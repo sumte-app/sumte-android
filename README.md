@@ -1,4 +1,9 @@
-1. 안드로이드 스튜디오 미어캣
-2. Device: Pixel 9
-3. SDK: API 24
-4. viewBinding = true
+# 홈/검색/필터링
+
+- 안드로이드 스튜디오 미어캣
+- Device: Pixel 9
+- SDK: API 24
+- viewBinding = true
+
+
+**25.06.28**
