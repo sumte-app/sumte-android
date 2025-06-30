@@ -48,14 +48,14 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/bottom_nav_search"
-                app:tint="@color/Primary" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/search_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="원하는 날짜, 인원을 설정해보세요"
-                android:textColor="@color/Primary"
+                android:textColor="@color/primary"
                 android:textSize="14sp"
                 android:layout_marginStart="8dp" />
         </LinearLayout>

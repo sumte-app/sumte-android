@@ -2,8 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="Primary">#62A75D</color>
-    <color name="gray">#F6F6F6</color>
+    <color name="error">#FF2327</color>
+    <color name="error_container">#FFDAD6</color>
+    <color name="lighten100">#87C183</color>
+    <color name="lighten200">#A9DDA5</color>
+    <color name="lighten300">#D0F1CD</color>
+    <color name="lighten400">#EEFBE9</color>
+    <color name="darken100">#498546</color>
+    <color name="primary">#62A75D</color>
+    <color name="gray50">#F6F6F6</color>
     <color name="gray100">#EAEAEA</color>
     <color name="gray200">#DBDBDB</color>
     <color name="gray300">#C1C1C1</color>
