@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.sumte.databinding.FragmentFilter1Binding
+import com.example.sumte.databinding.FragmentBookInfoBinding
 
-class Filter1Fragment : Fragment() {
-    lateinit var binding: FragmentFilter1Binding
+class BookInfoFragment : Fragment() {
+    lateinit var binding: FragmentBookInfoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ class Filter1Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentFilter1Binding.inflate(inflater, container, false)
+        binding=FragmentBookInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
 }
