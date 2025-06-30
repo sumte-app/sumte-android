@@ -23,7 +23,8 @@
     <LinearLayout
         android:id="@+id/homefrag_main_searchbox"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.09"
         android:layout_marginTop="-20dp"
         app:layout_constraintTop_toBottomOf="@+id/main_logo_ll"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +62,7 @@
         </LinearLayout>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/guesthouseRecyclerView"
+        android:id="@+id/guesthouse_rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingTop="8dp"

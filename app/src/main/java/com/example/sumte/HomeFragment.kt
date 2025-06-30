@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
             // ...
         )
 
-        binding.guesthouseRecyclerView.apply {
+        binding.guesthouseRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
