@@ -41,6 +41,11 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
+
+
+        binding.searchBox.setOnClickListener{
+
+        }
     }
     
     //search text 클릭시
