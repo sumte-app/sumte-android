@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
         initBottomNavigation()
+
+        //SearchResultAcitivty 실행용
+//        val intent = Intent(this, SearchResultActivity::class.java)
+//        startActivity(intent)
     }
 
     private fun initBottomNavigation(){
