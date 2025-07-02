@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/top_space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fitsSystemWindows="true"
+        android:gravity="center">
+        <View
+            android:layout_width="82dp"
+            android:layout_height="32dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/top_text"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:gravity="center"
+        android:weightSum="10"
+        app:layout_constraintTop_toBottomOf="@id/top_space">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/cancel_btn"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:gravity="center"
+            android:text="날짜, 인원 선택"
+            android:textSize="16dp"/>
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="12dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/select_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/top_text"
+        tools:layout_editor_absoluteX="38dp">
+
+        <LinearLayout
+            android:id="@+id/main_calendar"
+            android:layout_width="328dp"
+            android:layout_height="396dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/calendar_round_style"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/calendar_check"/>
+
+                <TextView
+                    android:id="@+id/date_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="날짜"
+                    android:textSize="14dp"
+                    android:layout_marginStart="8dp" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_count_bar"
+            android:layout_width="328dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/calendar_round_style"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bottom_nav_my"/>
+            <TextView
+                android:id="@+id/count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="성인 1"
+                android:textSize="14dp"
+                android:layout_marginStart="8dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/count_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="변경하기"
+                android:textSize="12dp"/>
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="4dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/arrow__down_btn"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@id/select_bar">
+
+        <LinearLayout
+            android:id="@+id/apply_btn"
+            android:layout_width="328dp"
+            android:layout_height="52dp"
+            android:background="@drawable/apply_btn_style"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/select_bar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="적용하기"
+                android:textColor="@color/white"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
