@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -14,6 +14,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
         android:weightSum="10"
+        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -167,11 +168,6 @@
                     android:gravity="center"
                     android:layout_weight="1"/>
             </LinearLayout>
-
-            <com.kizitonwose.calendar.view.CalendarView
-                android:id="@+id/custom_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
 <!--            줄 뷰 넣어줘야함, 그 밑에 캘린더-->
 
