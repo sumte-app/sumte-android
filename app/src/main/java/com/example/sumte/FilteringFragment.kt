@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,6 +15,8 @@ import com.google.android.material.chip.Chip
 class FilteringFragment: Fragment() {
     lateinit var binding: FragmentFilteringBinding
     val personOptions = arrayOf("1명", "2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명", "11명")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -29,6 +32,26 @@ class FilteringFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val serviceTextViews = listOf(
+            binding.filteringExtraServiceEventTv,
+            binding.filteringExtraServicePartyTv,
+            binding.filteringExtraServiceCurtainTv,
+            binding.filteringExtraServiceMealTv
+        )
+        val targetTextViews= listOf(
+            binding.filteringTargetFemaleonlyTv,
+            binding.filteringTargetMaleonlyTv,
+            binding.filteringTargetWithpetsTv
+        )
+        val regionJejusiTextView = binding.filteringTargetJejuallTv
+        val regionTextView= listOf(
+            binding.filteringTargetJejuallTv, binding.filteringTargetJejusiTv, binding.filteringTargetSeogwipoTv, binding.filteringTargetAewolTv,
+            binding.filteringTargetSeongsanTv, binding.filteringTargetJocheonTv, binding.filteringTargetGujwaTv, binding.filteringTargetHallimTv,
+            binding.filteringTargetHankyungTv, binding.filteringTargetDaejeongTv, binding.filteringTargetAndeokTv, binding.filteringTargetNamwonTv,
+            binding.filteringTargetPyoseonTv
+        )
+        val allTextViews=listOf(regionJejusiTextView)+regionTextView
+
         binding.filteringCloseIv.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -61,6 +84,95 @@ class FilteringFragment: Fragment() {
             }
             popup.show()
         }
+
+        //부가 서비스 선택시
+        serviceTextViews.forEach{ textView->
+            textView.setOnClickListener{
+                val isSelected = textView.tag=="selected"
+                if(isSelected){
+                    textView.setBackgroundResource(R.drawable.filtering_unselected)
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.gray800))
+                    textView.tag = "unselected"
+                }
+                else{
+                    textView.setBackgroundResource(R.drawable.filtering_selected)
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary))
+                    textView.tag = "selected"
+                }
+            }
+        }
+
+        //이용 대상 선택시
+        targetTextViews.forEach{textView->
+            textView.setOnClickListener{
+                val isSelected=textView.tag=="selected"
+                if(isSelected){
+                    textView.setBackgroundResource(R.drawable.filtering_unselected)
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.gray800))
+                    textView.tag = "unselected"
+                }
+                else{
+                    textView.setBackgroundResource(R.drawable.filtering_selected)
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary))
+                    textView.tag = "selected"
+                }
+            }
+        }
+        //지역 설정 선택시
+        fun setSelected(textView: TextView, selected: Boolean) {
+            if (selected) {
+                textView.setBackgroundResource(R.drawable.filtering_selected)
+                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary))
+                textView.tag = "selected"
+            } else {
+                textView.setBackgroundResource(R.drawable.filtering_unselected)
+                textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray800))
+                textView.tag = "unselected"
+            }
+        }
+
+        regionTextView.forEach{textView->
+            if (textView != regionJejusiTextView) {
+                textView.setOnClickListener {
+                    // If "제주도 전체" is selected, unselect it first
+                    if (regionJejusiTextView.tag == "selected") {
+                        setSelected(regionJejusiTextView, false)
+                    }
+                    val isSelected = textView.tag == "selected"
+                    if (isSelected) {
+                        textView.setBackgroundResource(R.drawable.filtering_unselected)
+                        textView.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.gray800
+                            )
+                        )
+                        textView.tag = "unselected"
+                    } else {
+                        textView.setBackgroundResource(R.drawable.filtering_selected)
+                        textView.setTextColor(
+                            ContextCompat.getColor(
+                                binding.root.context,
+                                R.color.primary
+                            )
+                        )
+                        textView.tag = "selected"
+                    }
+                }
+            }
+        }
+        regionJejusiTextView.setOnClickListener {
+            val isSelected = regionJejusiTextView.tag=="selected"
+            if (!isSelected) {
+                // 이벤트 선택 → 나머지 다 해제 + 이벤트 선택
+                regionTextView.forEach { setSelected(it, false) }
+                setSelected(regionJejusiTextView, true)
+            } else {
+                setSelected(regionJejusiTextView, false)
+            }
+        }
+
+
 
         //재설정 버튼 아직 미완성
         binding.filteringResetLl.setOnClickListener{
