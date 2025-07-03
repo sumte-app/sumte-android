@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.sumte"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -48,4 +48,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.kizitonwose.calendar:view:2.0.3")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
 }
