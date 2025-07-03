@@ -22,4 +22,6 @@ class SearchFragment : Fragment() {
         binding=FramentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    //bookinfo눌렀을때 캘린더쪽으로 화면전환
 }
