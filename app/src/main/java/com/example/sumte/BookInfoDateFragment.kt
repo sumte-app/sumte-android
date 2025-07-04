@@ -15,7 +15,6 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -33,6 +32,8 @@ class BookInfoDateFragment : Fragment() {
         binding=FragmentBookInfoDateBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    private var currentYearMonth: YearMonth = YearMonth.now()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         class DayViewContainer(view: View) : ViewContainer(view) {
@@ -166,6 +167,18 @@ class BookInfoDateFragment : Fragment() {
                 binding.todayMonthText.text = String.format("%d.%02d", year, month)
             }
         }
+
+        //화살표 클릭 시 달 이동
+        binding.leftBtn.setOnClickListener {
+            currentYearMonth = currentYearMonth.minusMonths(1)
+            binding.customCalendar.scrollToMonth(currentYearMonth)
+        }
+
+        binding.rightBtn.setOnClickListener {
+            currentYearMonth = currentYearMonth.plusMonths(1)
+            binding.customCalendar.scrollToMonth(currentYearMonth)
+        }
+
         
         //추후보수
         val currentDay = LocalDate.now(seoulZone)
