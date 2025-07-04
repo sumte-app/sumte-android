@@ -208,6 +208,7 @@
                     android:src="@drawable/arrow_right"/>
             </LinearLayout>
 
+
             <include
                 android:id="@+id/titlesContainer"
                 layout="@layout/calendar_day_titles_container" />
