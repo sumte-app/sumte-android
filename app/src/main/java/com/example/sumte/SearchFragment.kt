@@ -28,6 +28,4 @@ class SearchFragment : Fragment() {
             startActivity(intent)
         }
     }
-
-    //bookinfo눌렀을때 캘린더쪽으로 화면전환
 }

@@ -6,11 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityBookInfoBinding
 
 class BookInfoActivity : AppCompatActivity() {
-    lateinit var binding: ActivityBookInfoBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBookInfoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        enableEdgeToEdge()
+        setContentView(R.layout.activity_book_info)
+
+        // 처음에는 BookInfoFragment로 시작
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, BookInfoFragment())
+                .commit()
+        }
+
     }
 }

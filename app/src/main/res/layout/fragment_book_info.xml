@@ -108,72 +108,81 @@
                     android:src="@drawable/arrow_up"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/week"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/week"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:paddingHorizontal="16dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="일"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="월"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="화"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="수"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="목"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="금"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="토"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="일"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="월"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="화"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="수"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="목"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="금"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="토"-->
+<!--                    android:textSize="12dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_weight="1"/>-->
+<!--            </LinearLayout>-->
 
+            <include
+                android:id="@+id/titlesContainer"
+                layout="@layout/calendar_day_titles_container" />
+
+            <!-- CalendarView 본체 -->
             <com.kizitonwose.calendar.view.CalendarView
                 android:id="@+id/custom_calendar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:cv_dayViewResource="@layout/calendar_day_layout"
+                app:cv_orientation="horizontal" />
 
-<!--            줄 뷰 넣어줘야함, 그 밑에 캘린더-->
+
+
+            <!--            줄 뷰 넣어줘야함, 그 밑에 캘린더-->
 
         </LinearLayout>
 
