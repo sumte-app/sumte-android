@@ -14,14 +14,16 @@ import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.LocalDate
 import java.time.YearMonth
 
 class BookInfoDateFragment : Fragment() {
     lateinit var binding: FragmentBookInfoDateBinding
-
-    private var startDate: LocalDate? = LocalDate.now()
-    private var endDate: LocalDate? = LocalDate.now().plusDays(1)
+    val seoulZone = ZoneId.of("Asia/Seoul")
+    private var startDate: LocalDate? = LocalDate.now(seoulZone)
+    private var endDate: LocalDate? = LocalDate.now(seoulZone).plusDays(1)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,13 +97,13 @@ class BookInfoDateFragment : Fragment() {
                     container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                 }
                 //오늘 이전
-                if (date.isBefore(LocalDate.now())) {
+                if (date.isBefore(LocalDate.now(seoulZone))) {
                     container.textView.alpha = 0.3f
                     container.textView.isClickable = false
                     return
                 }
                 //오늘
-                if (date == LocalDate.now()) {
+                if (date == LocalDate.now(seoulZone)) {
                     val isNotSelected =
                         !(startDate != null && date == startDate) &&
                                 !(endDate != null && date == endDate) &&
@@ -150,7 +152,7 @@ class BookInfoDateFragment : Fragment() {
             }
         }
         binding.customCalendar.apply {
-            val currentMonth = YearMonth.now()
+            val currentMonth = YearMonth.now(seoulZone)
             val firstMonth = currentMonth
             val lastMonth = currentMonth.plusMonths(240)
             val firstDayOfWeek = firstDayOfWeekFromLocale()
@@ -166,8 +168,8 @@ class BookInfoDateFragment : Fragment() {
         }
         
         //추후보수
-        val currentDay = LocalDate.now()
-        val currentMonth = YearMonth.now()
+        val currentDay = LocalDate.now(seoulZone)
+        val currentMonth = YearMonth.now(seoulZone)
         val dayOfWeekKor = getKoreanDayOfWeek(currentDay)
         val endPlusOne = currentDay.plusDays(1)
         val endDayOfWeekKor = getKoreanDayOfWeek(endPlusOne)
