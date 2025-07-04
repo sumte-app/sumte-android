@@ -1,17 +1,22 @@
 package com.example.sumte
 
+import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class FilterOptions(
     val availableOnly: Boolean,
-    val minPrice: Int,
-    val maxPrice: Int,
-    val adults: Int,
-    val children: Int,
-    val services: List<String>,
-    val targetGroups: List<String>
-)
+    val priceMin: Int,
+    val priceMax: Int,
+    val peopleCount: String?,
+    val selectedServices: List<String>,
+    val selectedTargets: List<String>,
+    val selectedRegions1: List<String>,
+    val selectedRegions2: List<String>,
+    val selectedRegions3: List<String>
+) : Parcelable
 
 class FilterViewModel : ViewModel() {
     val filters = MutableLiveData<FilterOptions>()

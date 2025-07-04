@@ -119,16 +119,44 @@
             android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/filtering_pricehint_tv"
+            android:id="@+id/filtering_minprice_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000원 ~ 100,000원+"
+            android:text="1000원"
             android:textColor="@color/gray400"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_pricerange_tv"
             app:layout_constraintStart_toEndOf="@id/filtering_pricerange_tv"
             app:layout_constraintTop_toTopOf="@+id/filtering_pricerange_tv"/>
+
+        <TextView
+            android:id="@+id/filtering_pricemid_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="~"
+            android:textColor="@color/gray400"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/filtering_minprice_tv"
+            app:layout_constraintStart_toEndOf="@id/filtering_minprice_tv"
+            app:layout_constraintTop_toTopOf="@+id/filtering_minprice_tv" />
+
+        <TextView
+            android:id="@+id/filtering_maxprice_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="100,000원+"
+            android:textColor="@color/gray400"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/filtering_pricemid_tv"
+            app:layout_constraintStart_toEndOf="@+id/filtering_pricemid_tv"
+            app:layout_constraintTop_toTopOf="@+id/filtering_pricemid_tv" />
+
         <TextView
             android:id="@+id/filtering_price_start_tv"
             android:layout_width="wrap_content"
@@ -652,6 +680,7 @@
                 android:textSize="16sp"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/filtering_apply_tv"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="6"
