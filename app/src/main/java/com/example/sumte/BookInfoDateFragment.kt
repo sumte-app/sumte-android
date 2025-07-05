@@ -179,6 +179,17 @@ class BookInfoDateFragment : Fragment() {
             binding.customCalendar.scrollToMonth(currentYearMonth)
         }
 
+        binding.countChangeBar.setOnClickListener {
+
+            val fragment = BookInfoCountFragment()
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)  // 뒤로가기 가능하게 하려면 추가
+                .commit()
+
+        }
+
         
         //추후보수
         val currentDay = LocalDate.now(seoulZone)

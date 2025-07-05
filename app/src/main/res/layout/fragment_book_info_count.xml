@@ -49,7 +49,7 @@
         <LinearLayout
             android:id="@+id/calendar"
             android:layout_width="0dp"
-            android:layout_height="426dp"
+            android:layout_height="56dp"
             android:layout_weight="9"
             android:background="@drawable/calendar_round_style"
             android:clickable="true"
@@ -111,124 +111,19 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
 
+                <TextView
+                    android:id="@+id/count_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="변경하기"
+                    android:textSize="12dp" />
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="8dp"
-                    android:src="@drawable/arrow_up"/>
+                    android:src="@drawable/arrow_down"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/week"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="일"
-                    android:textSize="12dp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="월"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="화"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="수"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="목"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="금"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="토"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="1dp"
-                android:background="@color/gray100"/>
-
-            <LinearLayout
-                android:id="@+id/today_month"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:paddingHorizontal="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/left_btn"
-                    android:layout_width="6dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/arrow_left"/>
-
-                <TextView
-                    android:id="@+id/today_month_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2025.07"
-                    android:textSize="16dp"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:textStyle="bold"/>
-                <ImageView
-                    android:id="@+id/right_btn"
-                    android:layout_width="6dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/arrow_right"/>
-            </LinearLayout>
-
-            <include
-                android:id="@+id/titlesContainer"
-                layout="@layout/calendar_day_titles_container" />
-
-            <com.kizitonwose.calendar.view.CalendarView
-                android:id="@+id/custom_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp"
-                android:paddingHorizontal="16dp"
-                android:layout_weight="1"
-                app:cv_dayViewResource="@layout/calendar_day_layout"
-                app:cv_orientation="horizontal" />
 
         </LinearLayout>
 
@@ -246,21 +141,19 @@
         android:weightSum="10">
 
         <LinearLayout
-            android:id="@+id/count_change_bar"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="167dp"
             android:layout_weight="9"
             android:background="@drawable/calendar_round_style"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:layout_marginTop="16dp"
                 android:paddingHorizontal="16dp">
 
                 <ImageView
@@ -281,24 +174,89 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
 
-                <TextView
-                    android:id="@+id/count_change"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="변경하기"
-                    android:textSize="12dp" />
-
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="8dp"
-                    android:src="@drawable/arrow_down"/>
+                    android:src="@drawable/arrow_up"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_adult_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="성인"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_marginStart="4dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/minus_gray"/>
+                <TextView
+                    android:id="@+id/adult_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_marginStart="8dp" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/plus"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_child_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="아동"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_marginStart="4dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/minus_gray"/>
+                <TextView
+                    android:id="@+id/child_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:layout_marginStart="8dp" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/plus"
+                    android:layout_marginStart="8dp"/>
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
-
-
     <LinearLayout
         android:id="@+id/main_apply_btn"
         android:layout_width="match_parent"
@@ -330,4 +288,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
