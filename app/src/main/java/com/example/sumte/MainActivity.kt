@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         initBottomNavigation()
 
         //SearchResultAcitivty 실행용
-        val intent = Intent(this, SearchResultActivity::class.java)
-        startActivity(intent)
+//        val intent = Intent(this, SearchResultActivity::class.java)
+//        startActivity(intent)
     }
 
     private fun initBottomNavigation(){
