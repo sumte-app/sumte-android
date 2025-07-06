@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.Sumte" parent="Base.Theme.Sumte" />
+
+    <style name="Theme.RangeSlider" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </style>
 </resources>

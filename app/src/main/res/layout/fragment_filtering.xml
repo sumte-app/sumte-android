@@ -181,17 +181,25 @@
 
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/filtering_rangeslider"
+            android:theme="@style/Theme.RangeSlider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:valueFrom="1000"
             android:valueTo="100000"
-            android:stepSize="1000"
+            android:stepSize="0"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:values="@array/price_rage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filtering_price_start_tv"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:trackColorActive="@color/primary"
+            app:trackColorInactive="@color/gray100"
+            app:trackHeight="4dp"
+            app:thumbRadius="8dp"
+            app:thumbColor="@color/primary"
+            app:trackStopIndicatorSize="0dp"
+            app:haloColor="@color/primary"/>
         <View
             android:id="@+id/filtering_border2"
             android:background="@color/gray100"
