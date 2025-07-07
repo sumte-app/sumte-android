@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/top_text"
@@ -25,6 +26,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/my_boarder"
+        android:background="@color/gray100"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_text"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
     <LinearLayout
         android:id="@+id/main_my_id"
         android:layout_width="match_parent"
@@ -32,9 +43,10 @@
         android:orientation="horizontal"
         android:weightSum="10"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/top_text">
+        app:layout_constraintTop_toBottomOf="@+id/my_boarder">
 
         <LinearLayout
+            android:id="@+id/my_id_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -44,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center">
-
                 <TextView
                     android:id="@+id/my_id"
                     android:layout_width="wrap_content"
@@ -52,7 +63,6 @@
                     android:text="제주숨숨이"
                     android:textSize="22dp"
                     android:textStyle="bold"/>
-
                 <ImageView
                     android:id="@+id/right_btn"
                     android:layout_width="8dp"
@@ -65,12 +75,10 @@
                 android:id="@+id/my_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="sumte@gmail.com"
                 android:textSize="14dp"
                 android:textColor="@color/gray400"/>
-
-
-
         </LinearLayout>
 
 
@@ -87,7 +95,7 @@
         android:weightSum="10">
 
         <LinearLayout
-            android:id="@+id/review_box"
+            android:id="@+id/my_review_box"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="9"
@@ -103,7 +111,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp">
                 <TextView
-                    android:id="@+id/review_text"
+                    android:id="@+id/my_review"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="후기 관리"
@@ -123,6 +131,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/main_booking_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/main_review_box"
@@ -133,6 +142,7 @@
         android:weightSum="10">
 
         <LinearLayout
+            android:id="@+id/my_booking_box"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="9"
@@ -148,10 +158,10 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp">
                 <TextView
-                    android:id="@+id/count_text"
+                    android:id="@+id/my_booking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="후기 관리"
+                    android:text="예약 내역"
                     android:textStyle="bold"
                     android:textSize="14dp"
                     android:layout_marginStart="4dp" />

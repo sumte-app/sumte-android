@@ -22,4 +22,8 @@ class MyFragment : Fragment(){
         binding=FragmentMyBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+    }
 }
