@@ -114,7 +114,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="8dp"
-                    android:src="@drawable/arrow_up"/>
+                    android:src="@drawable/arrow_up" />
             </LinearLayout>
 
             <LinearLayout

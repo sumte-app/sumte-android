@@ -200,6 +200,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
                 <ImageView
+                    android:id="@+id/adult_minus_btn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/minus_gray"/>
@@ -212,6 +213,7 @@
                     android:textSize="16dp"
                     android:layout_marginStart="8dp" />
                 <ImageView
+                    android:id="@+id/adult_plus_btn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/plus"
@@ -238,6 +240,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
                 <ImageView
+                    android:id="@+id/child_minus_btn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/minus_gray"/>
@@ -250,6 +253,7 @@
                     android:textSize="16dp"
                     android:layout_marginStart="8dp" />
                 <ImageView
+                    android:id="@+id/child_plus_btn"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/plus"

@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.sumte.databinding.FramentSearchBinding
+import com.example.sumte.databinding.FragmentSearchBinding
 import java.time.ZoneId
 import java.time.LocalDate
-import java.time.YearMonth
 
 class SearchFragment : Fragment() {
-    lateinit var binding: FramentSearchBinding
+    lateinit var binding: FragmentSearchBinding
 
     val seoulZone = ZoneId.of("Asia/Seoul")
     private var startDate: LocalDate? = LocalDate.now(seoulZone)
@@ -23,7 +22,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FramentSearchBinding.inflate(inflater, container, false)
+        binding=FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -180,17 +180,13 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.countChangeBar.setOnClickListener {
-
             val fragment = BookInfoCountFragment()
-
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)  // 뒤로가기 가능하게 하려면 추가
+                .addToBackStack(null)
                 .commit()
-
         }
 
-        
         //추후보수
         val currentDay = LocalDate.now(seoulZone)
         val currentMonth = YearMonth.now(seoulZone)
