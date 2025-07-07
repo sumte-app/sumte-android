@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.sumte.databinding.FramentSearchBinding
+import com.example.sumte.databinding.FragmentSearchBinding
 
 class SearchFragment : Fragment() {
-    lateinit var binding: FramentSearchBinding
+    lateinit var binding: FragmentSearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FramentSearchBinding.inflate(inflater, container, false)
+        binding=FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 }
