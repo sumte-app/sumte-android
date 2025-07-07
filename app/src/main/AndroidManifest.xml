@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Sumte"
         tools:targetApi="31">
         <activity
+            android:name=".MyIdActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookInfoActivity"
             android:exported="false" />
         <activity

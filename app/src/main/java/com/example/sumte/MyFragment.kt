@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,9 @@ class MyFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        binding.myIdBox.setOnClickListener {
+            val intent = Intent(requireContext(), MyIdActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
