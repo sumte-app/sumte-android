@@ -1,0 +1,17 @@
+<!-- 요일 라인 전체 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="7"
+    android:orientation="horizontal">
+
+    <!-- 요일 7개 각각 include (재사용) -->
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+    <include layout="@layout/calendar_day_title_text" />
+
+</LinearLayout>

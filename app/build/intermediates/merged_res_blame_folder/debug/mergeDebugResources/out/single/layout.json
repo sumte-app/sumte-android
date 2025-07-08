@@ -1,0 +1,82 @@
+[
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_book_info_count.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_book_info_count.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_my_id_main.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my_id_main.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_my.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_review_manage.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_review_manage.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/item_guesthouse.xml",
+        "source": "com.example.sumte.app-main-51:/layout/item_guesthouse.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_book_info_date.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_book_info_date.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/like_guesthouse.xml",
+        "source": "com.example.sumte.app-main-51:/layout/like_guesthouse.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_like.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_like.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/activity_my_id.xml",
+        "source": "com.example.sumte.app-main-51:/layout/activity_my_id.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_home.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_search.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_search.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/calendar_day_title_text.xml",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_title_text.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/activity_main.xml",
+        "source": "com.example.sumte.app-main-51:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/activity_book_info.xml",
+        "source": "com.example.sumte.app-main-51:/layout/activity_book_info.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/calendar_day_layout.xml",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_layout.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_filtering.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_filtering.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/activity_search_result.xml",
+        "source": "com.example.sumte.app-main-51:/layout/activity_search_result.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/calendar_day_titles_container.xml",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_titles_container.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/item_review.xml",
+        "source": "com.example.sumte.app-main-51:/layout/item_review.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-mergeDebugResources-48:/layout/fragment_my_id_edit.xml",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my_id_edit.xml"
+    }
+]

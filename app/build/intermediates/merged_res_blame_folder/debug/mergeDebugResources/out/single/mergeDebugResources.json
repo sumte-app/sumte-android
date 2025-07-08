@@ -1,0 +1,382 @@
+[
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_selcted_circle_start.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/selcted_circle_start.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_arrow_left.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/arrow_left.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_cancel_btn.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/cancel_btn.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxxhdpi_app_icon_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxxhdpi/app_icon_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_book_info_date.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_book_info_date.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_like_house1.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/like_house1.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_star_fill.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/star_fill.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_home.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-mdpi_app_icon.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-mdpi/app_icon.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xhdpi_app_icon.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xhdpi/app_icon.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_home.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_home.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_border_only_bottom.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/border_only_bottom.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_sample_house2.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/sample_house2.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_search.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_search.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_book_info_count.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_book_info_count.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_filtering.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_filtering.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxxhdpi_app_icon.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxxhdpi/app_icon.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-hdpi_app_icon.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-hdpi/app_icon.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_search.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_search.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_arrow_up.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/arrow_up.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_apply_btn_style.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/apply_btn_style.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_activity_book_info.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/activity_book_info.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_round_style.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/round_style.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_round_style_apply.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/round_style_apply.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_minus_green.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/minus_green.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-anydpi-v26_app_icon.xml.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-anydpi-v26/app_icon.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_activity_main.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_filtering_unselected.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/filtering_unselected.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xhdpi_app_icon_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xhdpi/app_icon_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_arrow_right.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/arrow_right.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-hdpi_app_icon_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-hdpi/app_icon_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-mdpi_app_icon_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-mdpi/app_icon_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_like_house3.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/like_house3.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_text_color.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_text_color.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_review_manage.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_review_manage.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_filtering_selected.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/filtering_selected.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_sample_house1.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/sample_house1.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/xml_backup_rules.xml.flat",
+        "source": "com.example.sumte.app-main-51:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_item_review.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/item_review.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_my.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_my.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_border_only_top.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/border_only_top.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_selcted_circle_end.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/selcted_circle_end.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_like.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_like.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_adjustments.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/adjustments.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxhdpi_app_icon_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxhdpi/app_icon_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_heart.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_heart.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_calendar_day_title_text.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_title_text.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_arrow_down.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/arrow_down.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_sumte_main_logo.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/sumte_main_logo.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_like_house2.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/like_house2.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_edit_icon.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/edit_icon.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_like_guesthouse.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/like_guesthouse.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_round_style_search_result.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/round_style_search_result.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_plus.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/plus.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxhdpi_app_icon.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxhdpi/app_icon.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_item_guesthouse.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/item_guesthouse.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_round_style_search_result_empty.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/round_style_search_result_empty.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_calendar_check.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/calendar_check.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_selcted_middle.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/selcted_middle.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_minus_gray.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/minus_gray.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_bottom_nav_icon_color.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/bottom_nav_icon_color.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_today_circle.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/today_circle.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.sumte.app-main-51:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-anydpi-v26_app_icon_round.xml.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-anydpi-v26/app_icon_round.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_calendar_day_layout.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_layout.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_app_icon_foreground.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/app_icon_foreground.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_activity_my_id.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/activity_my_id.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_cancel.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/cancel.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_my_id_edit.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my_id_edit.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_my.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_selected_circle.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/selected_circle.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_activity_search_result.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/activity_search_result.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_trash.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/trash.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_sample_house3.png.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/sample_house3.png"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/menu_bottom_nav.xml.flat",
+        "source": "com.example.sumte.app-main-51:/menu/bottom_nav.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_calendar_day_titles_container.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/calendar_day_titles_container.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/layout_fragment_my_id_main.xml.flat",
+        "source": "com.example.sumte.app-main-51:/layout/fragment_my_id_main.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_calendar_round_style.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/calendar_round_style.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_search_result_circle.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/search_result_circle.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_edit.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/edit.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/drawable_arrow_rotate_right.xml.flat",
+        "source": "com.example.sumte.app-main-51:/drawable/arrow_rotate_right.xml"
+    },
+    {
+        "merged": "com.example.sumte.app-debug-49:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.sumte.app-main-51:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    }
+]
