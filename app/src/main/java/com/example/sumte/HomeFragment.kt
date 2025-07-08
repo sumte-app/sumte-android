@@ -31,9 +31,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
         val guestList = listOf(
-            GuestHouse("서귀포 섬게스트하우스", "서귀포항 근처", "19,000원~", R.drawable.sample_house1),
-            GuestHouse("제주 꿀림 365", "애월읍", "23,000원~", R.drawable.sample_house2),
-            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000원~", R.drawable.sample_house3),
+            GuestHouse("서귀포 섬게스트하우스", "서귀포항 근처", "19,000원~", R.drawable.sample_house1, "1"),
+            GuestHouse("제주 꿀림 365", "애월읍", "23,000원~", R.drawable.sample_house2, "2"),
+            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000원~", R.drawable.sample_house3, "3"),
             // ...
         )
 
@@ -41,9 +41,5 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
-
-//        binding.searchBox.setOnClickListener {
-//            (activity as? MainActivity)?.selectBottomNavItem(R.id.fragment_search)
-//        }
     }
 }

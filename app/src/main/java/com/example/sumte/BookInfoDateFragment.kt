@@ -139,7 +139,7 @@ class BookInfoDateFragment : Fragment() {
                     }
                     if (endDate != null) {
                         endDate?.let {
-                            val endDayKor = getKoreanDayOfWeek(it) 
+                            val endDayKor = getKoreanDayOfWeek(it)
                             binding.endDate.text = String.format("%d.%02d %s", it.monthValue, it.dayOfMonth, endDayKor)
                         }
                         val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)

@@ -10,7 +10,6 @@ import com.example.sumte.databinding.FragmentSearchBinding
 import java.time.LocalDate
 import java.time.ZoneId
 
-
 class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
 
@@ -50,6 +49,5 @@ class SearchFragment : Fragment() {
 
         binding.startDate.text = String.format("%d.%02d %s", currentDay.monthValue, currentDay.dayOfMonth, dayOfWeekKor)
         binding.endDate.text = String.format("%d.%02d %s,", endPlusOne.monthValue, endPlusOne.dayOfMonth, endDayOfWeekKor)
-        
     }
 }

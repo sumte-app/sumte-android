@@ -133,10 +133,6 @@
                     android:text="1박"
                     android:textStyle="bold"
                     android:textSize="16dp" />
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="1"/>-->
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"

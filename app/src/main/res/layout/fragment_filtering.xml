@@ -6,21 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/filtering_sv"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintHeight_percent="0.9"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/filtering_cl"
+        android:id="@+id/filtering_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
         <ImageView
             android:id="@+id/filtering_close_iv"
             android:layout_width="wrap_content"
@@ -30,25 +23,70 @@
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+
         <TextView
             android:id="@+id/filtering_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
+            android:layout_gravity="center_vertical"
             android:text="필터"
-            app:layout_constraintTop_toTopOf="@+id/filtering_close_iv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/empty_view"
+            app:layout_constraintStart_toEndOf="@+id/filtering_close_iv"
+            app:layout_constraintTop_toTopOf="@+id/filtering_close_iv" />
+        <View
+            android:id="@+id/empty_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintTop_toTopOf="@+id/filtering_top"
+            app:layout_constraintEnd_toEndOf="@+id/filtering_top"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<ScrollView
+    android:id="@+id/filtering_sv"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layout_constraintHeight_percent="0.84"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/filtering_top"
+    android:fillViewport="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/filtering_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+<!--        <ImageView-->
+<!--            android:id="@+id/filtering_close_iv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:src="@drawable/cancel"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"/>-->
+<!--        <TextView-->
+<!--            android:id="@+id/filtering_title_tv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:text="필터"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/filtering_close_iv"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="bold"/>-->
         <CheckBox
             android:id="@+id/filtering_checkbox"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/round_style_search_result_empty"
-            app:layout_constraintStart_toStartOf="@+id/filtering_close_iv"
-            app:layout_constraintTop_toBottomOf="@+id/filtering_title_tv"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/filtering_cl"/>
         <TextView
             android:id="@+id/filtering_available_tv"
             android:layout_width="wrap_content"
@@ -81,16 +119,44 @@
             android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/filtering_pricehint_tv"
+            android:id="@+id/filtering_minprice_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000원 ~ 100,000원+"
+            android:text="1000원"
             android:textColor="@color/gray400"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_pricerange_tv"
             app:layout_constraintStart_toEndOf="@id/filtering_pricerange_tv"
             app:layout_constraintTop_toTopOf="@+id/filtering_pricerange_tv"/>
+
+        <TextView
+            android:id="@+id/filtering_pricemid_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="~"
+            android:textColor="@color/gray400"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/filtering_minprice_tv"
+            app:layout_constraintStart_toEndOf="@id/filtering_minprice_tv"
+            app:layout_constraintTop_toTopOf="@+id/filtering_minprice_tv" />
+
+        <TextView
+            android:id="@+id/filtering_maxprice_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="100,000원+"
+            android:textColor="@color/gray400"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/filtering_pricemid_tv"
+            app:layout_constraintStart_toEndOf="@+id/filtering_pricemid_tv"
+            app:layout_constraintTop_toTopOf="@+id/filtering_pricemid_tv" />
+
         <TextView
             android:id="@+id/filtering_price_start_tv"
             android:layout_width="wrap_content"
@@ -115,17 +181,25 @@
 
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/filtering_rangeslider"
+            android:theme="@style/Theme.RangeSlider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:valueFrom="1000"
             android:valueTo="100000"
-            android:stepSize="1000"
+            android:stepSize="0"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:values="@array/price_rage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filtering_price_start_tv"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:trackColorActive="@color/primary"
+            app:trackColorInactive="@color/gray100"
+            app:trackHeight="4dp"
+            app:thumbRadius="8dp"
+            app:thumbColor="@color/primary"
+            app:trackStopIndicatorSize="0dp"
+            app:haloColor="@color/primary"/>
         <View
             android:id="@+id/filtering_border2"
             android:background="@color/gray100"
@@ -272,7 +346,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
             <TextView
                 android:id="@+id/filtering_extra_service_party_tv"
                 android:layout_width="0dp"
@@ -284,7 +358,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
             <TextView
                 android:id="@+id/filtering_extra_service_curtain_tv"
                 android:layout_width="0dp"
@@ -296,7 +370,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
             <TextView
                 android:id="@+id/filtering_extra_service_meal_tv"
                 android:layout_width="0dp"
@@ -308,7 +382,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
         </LinearLayout>
 
         <View
@@ -351,7 +425,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
             <TextView
                 android:id="@+id/filtering_target_maleonly_tv"
                 android:layout_width="0dp"
@@ -363,7 +437,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
             <TextView
                 android:id="@+id/filtering_target_withpets_tv"
                 android:layout_width="0dp"
@@ -375,7 +449,7 @@
                 android:textColor="@color/gray800"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/round_style_search_result_empty"/>
+                android:background="@drawable/filtering_unselected"/>
         </LinearLayout>
         <View
             android:id="@+id/filtering_border5"
@@ -614,6 +688,7 @@
                 android:textSize="16sp"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/filtering_apply_tv"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="6"
