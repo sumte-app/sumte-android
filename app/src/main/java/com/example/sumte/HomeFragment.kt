@@ -41,11 +41,5 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
-
-
-
     }
-    
-    //search text 클릭시
-    
 }

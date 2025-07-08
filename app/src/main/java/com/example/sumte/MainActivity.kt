@@ -48,4 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    fun selectBottomNavItem(itemId: Int) {
+        binding.bottomNavView.selectedItemId = itemId
+    }
 }

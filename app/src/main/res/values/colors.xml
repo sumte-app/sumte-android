@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="error">#FF2327</color>
+    <color name="red">#FF2327</color>
     <color name="error_container">#FFDAD6</color>
     <color name="lighten100">#87C183</color>
     <color name="lighten200">#A9DDA5</color>

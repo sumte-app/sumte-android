@@ -1,4 +1,3 @@
-<!-- 하나의 요일 텍스트 셀 (TextView) -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dayTitleText"
     android:layout_width="0dp"
