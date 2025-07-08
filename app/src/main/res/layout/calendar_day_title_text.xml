@@ -1,9 +1,9 @@
-<!-- 하나의 요일 텍스트 셀 (TextView) -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dayTitleText"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:gravity="center"
-    android:textSize="12sp"
-    android:textColor="@android:color/black" />
+<!--&lt;!&ndash; 하나의 요일 텍스트 셀 (TextView) &ndash;&gt;-->
+<!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:id="@+id/dayTitleText"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_weight="1"-->
+<!--    android:gravity="center"-->
+<!--    android:textSize="12sp"-->
+<!--    android:textColor="@android:color/black" />-->

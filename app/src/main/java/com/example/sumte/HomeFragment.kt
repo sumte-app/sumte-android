@@ -42,8 +42,8 @@ class HomeFragment : Fragment() {
             adapter = GuestHouseAdapter(guestList)
         }
 
-        binding.searchBox.setOnClickListener {
-            (activity as? MainActivity)?.selectBottomNavItem(R.id.fragment_search)
-        }
+//        binding.searchBox.setOnClickListener {
+//            (activity as? MainActivity)?.selectBottomNavItem(R.id.fragment_search)
+//        }
     }
 }

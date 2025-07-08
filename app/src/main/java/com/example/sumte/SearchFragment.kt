@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.sumte.databinding.FragmentSearchBinding
-import java.time.ZoneId
 import java.time.LocalDate
+import java.time.ZoneId
+
 
 class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
