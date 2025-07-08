@@ -36,6 +36,8 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -56,4 +58,14 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("com.kizitonwose.calendar:view:2.0.3")
+
+    // Retrofit & Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // OkHttp 로깅 (디버깅 시 유용)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }
