@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,6 +61,12 @@ class BookInfoCountFragment : Fragment() {
                 binding.childCountText.text = null
             }
         }
+
+        binding.applyBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SearchResultActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 }
