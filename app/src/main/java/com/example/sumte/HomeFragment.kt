@@ -41,5 +41,15 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
+        binding.searchBox.setOnClickListener {
+            (activity as? MainActivity)?.let { mainActivity ->
+                // Fragment 전환
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_container, SearchFragment())
+                    .commitAllowingStateLoss()
+                mainActivity.selectBottomNavItem(R.id.fragment_search)
+            }
+        }
+
     }
 }
