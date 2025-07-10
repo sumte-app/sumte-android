@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.fragment_search -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_container, SearchFragment()).commitAllowingStateLoss()
+                    navigateToSearchFragment()
                     true
                 }
                 R.id.fragment_favorite -> {
@@ -48,7 +48,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    fun selectBottomNavItem(itemId: Int) {
-        binding.bottomNavView.selectedItemId = itemId
+    fun navigateToSearchFragment() {
+        val fragment = SearchFragment()
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            .replace(R.id.main_container, fragment)
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
+
     }
+
 }
