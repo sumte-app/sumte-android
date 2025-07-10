@@ -107,6 +107,28 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/review_pic_show_ll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintHeight_percent="0.2"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/review_pic_add_ll"
+        app:layout_constraintTop_toBottomOf="@+id/review_pic_add_ll">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/review_pic_show_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="@+id/review_pic_add_ll"
+            app:layout_constraintTop_toBottomOf="@+id/review_pic_add_ll"
+            app:layout_constraintWidth_percent="0.9" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/review_content_ll"
         android:layout_width="0dp"
