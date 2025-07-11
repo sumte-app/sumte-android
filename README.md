@@ -1,13 +1,15 @@
-<<<<<<< HEAD
-# 홈/검색/필터링
 
+- UI 구성 : View + ConstraintLayout
+- API 통신 : Retrofit2, Okhttp
+- 캘린더 : Kizitonwose
+- 네비게이션 : Jetpack Navigation
+- 비동기 처리 : Kotlin Coroutines
+  
 - 안드로이드 스튜디오 미어캣
 - Device: Pixel 9
-- SDK: API 35
-- viewBinding = true
+- minSdk = 26
+- targetSdk = 35
 
 
-**25.07.01**
-=======
-# sumte-android
->>>>>>> a0767d24571b2850a3fcf7f5a644a46d85fbadf5
+
+
