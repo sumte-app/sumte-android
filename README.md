@@ -5,6 +5,11 @@
 - 네비게이션 : Jetpack Navigation
 - 비동기 처리 : Kotlin Coroutines
 
+## Android Studio 환경 설정  
+- 안드로이드 스튜디오 미어캣
+- Device: Pixel 9
+- minSdk = 26
+- targetSdk = 35
 
 ## 브랜치 전략
 - 기능별로 branch 이름 정함 (feature/login)
@@ -59,7 +64,7 @@
 
 ---
 
-## 2. 📄 파일 네이밍
+## 2.  파일 네이밍
 
 | 종류           | 규칙               | 예시                  |
 |----------------|--------------------|-----------------------|
@@ -117,11 +122,6 @@ const val MAX_RETRY_COUNT = 3
 - **ViewBinding 기반 프로젝트라면 camelCase를 기준으로 정리**  
 - 공용 리소스 파일 (strings.xml 등) 수정 시 팀원에게 공유 필수
 
-## Android Studio 환경 설정  
-- 안드로이드 스튜디오 미어캣
-- Device: Pixel 9
-- minSdk = 26
-- targetSdk = 35
 
   ## color, font
 
