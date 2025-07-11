@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/round_style_search_result_empty">
+
+    <TextView
+        android:id="@+id/review_submitted_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="후기가 등록되었습니다."
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:paddingBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/review_submitted_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="소중한 후기를 남겨주셔서 감사합니다.\n다른 사용자들에게 큰 도움이 될 거예요!"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/review_submitted_apply_tv"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="확인"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/round_style_apply"/>
+</LinearLayout>

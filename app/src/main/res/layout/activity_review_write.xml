@@ -142,6 +142,7 @@
         android:padding="16dp"
         android:gravity="top|start"
         android:background="@drawable/round_style_review_default"
+        android:clickable="true"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintStart_toStartOf="parent"

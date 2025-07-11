@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ class ReviewWriteActivity:AppCompatActivity() {
     private lateinit var reviewPhotoAdapter: ReviewPhotoAdapter
 
     private var cameraImageUri: Uri? = null
+    private var selectedRating = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +111,35 @@ class ReviewWriteActivity:AppCompatActivity() {
 //            }
 //        }
 
+        // 별점 평가
+        val starViews = listOf(
+            binding.starEmpty1Iv,
+            binding.starEmpty2Iv,
+            binding.starEmpty3Iv,
+            binding.starEmpty4Iv,
+            binding.starEmpty5Iv
+        )
+
+        // ⭐ 2. 각 별에 클릭 리스너 세팅
+        starViews.forEachIndexed { index, imageView ->
+            imageView.setOnClickListener {
+                selectedRating = index + 1            // 1~5점
+                updateStars(starViews, selectedRating)
+                updateApplyButton()
+            }
+        }
+
+        // 후기 등록하기 버튼
+        binding.reviewApplyTv.setOnClickListener {
+            //유효성 검사 필요
+            ReviewSubmittedDialog {
+                finish()
+            }.show(supportFragmentManager, "review_done")
+        }
+        // 리뷰 작성 영역 선택시 클릭 리스너
+        binding.reviewContentLl.setOnClickListener {
+            binding.reviewContentLl.setBackgroundResource(R.drawable.round_style_review_selected)
+        }
     }
 
     private fun requestPermissionsIfNeeded(onGranted: () -> Unit) {
@@ -145,4 +176,23 @@ class ReviewWriteActivity:AppCompatActivity() {
     private fun launchGallery() {
         galleryLauncher.launch("image/*")
     }
+
+    private fun updateStars(stars: List<ImageView>, rating: Int) {
+        stars.forEachIndexed { idx, iv ->
+            iv.setImageResource(
+                if (idx < rating) R.drawable.star_fill
+                else R.drawable.star_empty
+            )
+        }
+    }
+    private fun updateApplyButton() {
+        if (selectedRating > 0) {
+            binding.reviewApplyDefaultTv.visibility = View.GONE
+            binding.reviewApplyTv.visibility = View.VISIBLE
+        } else {
+            binding.reviewApplyDefaultTv.visibility = View.VISIBLE
+            binding.reviewApplyTv.visibility = View.GONE
+        }
+    }
+
 }

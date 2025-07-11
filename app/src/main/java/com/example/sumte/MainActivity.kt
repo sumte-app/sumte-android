@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         initBottomNavigation()
 
-        //SearchResultAcitivty 실행용
+//        SearchResultAcitivty 실행용
 //        val intent = Intent(this, SearchResultActivity::class.java)
 //        startActivity(intent)
     }
