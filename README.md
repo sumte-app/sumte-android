@@ -100,7 +100,7 @@ const val MAX_RETRY_COUNT = 3
   ## color, font
 
 <img width="765" height="639" alt="Image" src="https://github.com/user-attachments/assets/50dd2802-1431-4785-b6be-ce5276a77c0b" />
-![image.png](attachment:9db0b061-dd83-461e-acdc-0db720387279:image.png)
+<img width="985" height="357" alt="Image" src="https://github.com/user-attachments/assets/789183bb-e90f-4962-bd84-ebbc581cafb1" />
 
 ---
 최종 수정일 : 25.7.11
