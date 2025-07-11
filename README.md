@@ -6,7 +6,7 @@
 - 비동기 처리 : Kotlin Coroutines
 
 ## Android Studio 환경 설정  
-- 안드로이드 스튜디오 미어캣
+- 안드로이드 스튜디오 Narwhal
 - Device: Pixel 9
 - minSdk = 26
 - targetSdk = 35
@@ -15,22 +15,8 @@
 - 기능별로 branch 이름 정함 (feature/login)
 
 ## PR 컨벤션
-# 제목 규칙
-[이름/#기능] 브랜치1 → 브랜치2
-
-# 본문 규칙
-##  작업 개요
-- ex) 로그인 화면 구성
-
-##  변경 사항
-- ex) activity_login.xml 작성
-
-##  관련 이슈
-- resolved: #12
-
-##  참고 사항
-- ex) Figma 디자인 기반으로 레이아웃 구성
-
+제목 : [이름/#기능] 브랜치1 → 브랜치2 <br>
+본문 : 작업 개요 + 변경 사항 + 관련 이슈 + 참고 사항
 
   
 ## 이슈 컨벤션 양식 (노션에서 진행)
@@ -118,8 +104,7 @@ const val MAX_RETRY_COUNT = 3
 ## 6. 기타 권장 사항
 
 - **의미 없는 약어 지양**: `tvMsg1` ❌ → `tvLoginMessage` ✅  
-- **UI 요소는 역할을 명확히 표현**: `btnSubmit`보단 `btnLogin`, `btnSignUp`이 더 구체적  
-- **ViewBinding 기반 프로젝트라면 camelCase를 기준으로 정리**  
+- **UI 요소는 역할을 명확히 표현**: `btnSubmit`보단 `btnLogin`, `btnSignUp`  
 - 공용 리소스 파일 (strings.xml 등) 수정 시 팀원에게 공유 필수
 
 
