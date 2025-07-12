@@ -37,9 +37,21 @@ class HomeFragment : Fragment() {
             // ...
         )
 
+        val adapter = GuestHouseAdapter(guestList) { clickedGuest ->
+
+            // HouseDetailFragment로 전환
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, HouseDetailFragment()) // FrameLayout ID
+                .addToBackStack(null)
+                .commit()
+        }
+
+
         binding.guesthouseRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = GuestHouseAdapter(guestList)
+            this.adapter = adapter
         }
+
+
     }
 }
