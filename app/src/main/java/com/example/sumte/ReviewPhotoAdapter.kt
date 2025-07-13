@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.databinding.ItemReviewPhotoBinding
 
 class ReviewPhotoAdapter(
@@ -14,10 +15,13 @@ class ReviewPhotoAdapter(
     inner class PhotoViewHolder(private val binding: ItemReviewPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(uri: Uri) {
-            binding.photoImageView.setImageURI(uri)
+        fun bind(uri: Uri) = with(binding) {
+            Glide.with(root)
+                .load(uri)
+                .centerCrop()
+                .into(photoImageView)
 
-            binding.removeButton.setOnClickListener {
+            removeButton.setOnClickListener {
                 onRemoveClick(adapterPosition)
             }
         }

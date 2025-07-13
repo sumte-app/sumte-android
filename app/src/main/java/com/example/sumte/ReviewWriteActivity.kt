@@ -14,10 +14,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ActivityReviewWriteBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 import java.io.File
 
 class ReviewWriteActivity:AppCompatActivity() {
@@ -32,22 +34,26 @@ class ReviewWriteActivity:AppCompatActivity() {
     private var cameraImageUri: Uri? = null
     private var selectedRating = 0
 
+    private var uploadedImageUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityReviewWriteBinding.inflate(layoutInflater)
+        binding = ActivityReviewWriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val granted = permissions.all { it.value }
-            if (!granted) {
-                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                val granted = permissions.all { it.value }
+                if (!granted) {
+                    Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
         // 리싸이클러 및 어댑터 초기화
         reviewPhotoAdapter = ReviewPhotoAdapter(photoList) { position ->
             photoList.removeAt(position)
             reviewPhotoAdapter.notifyItemRemoved(position)
+            togglePhotoSection()
 
             if (photoList.isEmpty()) {
                 binding.reviewPicShowLl.visibility = View.GONE
@@ -56,60 +62,38 @@ class ReviewWriteActivity:AppCompatActivity() {
 
         binding.reviewPicShowRv.apply {
             adapter = reviewPhotoAdapter
-            layoutManager = LinearLayoutManager(this@ReviewWriteActivity, RecyclerView.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(this@ReviewWriteActivity, RecyclerView.HORIZONTAL, false)
         }
 
         // 카메라 런처
-        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success && cameraImageUri != null) {
-                photoList.add(cameraImageUri!!)
-                reviewPhotoAdapter.notifyItemInserted(photoList.lastIndex)
-                binding.reviewPicShowLl.visibility = View.VISIBLE
+        cameraLauncher =
+            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+                if (success && cameraImageUri != null) {
+                    addPhoto(cameraImageUri!!)
+                }
             }
-        }
 
         // 갤러리 런처
-        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                photoList.add(it)
-                reviewPhotoAdapter.notifyItemInserted(photoList.lastIndex)
-                binding.reviewPicShowLl.visibility = View.VISIBLE
+        galleryLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let { addPhoto(it) }
             }
-        }
 
         // 바텀시트- 사진 추가 버튼 클릭시
         binding.reviewPicAddLl.setOnClickListener {
             val bottomSheet = PhotoOptionsBottomSheet()
-            bottomSheet.setOnOptionSelectedListener(object:PhotoOptionsBottomSheet.OnOptionSelectedListener{
+            bottomSheet.setOnOptionSelectedListener(object :
+                PhotoOptionsBottomSheet.OnOptionSelectedListener {
                 override fun onTakePhotoSelected() {
-                    requestPermissionsIfNeeded {
-                        launchCamera()
-                    }
+                    requestPermissionsIfNeeded { launchCamera() }
                 }
-
                 override fun onSelectFromAlbumSelected() {
-                    requestPermissionsIfNeeded {
-                        launchGallery()
-                    }
+                    requestPermissionsIfNeeded { launchGallery() }
                 }
             })
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
-//        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-//            if (success && cameraImageUri != null) {
-//                photoList.add(cameraImageUri!!)
-//                reviewPhotoAdapter.notifyItemInserted(photoList.lastIndex)
-//                binding.reviewPicShowLl.visibility = View.VISIBLE
-//            }
-//        }
-//
-//        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-//            uri?.let {
-//                photoList.add(it)
-//                reviewPhotoAdapter.notifyItemInserted(photoList.lastIndex)
-//                binding.reviewPicShowLl.visibility = View.VISIBLE
-//            }
-//        }
 
         // 별점 평가
         val starViews = listOf(
@@ -120,7 +104,7 @@ class ReviewWriteActivity:AppCompatActivity() {
             binding.starEmpty5Iv
         )
 
-        // ⭐ 2. 각 별에 클릭 리스너 세팅
+        // 2. 각 별에 클릭 리스너 세팅
         starViews.forEachIndexed { index, imageView ->
             imageView.setOnClickListener {
                 selectedRating = index + 1            // 1~5점
@@ -131,11 +115,13 @@ class ReviewWriteActivity:AppCompatActivity() {
 
         // 후기 등록하기 버튼
         binding.reviewApplyTv.setOnClickListener {
+            sendReviewToServer()
             //유효성 검사 필요
             ReviewSubmittedDialog {
                 finish()
             }.show(supportFragmentManager, "review_done")
         }
+
         // 리뷰 작성 영역 선택시 클릭 리스너
         binding.reviewContentLl.setOnClickListener {
             binding.reviewContentLl.setBackgroundResource(R.drawable.round_style_review_selected)
@@ -161,6 +147,17 @@ class ReviewWriteActivity:AppCompatActivity() {
         } else {
             permissionLauncher.launch(notGranted.toTypedArray())
         }
+    }
+
+    private fun addPhoto(uri: Uri) {
+        photoList.add(uri)
+        reviewPhotoAdapter.notifyItemInserted(photoList.lastIndex)
+        togglePhotoSection()
+    }
+
+    private fun togglePhotoSection() {
+        binding.reviewPicShowLl.visibility =
+            if (photoList.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun launchCamera() {
@@ -192,6 +189,43 @@ class ReviewWriteActivity:AppCompatActivity() {
         } else {
             binding.reviewApplyDefaultTv.visibility = View.VISIBLE
             binding.reviewApplyTv.visibility = View.GONE
+        }
+    }
+
+    private fun sendReviewToServer(){
+        // 입력값 수집
+        val roomId = intent.getLongExtra("roomId", -1)   // 전달받은 방 ID
+        val contents = binding.reviewContentLl.text.toString().trim()
+        val score = selectedRating
+
+        if (roomId == -1L || contents.isEmpty() || score == 0) {
+            Toast.makeText(this, "내용과 별점을 모두 입력하세요", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val body = ReviewRequest(
+            roomId = roomId,
+            imageUrl = uploadedImageUrl,
+            contents = contents,
+            score = score
+        )
+
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.reviewService.postReview(body)
+                if (response.isSuccessful) {
+                    Toast.makeText(this@ReviewWriteActivity, "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                    finish()    // 작성 화면 종료 → 이전 액티비티로
+                } else {
+                    Toast.makeText(this@ReviewWriteActivity,
+                        "등록 실패: ${response.code()}",
+                        Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@ReviewWriteActivity,
+                    "네트워크 오류: ${e.localizedMessage}",
+                    Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
