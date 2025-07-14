@@ -17,12 +17,10 @@ class ReviewDeleteAskDialog ( private val onConfirm: () -> Unit) : DialogFragmen
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        binding!!.reviewDeleteCancelTv.setOnClickListener {
+        binding!!.reviewDeleteCancelTv.setOnClickListener { dismiss() }
+        binding!!.reviewDeleteConfirmTv.setOnClickListener {
             onConfirm()
             dismiss()
-        }
-        binding!!.reviewDeleteConfirmTv.setOnClickListener {
-            // 삭제 기능 구현 필요
         }
         return dialog
     }

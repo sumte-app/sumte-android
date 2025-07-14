@@ -2,6 +2,7 @@ package com.example.sumte
 
 data class MyReviewPage(
     val totalPages: Int,
+    val totalElements: Int,
     val content: List<MyReview>
 )
 

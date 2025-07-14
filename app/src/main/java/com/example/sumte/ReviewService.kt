@@ -2,8 +2,10 @@ package com.example.sumte
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 data class ReviewRequest(
@@ -33,4 +35,7 @@ interface ReviewService {
         @Query("size") size: Int = 10,
         @Query("sort") sort: String = "createdAt,DESC"
     ): Response<MyReviewPage>
+
+    @DELETE("/api/reviews/{id}")
+    suspend fun deleteReview(@Path("id") reviewId: Long): Response<Unit>
 }

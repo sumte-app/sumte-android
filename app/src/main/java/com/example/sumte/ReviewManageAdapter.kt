@@ -3,11 +3,13 @@ package com.example.sumte
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sumte.databinding.ItemReviewBinding
 
-class ReviewManageAdapter:RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHolder>() {
+class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHolder>() {
     private val items = mutableListOf<MyReview>()
 
     // 외부에서 새 리스트 넣어줄 때 호출
@@ -15,6 +17,16 @@ class ReviewManageAdapter:RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHol
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()
+    }
+    fun setItems(newList:List<MyReview>){
+        items.clear()
+        items.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+    fun removeItem(pos: Int) {
+        items.removeAt(pos)
+        notifyItemRemoved(pos)
     }
 
     inner class ReviewViewHolder(private val binding: ItemReviewBinding):RecyclerView.ViewHolder(binding.root){
@@ -36,15 +48,20 @@ class ReviewManageAdapter:RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHol
             // 사진 부분
 //            itemReviewContentTv.text=item.contents
 //            Glide.with(root).load(item.imageUrl)
-//                .placeholder(R.drawable.placeholder)
-//                .error(R.drawable.placeholder)
-//                .into(reviewThubIv)
+//                .placeholder(R.drawable.like_house2)
+//                .error(R.drawable.like_house2)
+//                .into(photoImageView)
 
             itemReviewEditIv.setOnClickListener {
 
             }
             itemReviewDeleteTv.setOnClickListener {
-
+                ReviewDeleteAskDialog(
+                    onConfirm = {
+                        (fragment as? ReviewManage)
+                            ?.deleteReview(item.id, adapterPosition)
+                    }
+                ).show(fragment.parentFragmentManager, "review_delete_ask")
             }
         }
 
