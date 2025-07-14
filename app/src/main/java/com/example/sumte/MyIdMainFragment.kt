@@ -20,10 +20,11 @@ class MyIdMainFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val fragment = MyIdEditFragment()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.my_id_container, fragment)
-            .commit()
+        binding.editBtn.setOnClickListener {
+            val fragment = MyIdEditFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.my_id_container, fragment)
+                .commit()
+        }
     }
-
 }
