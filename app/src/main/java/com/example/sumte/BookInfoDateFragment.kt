@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.sumte.databinding.CalendarDayLayoutBinding
 import com.example.sumte.databinding.FragmentBookInfoDateBinding
 import com.kizitonwose.calendar.core.CalendarDay
@@ -17,9 +18,13 @@ import com.kizitonwose.calendar.view.ViewContainer
 import java.time.ZoneId
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class BookInfoDateFragment : Fragment() {
     lateinit var binding: FragmentBookInfoDateBinding
+    private val viewModel: BookInfoViewModel by activityViewModels()
+
     val seoulZone = ZoneId.of("Asia/Seoul")
     private var startDate: LocalDate? = LocalDate.now(seoulZone)
     private var endDate: LocalDate? = LocalDate.now(seoulZone).plusDays(1)
@@ -36,6 +41,27 @@ class BookInfoDateFragment : Fragment() {
     private var currentYearMonth: YearMonth = YearMonth.now()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val start = viewModel.startDate
+        val end = viewModel.endDate
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
+
+        // 날짜 텍스트 (종료일 쉼표 포함)
+        binding.startDate.text = start.format(formatter)
+        binding.endDate.text = "${end.format(formatter)},"
+        binding.dateCount.text = "${nights}박"
+
+        // 인원수 텍스트
+        val adultCount = viewModel.adultCount
+        val childCount = viewModel.childCount
+
+        // XML 구조에 맞게 "성인 1", ", 아동 1" 형식으로 텍스트 설정
+        binding.adultCount.text = "성인 $adultCount"
+        binding.childCount.text = if (childCount > 0) ", 아동 $childCount" else ""
+
+
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
         }
@@ -148,6 +174,11 @@ class BookInfoDateFragment : Fragment() {
                         binding.endDate.text = ""
                         binding.dateCount.text = ""
                     }
+                    if (startDate != null && endDate != null) {
+                        viewModel.startDate = startDate!!
+                        viewModel.endDate = endDate!!
+                    }
+
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
@@ -185,17 +216,5 @@ class BookInfoDateFragment : Fragment() {
                 .replace(R.id.book_info_container, fragment)
                 .addToBackStack(null)
                 .commit()
-        }
-
-        //추후보수
-        val currentDay = LocalDate.now(seoulZone)
-        val currentMonth = YearMonth.now(seoulZone)
-        val dayOfWeekKor = getKoreanDayOfWeek(currentDay)
-        val endPlusOne = currentDay.plusDays(1)
-        val endDayOfWeekKor = getKoreanDayOfWeek(endPlusOne)
-
-        binding.startDate.text = String.format("%d.%02d %s", currentDay.monthValue, currentDay.dayOfMonth, dayOfWeekKor)
-        binding.endDate.text = String.format("%d.%02d %s,", endPlusOne.monthValue, endPlusOne.dayOfMonth, endDayOfWeekKor)
-        binding.todayMonthText.text = String.format("%d.%02d", currentMonth.year, currentMonth.monthValue)
-    }
+        }}
 }
