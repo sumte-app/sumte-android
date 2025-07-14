@@ -14,6 +14,12 @@ data class ReviewRequest(
 )
 
 interface ReviewService {
+    @GET("/s3/presigned-url")
+    suspend fun getPresignedUrl(
+        @Query("fileName")   fileName: String,
+        @Query("contentType") contentType: String
+    ): Response<String>           // presigned URL 문자열 그대로 반환한다고 가정
+
     // 후기 등록
     @POST("/api/reviews")
     suspend fun postReview(
