@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="서귀포 섬게스트하우스"
+        android:textColor="@color/gray900"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginTop="8dp" />
@@ -43,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="19,000원~"
+        android:textColor="@color/gray900"
         android:textSize="14sp"
         android:textStyle="bold"
         android:gravity="end"
