@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
-        binding.searchBox.setOnClickListener {
+        binding.searchBoxLl.setOnClickListener {
             (activity as? MainActivity)?.navigateToSearchFragment()
         }
 
