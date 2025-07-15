@@ -19,6 +19,7 @@ import java.time.ZoneId
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class BookInfoDateFragment : Fragment() {
@@ -60,18 +61,6 @@ class BookInfoDateFragment : Fragment() {
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
-        }
-
-        fun getKoreanDayOfWeek(date: LocalDate): String {
-            return when (date.dayOfWeek) {
-                java.time.DayOfWeek.MONDAY -> "월"
-                java.time.DayOfWeek.TUESDAY -> "화"
-                java.time.DayOfWeek.WEDNESDAY -> "수"
-                java.time.DayOfWeek.THURSDAY -> "목"
-                java.time.DayOfWeek.FRIDAY -> "금"
-                java.time.DayOfWeek.SATURDAY -> "토"
-                java.time.DayOfWeek.SUNDAY -> "일"
-            }
         }
 
         binding.customCalendar.dayBinder = object : MonthDayBinder<DayViewContainer>{
@@ -155,26 +144,27 @@ class BookInfoDateFragment : Fragment() {
                         }
                     }
 
+                    //val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
                     startDate?.let {
-                        val startDayKor = getKoreanDayOfWeek(it)
-                        binding.startDate.text = String.format("%d.%02d %s", it.monthValue, it.dayOfMonth, startDayKor)
+                        binding.startDate.text = it.format(formatter)
                     }
+
                     if (endDate != null) {
                         endDate?.let {
-                            val endDayKor = getKoreanDayOfWeek(it)
-                            binding.endDate.text = String.format("%d.%02d %s", it.monthValue, it.dayOfMonth, endDayKor)
+                            binding.endDate.text = it.format(formatter)
                         }
-                        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+                        val nights = ChronoUnit.DAYS.between(startDate, endDate)
                         binding.dateCount.text = ", ${nights}박"
                     } else {
                         binding.endDate.text = ""
                         binding.dateCount.text = ""
                     }
+
                     if (startDate != null && endDate != null) {
                         viewModel.startDate = startDate!!
                         viewModel.endDate = endDate!!
                     }
-
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
