@@ -3,6 +3,8 @@ package com.example.sumte
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivitySplashBinding
 
