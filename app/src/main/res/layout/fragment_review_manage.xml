@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="후기 관리"
+            android:textColor="@color/gray900"
             android:textStyle="bold"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/review_manage_arrow_iv"
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="내가 남긴 후기 "
+            android:textColor="@color/gray900"
             android:textStyle="bold"
             android:textSize="18sp"/>
         <TextView
@@ -65,12 +67,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/gray900"
             android:textStyle="bold"
             android:textSize="18sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="개"
+            android:textColor="@color/gray900"
             android:textStyle="bold"
             android:textSize="18sp"/>
     </LinearLayout>
