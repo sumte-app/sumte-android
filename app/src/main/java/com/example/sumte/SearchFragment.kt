@@ -30,6 +30,12 @@ class SearchFragment : Fragment() {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             startActivity(intent)
         }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
+
         fun getKoreanDayOfWeek(date: LocalDate): String {
             return when (date.dayOfWeek) {
                 java.time.DayOfWeek.MONDAY -> "월"
@@ -50,4 +56,5 @@ class SearchFragment : Fragment() {
         binding.startDate.text = String.format("%d.%02d %s", currentDay.monthValue, currentDay.dayOfMonth, dayOfWeekKor)
         binding.endDate.text = String.format("%d.%02d %s,", endPlusOne.monthValue, endPlusOne.dayOfMonth, endDayOfWeekKor)
     }
+
 }

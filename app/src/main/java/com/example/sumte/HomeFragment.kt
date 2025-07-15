@@ -22,9 +22,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding=FragmentHomeBinding.inflate(inflater, container, false)
-//        binding.searchText.setOnClickListener{
-//            Toast.makeText(requireContext(), "검색창 클릭됨", Toast.LENGTH_SHORT).show()
-//        }
         return binding.root
     }
 
@@ -41,5 +38,10 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = GuestHouseAdapter(guestList)
         }
+        binding.searchBox.setOnClickListener {
+            (activity as? MainActivity)?.navigateToSearchFragment()
+        }
+
+
     }
 }
