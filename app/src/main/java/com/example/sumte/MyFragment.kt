@@ -29,5 +29,10 @@ class MyFragment : Fragment(){
             val intent = Intent(requireContext(), MyIdActivity::class.java)
             startActivity(intent)
         }
+        binding.myBookingBox.setOnClickListener {
+            val intent = Intent(requireContext(), BookedListActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }

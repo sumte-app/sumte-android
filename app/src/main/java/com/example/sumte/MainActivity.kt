@@ -1,11 +1,9 @@
 package com.example.sumte
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.sumte.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,9 +15,21 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         initBottomNavigation()
 
-//        SearchResultAcitivty 실행용
-//        val intent = Intent(this, SearchResultActivity::class.java)
-//        startActivity(intent)
+        supportFragmentManager.addOnBackStackChangedListener {
+            val current = supportFragmentManager.findFragmentById(R.id.main_container)
+
+            binding.bottomNavView.visibility =
+                if (current is SearchFragment) View.GONE else View.VISIBLE
+
+            val targetId = when (current) {
+                is HomeFragment    -> R.id.fragment_home
+                is LikeFragment -> R.id.fragment_favorite
+                is MyFragment -> R.id.fragment_my
+                else               -> return@addOnBackStackChangedListener
+            }
+            binding.bottomNavView.menu.findItem(targetId).isChecked = true
+        }
+
     }
 
     private fun initBottomNavigation(){
@@ -33,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.fragment_search -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_container, SearchFragment()).commitAllowingStateLoss()
+                    navigateToSearchFragment()
                     true
                 }
                 R.id.fragment_favorite -> {
@@ -48,7 +58,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    fun selectBottomNavItem(itemId: Int) {
-        binding.bottomNavView.selectedItemId = itemId
+    fun navigateToSearchFragment() {
+        val fragment = SearchFragment()
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,
+                R.anim.slide_out_right
+            )
+            .replace(R.id.main_container, fragment)
+            .addToBackStack(null)
+            .commitAllowingStateLoss()
+
     }
+
 }
