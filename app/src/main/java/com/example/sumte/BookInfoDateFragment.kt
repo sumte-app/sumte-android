@@ -26,8 +26,8 @@ class BookInfoDateFragment : Fragment() {
     private val viewModel: BookInfoViewModel by activityViewModels()
 
     val seoulZone = ZoneId.of("Asia/Seoul")
-    private var startDate: LocalDate? = LocalDate.now(seoulZone)
-    private var endDate: LocalDate? = LocalDate.now(seoulZone).plusDays(1)
+    private var startDate: LocalDate? = null
+    private var endDate: LocalDate? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,24 +43,20 @@ class BookInfoDateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+        startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
+        endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
 
-        val start = viewModel.startDate
-        val end = viewModel.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
 
-        // 날짜 텍스트 (종료일 쉼표 포함)
-        binding.startDate.text = start.format(formatter)
-        binding.endDate.text = "${end.format(formatter)},"
-        binding.dateCount.text = "${nights}박"
+        binding.startDate.text = startDate!!.format(formatter)
+        binding.endDate.text = "${endDate!!.format(formatter)}"
+        binding.dateCount.text = ", ${nights}박"
 
-        // 인원수 텍스트
         val adultCount = viewModel.adultCount
         val childCount = viewModel.childCount
 
-        // XML 구조에 맞게 "성인 1", ", 아동 1" 형식으로 텍스트 설정
         binding.adultCount.text = "성인 $adultCount"
         binding.childCount.text = if (childCount > 0) ", 아동 $childCount" else ""
-
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -166,10 +162,10 @@ class BookInfoDateFragment : Fragment() {
                     if (endDate != null) {
                         endDate?.let {
                             val endDayKor = getKoreanDayOfWeek(it)
-                            binding.endDate.text = String.format("%d.%02d %s,", it.monthValue, it.dayOfMonth, endDayKor)
+                            binding.endDate.text = String.format("%d.%02d %s", it.monthValue, it.dayOfMonth, endDayKor)
                         }
                         val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-                        binding.dateCount.text = "${nights}박"
+                        binding.dateCount.text = ", ${nights}박"
                     } else {
                         binding.endDate.text = ""
                         binding.dateCount.text = ""
@@ -216,5 +212,6 @@ class BookInfoDateFragment : Fragment() {
                 .replace(R.id.book_info_container, fragment)
                 .addToBackStack(null)
                 .commit()
-        }}
+        }
+    }
 }

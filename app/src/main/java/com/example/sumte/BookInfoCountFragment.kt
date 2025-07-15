@@ -34,8 +34,8 @@ class BookInfoCountFragment : Fragment() {
         val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
 
         binding.startDate.text = start.format(formatter)
-        binding.endDate.text = "${end.format(formatter)},"
-        binding.dateCount.text = "${nights}박"
+        binding.endDate.text = "${end.format(formatter)}"
+        binding.dateCount.text = ", ${nights}박"
 
         var adultCount = viewModel.adultCount
         var childCount = viewModel.childCount
