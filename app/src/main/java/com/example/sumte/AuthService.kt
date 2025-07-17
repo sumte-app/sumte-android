@@ -6,7 +6,7 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-    @POST("auth/login")  // baseUrl + "auth/login" => 전체 URL
+    @POST("users/login")  // baseUrl + "auth/login" => 전체 URL
     suspend fun login(
         @Body request: LoginRequest
     ): Response<LoginResponse>

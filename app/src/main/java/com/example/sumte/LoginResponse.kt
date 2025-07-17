@@ -1,7 +1,12 @@
 package com.example.sumte
 
 data class LoginResponse(
-    val token: String,
-    val userId: Long,
-    val userName: String
+    val success: Boolean,
+    val code: String,
+    val message: String,
+    val data: LoginData?
+)
+
+data class LoginData(
+    val accessToken: String
 )

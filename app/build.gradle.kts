@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id ("kotlin-parcelize")
+    id("org.jetbrains.kotlin.kapt")
+
 }
 
 android {
@@ -55,6 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.places)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,4 +75,8 @@ dependencies {
 
     // OkHttp 로깅 (디버깅 시 유용)
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Glide (이미지 로딩용)
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
 }
