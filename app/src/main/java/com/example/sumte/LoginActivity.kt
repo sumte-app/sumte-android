@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -38,27 +39,30 @@ class LoginActivity : AppCompatActivity() {
         binding.etEmail.setBackgroundResource(R.drawable.edittext_selector)
         binding.etPassword.setBackgroundResource(R.drawable.edittext_selector)
 
-        //서버 닫혀있을 때
-        authService = if (BuildConfig.DEBUG) {
-            object : AuthService {
-                override suspend fun login(request: LoginRequest): retrofit2.Response<LoginResponse> {
-                    kotlinx.coroutines.delay(1000) // 네트워크 대기 시뮬레이션
 
-                    return if (request.email == "test@example.com" && request.password == "Test123!") {
-                        val fakeResponse = LoginResponse(
-                            token = "mock-token-1234",
-                            userId = 1L,
-                            userName = "테스트유저"
-                        )
-                        Response.success(fakeResponse)
-                    } else {
-                        Response.error(401, okhttp3.ResponseBody.create(null, "Unauthorized"))
-                    }
-                }
-            }
-        } else {
-            RetrofitClient.instance.create(AuthService::class.java)
-        }
+        authService = RetrofitClient.instance.create(AuthService::class.java)
+
+        //서버 닫혀있을 때
+//        authService = if (BuildConfig.DEBUG) {
+//            object : AuthService {
+//                override suspend fun login(request: LoginRequest): retrofit2.Response<LoginResponse> {
+//                    kotlinx.coroutines.delay(1000) // 네트워크 대기 시뮬레이션
+//
+//                    return if (request.email == "test@example.com" && request.password == "Test123!") {
+//                        val fakeResponse = LoginResponse(
+//                            token = "mock-token-1234",
+//                            userId = 1L,
+//                            userName = "테스트유저"
+//                        )
+//                        Response.success(fakeResponse)
+//                    } else {
+//                        Response.error(401, okhttp3.ResponseBody.create(null, "Unauthorized"))
+//                    }
+//                }
+//            }
+//        } else {
+//            RetrofitClient.instance.create(AuthService::class.java)
+//        }
 
         //포커스 초기화
         binding.root.setOnClickListener {
@@ -106,8 +110,8 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            //login(email, password)
-            fakeLogin(email, password)
+            login(email, password)
+
         }
 
         // 포커스 변경 시 에러 리셋
@@ -158,29 +162,40 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(email: String, password: String) {
-        val loginRequest = LoginRequest(email, password)
+        val loginRequest = LoginRequest(loginId = email, password = password)
 
         lifecycleScope.launch {
             try {
                 val response = authService.login(loginRequest)
                 if (response.isSuccessful) {
                     val body = response.body()
-                    val token = body?.token ?: ""
-                    // 토큰 저장
-                    getSharedPreferences("auth", MODE_PRIVATE)
-                        .edit()
-                        .putString("access_token", token)
-                        .apply()
 
-                    Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    Log.d("LoginResponse", "서버 메시지: ${body?.message}")
 
-                    // 메인 화면 이동
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                    finish()
+                    if (body != null && body.success) {
+                        val token = body.data?.accessToken ?: ""
+
+
+                        getSharedPreferences("auth", MODE_PRIVATE)
+                            .edit()
+                            .putString("access_token", token)
+                            .apply()
+
+                        Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+
+
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    } else {
+                        showCustomErrorDialog()
+                    }
                 } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("LoginResponse", "실패 응답: $errorBody")
                     showCustomErrorDialog()
                 }
             } catch (e: Exception) {
+                Log.e("LoginError", "서버 오류: ${e.localizedMessage}")
                 Toast.makeText(this@LoginActivity, "서버 오류: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         }
