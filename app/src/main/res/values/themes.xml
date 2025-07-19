@@ -9,6 +9,12 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="Signup.Sumte" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+
+
     <style name="Theme.RangeSlider" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>
 </resources>

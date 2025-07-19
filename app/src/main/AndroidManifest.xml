@@ -42,6 +42,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EmailInputActivity" />
+        <activity android:name=".VerificationInputActivity" />
+        <activity android:name=".PasswordInputActivity" />
+        <activity android:name=".SignupProfileActivity" />
+        <activity android:name=".SignupCompleteActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
