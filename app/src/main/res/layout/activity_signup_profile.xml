@@ -120,17 +120,41 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/birth_error_arrow"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        android:src="@drawable/arrow_curve_left_right"
+        app:layout_constraintTop_toBottomOf="@id/birthLayout"
+        app:layout_constraintStart_toStartOf="@id/birthLayout"
+        android:layout_marginTop="8dp"
+        />
+    <TextView
+        android:id="@+id/birth_error_text"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        android:text="만 19세 미만은 가입이 불가합니다."
+        android:textColor="#FF2327"
+        android:textSize="12sp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toEndOf="@id/birth_error_arrow"
+        app:layout_constraintTop_toTopOf="@id/birth_error_arrow"
+        app:layout_constraintWidth_percent="0.9"
+        />
+
     <TextView
         android:id="@+id/labelGender"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:text="성별"
         android:textColor="@color/black"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/birthLayout"
+        app:layout_constraintTop_toBottomOf="@id/birth_error_arrow"
         app:layout_constraintWidth_percent="0.9" />
 
     <RadioGroup
@@ -173,7 +197,7 @@
         android:id="@+id/labelNickname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:text="닉네임"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -195,6 +219,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/labelNickname"
         app:layout_constraintWidth_percent="0.9" />
+
+    <ImageView
+        android:id="@+id/nickname_error_arrow"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        android:src="@drawable/arrow_curve_left_right"
+        app:layout_constraintTop_toBottomOf="@id/etNickname"
+        app:layout_constraintStart_toStartOf="@id/etNickname"
+        android:layout_marginTop="8dp"
+        />
+    <TextView
+        android:id="@+id/nickname_error_text"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:visibility="gone"
+        android:text="이미 사용 중인 닉네임입니다."
+        android:textColor="#FF2327"
+        android:textSize="12sp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toEndOf="@id/nickname_error_arrow"
+        app:layout_constraintTop_toTopOf="@id/nickname_error_arrow"
+        app:layout_constraintWidth_percent="0.9"
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSubmit"
