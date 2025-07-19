@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class GuestHouseAdapter(
-    private val items: List<GuestHouse>
+    private val items: List<GuestHouse>,
+    private val onItemClick: (GuestHouse) -> Unit
 ) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
@@ -33,6 +34,11 @@ class GuestHouseAdapter(
             location.text = guestHouse.location
             price.text = guestHouse.price
             houseIv.setImageResource(guestHouse.imageResId)
+
+            //클릭 이벤트
+            root.setOnClickListener {
+                onItemClick(guestHouse)
+            }
         }
     }
 }

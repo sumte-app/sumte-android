@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
 
 object RetrofitClient {
-    private const val BASE_URL = ""
+    private const val BASE_URL = "https://sumteapi.duckdns.org/"
 
     val instance: Retrofit by lazy {
         Retrofit.Builder()
