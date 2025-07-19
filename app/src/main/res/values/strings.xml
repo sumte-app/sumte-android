@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">숨터</string>
+    <string name="review_write_hint">
+        숙소를 이용하면서 느낀 점을 들려주세요.\n객실 상태, 주변 환경, 호스트의 응대 등 다음 여행자에게\n도움이 될 수 있도록 후기를 남겨주세요.
+    </string>
+    <string name="review_delete_ask">
+        후기를 삭제하시면 재작성이 불가합니다.\n삭제하시겠습니까?
+    </string>
+    <string name="review_submitted">
+        소중한 후기를 남겨주셔서 감사합니다.\n다른 사용자들에게 큰 도움이 될 거예요!
+    </string>
 </resources>

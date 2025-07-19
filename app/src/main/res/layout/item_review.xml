@@ -20,7 +20,7 @@
             android:text="제주 고고애월 게스트 하우스"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/gray900"
             app:layout_constraintStart_toStartOf="@+id/item_review_cl"
             app:layout_constraintTop_toTopOf="@+id/item_review_cl"/>
         <ImageView
