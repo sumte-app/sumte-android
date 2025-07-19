@@ -22,13 +22,11 @@ interface ReviewService {
         @Query("contentType") contentType: String
     ): Response<String>           // presigned URL 문자열 그대로 반환한다고 가정
 
-    // 후기 등록
     @POST("/api/reviews")
     suspend fun postReview(
         @Body body: ReviewRequest
-    ): Response<Unit>        // 응답 JSON이 있으면 dto로 교체
+    ): Response<Unit>
 
-    // 내가 쓴 후기 목록 불러오기
     @GET("/api/reviews/myreviews")
     suspend fun getMyReviews(
         @Query("page") page: Int = 0,
