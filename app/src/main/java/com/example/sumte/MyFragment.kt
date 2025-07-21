@@ -33,6 +33,10 @@ class MyFragment : Fragment(){
             val intent = Intent(requireContext(), BookedListActivity::class.java)
             startActivity(intent)
         }
+        binding.myReviewBox.setOnClickListener {
+            val intent = Intent(requireContext(), MyReviewActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 }

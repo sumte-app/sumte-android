@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Sumte"
         tools:targetApi="31">
         <activity
+            android:name=".MyReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookedListActivity"
             android:exported="false" />
         <activity
