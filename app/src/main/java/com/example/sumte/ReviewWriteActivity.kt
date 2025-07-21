@@ -130,7 +130,7 @@ class ReviewWriteActivity:AppCompatActivity() {
             }.show(supportFragmentManager, "review_done")
         }
 
-        // 리뷰 작성 영역 선택시 클릭 리스너
+        // 리뷰 작성 영역 선택시 테두리 검정색으로 변경
         binding.reviewContentLl.setOnClickListener {
             binding.reviewContentLl.setBackgroundResource(R.drawable.round_style_review_selected)
         }

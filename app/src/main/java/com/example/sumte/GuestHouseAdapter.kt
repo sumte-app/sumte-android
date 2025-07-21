@@ -10,8 +10,10 @@ import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class GuestHouseAdapter(
     private val items: List<GuestHouse>,
-    private val onItemClick: (GuestHouse) -> Unit
+    private val onItemClick: (GuestHouse) -> Unit,
+    private val onHeartClick: (GuestHouse) -> Unit
 ) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
+
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -30,14 +32,18 @@ class GuestHouseAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val guestHouse = items[position]
         with(holder.binding) {
-            title.text = guestHouse.title
-            location.text = guestHouse.location
-            price.text = guestHouse.price
-            houseIv.setImageResource(guestHouse.imageResId)
+            guesthouseTitleTv.text = guestHouse.title
+            guesthouseLocationTv.text = guestHouse.location
+            guesthousePriceTv.text = guestHouse.price
+            guesthouseIv.setImageResource(guestHouse.imageResId)
 
             //클릭 이벤트
             root.setOnClickListener {
                 onItemClick(guestHouse)
+            }
+
+            guesthouseHeartIv.setOnClickListener {
+                onHeartClick(guestHouse)
             }
         }
     }

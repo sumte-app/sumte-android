@@ -5,5 +5,6 @@ data class GuestHouse(
     val location: String,
     val price: String,
     val imageResId: Int,
+    val time: String,
     val id: String=""
 )

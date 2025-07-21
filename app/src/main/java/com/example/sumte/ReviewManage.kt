@@ -40,32 +40,6 @@ class ReviewManage: Fragment() {
         loadUserReviews()
     }
 
-//    fun loadUserReviews() {
-//        lifecycleScope.launch {
-//            try {
-//                val response = ApiClient.reviewService.getMyReviews()
-//                if (response.isSuccessful) {
-//                    val body = response.body()
-//                    if (body != null) {
-//                        val reviewList = body.content
-//                        val totalCount = body.totalElements
-//
-//                        binding.reviewMyreviewCountTv.text = totalCount.toString()
-//                        // 어댑터에 데이터 전달
-////                        val adapter = ReviewManageAdapter()
-////                        binding.reviewManageRv.adapter = adapter
-////                        binding.reviewManageRv.layoutManager = LinearLayoutManager(requireContext())
-//                        adapter.setItems(reviewList)
-//                    }
-//                } else {
-//                    Toast.makeText(requireContext(), "리뷰 불러오기 실패", Toast.LENGTH_SHORT).show()
-//                }
-//            } catch (e: Exception) {
-//                Toast.makeText(requireContext(), "네트워크 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-
     fun loadUserReviews() {
         lifecycleScope.launch {
             try {
