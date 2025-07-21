@@ -61,4 +61,8 @@ object ApiClient {
     val reviewService: ReviewService by lazy {
         retrofit.create(ReviewService::class.java)
     }
+
+    val favoriteService: FavoriteService by lazy {
+        retrofit.create(FavoriteService::class.java)
+    }
 }

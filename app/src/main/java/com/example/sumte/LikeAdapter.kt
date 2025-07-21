@@ -1,30 +1,22 @@
 package com.example.sumte
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
-class GuestHouseAdapter(
+class LikeAdapter(
     private val items: List<GuestHouse>,
-    private val viewModel: GuestHouseViewModel,
-    private val onItemClick: (GuestHouse) -> Unit
-//    private val onHeartClick: (GuestHouse) -> Unit
-) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
-
+    private val viewModel: GuestHouseViewModel
+) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGuesthouseBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return ViewHolder(binding)
     }
@@ -39,25 +31,14 @@ class GuestHouseAdapter(
             guesthousePriceTv.text = guestHouse.price
             guesthouseIv.setImageResource(guestHouse.imageResId)
 
-            val isLiked = viewModel.isLiked(guestHouse)
             guesthouseHeartIv.setImageResource(
-                if (isLiked) R.drawable.heart_home_filled else R.drawable.heart_home_empty
+                if (viewModel.isLiked(guestHouse)) R.drawable.heart_home_filled else R.drawable.heart_home_empty
             )
-
-            //클릭 이벤트
-            root.setOnClickListener {
-                onItemClick(guestHouse)
-            }
 
             guesthouseHeartIv.setOnClickListener {
                 viewModel.toggleLike(guestHouse)
-//                onHeartClick(guestHouse)
-                val position = holder.adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    notifyItemChanged(position)
-                }
+                notifyItemRemoved(position)
             }
         }
     }
 }
-
