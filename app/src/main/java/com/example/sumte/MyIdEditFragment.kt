@@ -27,32 +27,42 @@ class MyIdEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.editNickname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val isEmpty = s.isNullOrEmpty()
-                showError(isEmpty)
+                val text = s?.toString() ?: ""
+
+                if (text.isEmpty()) {
+                    showError(true, "닉네임을 입력해 주세요")
+                } else if (!text.matches(Regex("^[가-힣a-zA-Z0-9]{2,8}$"))) {
+                    showError(true, "닉네임은 2~8자 한글/영문/숫자만 가능합니다.")
+                } else {
+                    showError(false)
+                }
             }
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
 
     }
 
-    fun showError(isError: Boolean) {
+    fun showError(isError: Boolean, message: String = "") {
         if (isError) {
             binding.editNickname.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.red)
             )
             binding.errorSign.visibility = View.VISIBLE
+            binding.errorTxt.text = message
         } else {
             binding.editNickname.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.black)
             )
             binding.errorSign.visibility = View.GONE
+            binding.errorTxt.text = ""
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

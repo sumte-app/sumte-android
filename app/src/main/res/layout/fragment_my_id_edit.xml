@@ -101,6 +101,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_box">
 
         <LinearLayout
+            android:id="@+id/apply_box"
             android:layout_width="88dp"
             android:layout_height="38dp"
             android:layout_marginStart="24dp"
@@ -116,10 +117,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/cancel_box"
             android:layout_width="88dp"
             android:layout_height="38dp"
             android:gravity="center">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
