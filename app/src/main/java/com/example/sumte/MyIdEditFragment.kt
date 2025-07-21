@@ -45,6 +45,13 @@ class MyIdEditFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.removeBtn.setOnClickListener {
+            binding.editNickname.setText("")
+        }
+        binding.cancelText.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
     }
 
     fun showError(isError: Boolean, message: String = "") {
@@ -53,13 +60,13 @@ class MyIdEditFragment : Fragment() {
                 ContextCompat.getColor(requireContext(), R.color.red)
             )
             binding.errorSign.visibility = View.VISIBLE
-            binding.errorTxt.text = message
+            binding.errorText.text = message
         } else {
             binding.editNickname.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.black)
             )
             binding.errorSign.visibility = View.GONE
-            binding.errorTxt.text = ""
+            binding.errorText.text = ""
         }
     }
 
