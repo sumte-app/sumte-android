@@ -34,9 +34,8 @@ class MyFragment : Fragment(){
             startActivity(intent)
         }
         binding.myReviewBox.setOnClickListener {
-            val intent = Intent(requireContext(), MyReviewActivity::class.java)
+            val intent = Intent(requireContext(), ReviewManageActivity::class.java)
             startActivity(intent)
         }
-
     }
 }

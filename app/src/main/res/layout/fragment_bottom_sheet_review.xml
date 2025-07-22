@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
+    android:paddingBottom="24dp"
+    android:paddingTop="20dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
     android:background="@drawable/round_style_bottomsheet">
 
     <!-- 제목 및 닫기 버튼 -->
@@ -62,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="카메라로 촬영하기"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
@@ -89,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="앨범에서 선택하기"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
