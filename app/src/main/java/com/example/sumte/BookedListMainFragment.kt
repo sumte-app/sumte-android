@@ -20,5 +20,8 @@ class BookedListMainFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.backBtn.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 }

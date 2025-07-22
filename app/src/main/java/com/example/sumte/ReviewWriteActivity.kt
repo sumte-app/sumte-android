@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ActivityReviewWriteBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -112,10 +114,16 @@ class ReviewWriteActivity:AppCompatActivity() {
             binding.starEmpty5Iv
         )
 
-        // 2. 각 별에 클릭 리스너 세팅
+        // 각 별에 클릭 리스너
         starViews.forEachIndexed { index, imageView ->
             imageView.setOnClickListener {
-                selectedRating = index + 1            // 1~5점
+                selectedRating = if (selectedRating == index + 1) {
+                    // 현재 별이 선택된 마지막 별일 경우 → 한 단계 줄이기
+                    selectedRating - 1
+                } else {
+                    // 그 외는 해당 별까지 선택
+                    index + 1
+                }
                 updateStars(starViews, selectedRating)
                 updateApplyButton()
             }
@@ -130,10 +138,24 @@ class ReviewWriteActivity:AppCompatActivity() {
             }.show(supportFragmentManager, "review_done")
         }
 
-        // 리뷰 작성 영역 선택시 클릭 리스너
-        binding.reviewContentLl.setOnClickListener {
-            binding.reviewContentLl.setBackgroundResource(R.drawable.round_style_review_selected)
+        // 리뷰 작성 영역 선택시 테두리 검정색으로 변경
+        binding.reviewContentEt.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.reviewContentEt.setBackgroundResource(R.drawable.round_style_review_selected)
+            } else {
+                binding.reviewContentEt.setBackgroundResource(R.drawable.round_style_review_default)
+            }
         }
+        binding.root.setOnClickListener{
+            binding.reviewContentEt.clearFocus()
+            hideKeyboard()
+        }
+    }
+
+    //키보드 숨기기
+    private fun hideKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     private fun requestPermissionsIfNeeded(onGranted: () -> Unit) {
@@ -231,7 +253,7 @@ class ReviewWriteActivity:AppCompatActivity() {
 
     private fun sendReviewToServer() = lifecycleScope.launch {
         val roomId   = intent.getLongExtra("roomId", -1)
-        val contents = binding.reviewContentLl.text.toString().trim()
+        val contents = binding.reviewContentEt.text.toString().trim()
         val score    = selectedRating
 
         if (roomId == -1L || contents.isEmpty() || score == 0) {
