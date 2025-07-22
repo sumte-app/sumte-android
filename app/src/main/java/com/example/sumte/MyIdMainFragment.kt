@@ -24,6 +24,7 @@ class MyIdMainFragment : Fragment(){
             val fragment = MyIdEditFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.my_id_container, fragment)
+                .addToBackStack(null)
                 .commit()
         }
     }

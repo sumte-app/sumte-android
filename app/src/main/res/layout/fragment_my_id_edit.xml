@@ -13,9 +13,10 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,76 +29,136 @@
 
     <View
         android:id="@+id/my_boarder"
-        android:background="@color/gray100"
         android:layout_width="0dp"
         android:layout_height="1dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_text"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/top_text" />
 
-    <LinearLayout
-        android:id="@+id/text_edit_box"
+
+    <FrameLayout
+        android:id="@+id/edit_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="30dp"
         app:layout_constraintTop_toBottomOf="@+id/my_boarder">
 
-        <FrameLayout
+        <EditText
+            android:id="@+id/edit_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_marginHorizontal="24dp"
+            android:text="제주숨숨이"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/black"/>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:text="제주숨숨이"
-                android:textSize="22dp"
-                android:textStyle="bold"/>
+        <ImageView
+            android:id="@+id/remove_btn"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/cancel" />
+    </FrameLayout>
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/cancel"
-                android:layout_gravity="end|bottom"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"/>
-        </FrameLayout>
+    <LinearLayout
+        android:id="@+id/error_sign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/edit_box"
+        android:visibility="gone">  <!-- 초기엔 숨김 -->
+
+        <ImageView
+            android:id="@+id/error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_curve_left_right"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="닉네임을 입력해 주세요"
+            android:textColor="@color/red"
+            android:textSize="12sp" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/text_edit_box"
-        android:layout_marginTop="20dp">
+        app:layout_constraintTop_toBottomOf="@+id/edit_box">
+
         <LinearLayout
+            android:id="@+id/apply_box"
             android:layout_width="88dp"
             android:layout_height="38dp"
-            android:background="@drawable/round_style_my"
             android:layout_marginStart="24dp"
+            android:background="@drawable/round_style_my"
             android:gravity="center">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="확인"
-                android:textSize="14sp"/>
+                android:textColor="@color/gray400"
+                android:textSize="14sp" />
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/cancel_box"
             android:layout_width="88dp"
             android:layout_height="38dp"
-            android:background="@drawable/round_style_my"
             android:gravity="center">
             <TextView
+                android:id="@+id/cancel_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="취소"
-                android:textSize="14sp"/>
+                android:textColor="@color/gray400"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="391dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

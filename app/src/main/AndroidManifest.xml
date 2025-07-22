@@ -21,6 +21,9 @@
         <activity android:name=".ReviewManageActivity"
             android:exported="false"/>
         <activity
+            android:name=".MyReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookedListActivity"
             android:exported="false" />
         <activity
