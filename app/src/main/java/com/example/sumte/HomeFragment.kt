@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding=FragmentHomeBinding.inflate(inflater, container, false)
+        // ReviewWrite 실행을 위한 임시 클릭리스너
+        binding.mainLogoIv.setOnClickListener {
+            val intent = Intent(activity, ReviewWriteActivity::class.java)
+            startActivity(intent)
+        }
         return binding.root
     }
 
