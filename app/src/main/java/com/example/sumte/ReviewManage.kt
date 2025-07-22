@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.databinding.FragmentReviewManageBinding
+import kotlinx.coroutines.launch
 
 class ReviewManage: Fragment() {
-    lateinit var binding:FragmentReviewManageBinding
-
-//    private val databaseRef
-//    private val currentUserUid
+    private var _binding: FragmentReviewManageBinding? = null
+    private val binding get() = _binding!!
+    private val adapter by lazy{ReviewManageAdapter(this)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,45 +25,69 @@ class ReviewManage: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentReviewManageBinding.inflate(inflater, container, false)
+        _binding=FragmentReviewManageBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.reviewManageRv.adapter = adapter
+        binding.reviewManageRv.layoutManager = LinearLayoutManager(requireContext())
         loadUserReviews()
     }
 
-    fun loadUserReviews(){
-//        if(currentUserUid == null) return
-//        // "/reviews/{userUid}/" 아래에 후기들이 저장되어 있다고 가정
-//
-//        databaseRef.child("reviews").child(currentUserUid)
-//            .addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    val reviewList = mutableListOf<Review>()
-//
-//                    for (child in snapshot.children) {
-//                        val review = child.getValue(Review::class.java)
-//                        review?.let { reviewList.add(it) }
-//                    }
-//
-//                    if (reviewList.isEmpty()) {
-//                        binding.reviewManageRv.visibility = View.GONE
-//                        binding.reviewEmptyLayout.visibility = View.VISIBLE
-//                    } else {
-//                        binding.reviewManageRv.visibility = View.VISIBLE
-//                        binding.reviewEmptyLayout.visibility = View.GONE
-//
-//                        val adapter = ReviewAdapter(reviewList)
-//                        binding.reviewManageRv.layoutManager = LinearLayoutManager(requireContext())
+    fun loadUserReviews() {
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.reviewService.getMyReviews()
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        val reviewList = body.content
+                        val totalCount = body.totalElements
+
+                        binding.reviewMyreviewCountTv.text = totalCount.toString()
+                        // 어댑터에 데이터 전달
+//                        val adapter = ReviewManageAdapter()
 //                        binding.reviewManageRv.adapter = adapter
-//                    }
-//                }
-//
-////                override fun onCancelled(error: DatabaseError) {
-////                    Toast.makeText(requireContext(), "리뷰 로딩 실패", Toast.LENGTH_SHORT).show()
-////                }
-//            })
+//                        binding.reviewManageRv.layoutManager = LinearLayoutManager(requireContext())
+                        adapter.setItems(reviewList)
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "리뷰 불러오기 실패", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "네트워크 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+     fun deleteReview(reviewId: Long, position: Int) {
+        lifecycleScope.launch {
+            try {
+                val resp = ApiClient.reviewService.deleteReview(reviewId)
+                if (resp.isSuccessful) {
+                    // 로컬 리스트에서 제거
+                    adapter.removeItem(position)
+                    // 총 개수 텍스트뷰 갱신
+                    val newCount = adapter.itemCount
+                    binding.reviewMyreviewCountTv.text = newCount.toString()
+                    Toast.makeText(requireContext(), "리뷰가 삭제되었습니다", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(),
+                        "삭제 실패: ${resp.code()}",
+                        Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(),
+                    "네트워크 오류: ${e.localizedMessage}",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

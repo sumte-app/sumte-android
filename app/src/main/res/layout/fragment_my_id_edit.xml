@@ -34,10 +34,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_text"
         app:layout_constraintEnd_toEndOf="parent"/>
-    
+
     <LinearLayout
+        android:id="@+id/text_edit_box"
         android:layout_width="match_parent"
-        android:layout_height="162dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/my_boarder">
 
@@ -62,8 +63,41 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="20dp"/>
         </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/text_edit_box"
+        android:layout_marginTop="20dp">
+        <LinearLayout
+            android:layout_width="88dp"
+            android:layout_height="38dp"
+            android:background="@drawable/round_style_my"
+            android:layout_marginStart="24dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="확인"
+                android:textSize="14sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="88dp"
+            android:layout_height="38dp"
+            android:background="@drawable/round_style_my"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="취소"
+                android:textSize="14sp"/>
+        </LinearLayout>
 
     </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

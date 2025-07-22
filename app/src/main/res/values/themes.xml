@@ -5,7 +5,15 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Sumte" parent="Base.Theme.Sumte" />
+    <style name="Theme.Sumte" parent="Base.Theme.Sumte">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="Signup.Sumte" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+
 
     <style name="Theme.RangeSlider" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>

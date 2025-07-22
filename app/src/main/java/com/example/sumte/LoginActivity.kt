@@ -145,6 +145,11 @@ class LoginActivity : AppCompatActivity() {
 //        binding.tvSignUp.setOnClickListener {
 //            startActivity(Intent(this, SignUpActivity::class.java))
 //        }
+
+        binding.tvSignUp.setOnClickListener {
+            val intent = Intent(this, EmailInputActivity::class.java)
+            startActivity(intent)
+        }
     }
     //test용
     private fun fakeLogin(email: String, password: String) {
