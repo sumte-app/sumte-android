@@ -1,52 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginBottom="12dp"
-    android:padding="12dp">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardview"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerCrop"
-        app:cardCornerRadius="12dp">
-        <ImageView
-            android:id="@+id/house_iv"
+        android:layout_height="150dp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_house1"/>
-    </androidx.cardview.widget.CardView>
+            app:cardCornerRadius="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:id="@+id/guesthouse_iv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_house1"/>
+        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/guesthouse_heart_iv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.07"
+            app:layout_constraintHeight_percent="0.17"
+            android:adjustViewBounds="true"
+            android:src="@drawable/heart_home_empty"
+            android:translationZ="5dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintTop_toTopOf="@+id/cardview"
+            app:layout_constraintEnd_toEndOf="@+id/cardview"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="서귀포 섬게스트하우스"
-        android:textColor="@color/gray900"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/guesthouse_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서귀포 섬게스트하우스"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <LinearLayout
+            android:id="@+id/guesthouse_ratingbox_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
+            app:layout_constraintTop_toBottomOf="@+id/guesthouse_title_tv"
+            app:layout_constraintStart_toStartOf="@+id/guesthouse_title_tv">
+            <ImageView
+                android:id="@+id/guesthouse_stars_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star_fill"
+                app:tint="@color/gray700" />
+            <TextView
+                android:id="@+id/guesthouse_rating_tv"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="2dp"
+                android:text="4.5"
+                android:textStyle="bold"
+                android:textColor="@color/gray700"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:layout_marginStart="2dp"
+                android:text="("
+                android:textSize="14sp"
+                android:textColor="@color/gray700"/>
+            <TextView
+                android:id="@+id/guesthouse_review_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:text="65"
+                android:textSize="14sp"
+                android:textColor="@color/gray700"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:text=")"
+                android:textSize="14sp"
+                android:textColor="@color/gray700"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="서귀포항 근처"
-        android:textSize="13sp"
-        android:textColor="@color/gray400" />
+        <LinearLayout
+            android:id="@+id/guesthouse_locationbox_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
+            app:layout_constraintTop_toBottomOf="@+id/guesthouse_ratingbox_ll"
+            app:layout_constraintStart_toStartOf="@+id/guesthouse_ratingbox_ll">
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:src="@drawable/location_icon"/>
+            <TextView
+                android:id="@+id/guesthouse_location_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="서귀포항 근처"
+                android:textSize="12sp"
+                android:textColor="@color/gray700" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="19,000원~"
-        android:textColor="@color/gray900"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:gravity="end"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/guesthouse_timetitle_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="숙박 "
+            android:textColor="@color/gray700"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/guesthouse_time_tv"
+            app:layout_constraintEnd_toStartOf="@+id/guesthouse_time_tv"
+            app:layout_constraintTop_toTopOf="@+id/guesthouse_time_tv" />
+
+        <TextView
+            android:id="@+id/guesthouse_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16:00"
+            android:textColor="@color/gray700"
+            android:textSize="12sp"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/guesthouse_timeend_tv"
+            app:layout_constraintEnd_toStartOf="@+id/guesthouse_timeend_tv"
+            app:layout_constraintTop_toTopOf="@+id/guesthouse_timeend_tv" />
+        <TextView
+            android:id="@+id/guesthouse_timeend_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="~"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="@+id/guesthouse_ratingbox_ll"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/guesthouse_price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="19,000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/guesthouse_priceend_tv"
+            app:layout_constraintEnd_toStartOf="@+id/guesthouse_priceend_tv"/>
+        <TextView
+            android:id="@+id/guesthouse_priceend_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원~"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/guesthouse_locationbox_ll"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
