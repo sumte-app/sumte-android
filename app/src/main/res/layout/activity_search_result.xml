@@ -85,12 +85,46 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/calendar_check"/>
             <TextView
-                android:id="@+id/search_result_date"
+                android:id="@+id/start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="6.18 수 -6.19 목, 1박"
+                android:layout_marginStart="8dp"
+                android:text="6.18 수"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="-"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="6.19 목"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/date_comma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text=","
+                android:visibility="gone"
                 android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/date_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="1박"
+                android:textSize="12sp" />
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"

@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -50,14 +51,14 @@ class BookInfoDateFragment : Fragment() {
         val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
 
         binding.startDate.text = startDate!!.format(formatter)
-        binding.endDate.text = "${endDate!!.format(formatter)}"
-        binding.dateCount.text = ", ${nights}박"
+        binding.endDate.text = endDate!!.format(formatter)
+        binding.dateCount.text = "${nights}박"
 
         val adultCount = viewModel.adultCount
         val childCount = viewModel.childCount
 
         binding.adultCount.text = "성인 $adultCount"
-        binding.childCount.text = if (childCount > 0) ", 아동 $childCount" else ""
+        binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -155,7 +156,7 @@ class BookInfoDateFragment : Fragment() {
                             binding.endDate.text = it.format(formatter)
                         }
                         val nights = ChronoUnit.DAYS.between(startDate, endDate)
-                        binding.dateCount.text = ", ${nights}박"
+                        binding.dateCount.text = "${nights}박"
                     } else {
                         binding.endDate.text = ""
                         binding.dateCount.text = ""
@@ -202,6 +203,11 @@ class BookInfoDateFragment : Fragment() {
                 .replace(R.id.book_info_container, fragment)
                 .addToBackStack(null)
                 .commit()
+        }
+
+        binding.applyBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SearchResultActivity::class.java)
+            startActivity(intent)
         }
     }
 }
