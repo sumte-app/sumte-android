@@ -54,6 +54,23 @@ class SearchResultFragment : Fragment() {
         filterOptions?.let {
             // 필터 데이터 처리 가능
         }
+
+        binding.dateChangeBar.setOnClickListener {
+            val fragment = BookInfoDateFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        binding.countChangeBar.setOnClickListener {
+            val fragment = BookInfoCountFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+
     }
 
     override fun onDestroyView() {
