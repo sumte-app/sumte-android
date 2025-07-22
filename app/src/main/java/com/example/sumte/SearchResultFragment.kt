@@ -15,7 +15,6 @@ class SearchResultFragment : Fragment() {
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
 
-    // Activity의 ViewModel과 공유
     private val viewModel: BookInfoViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -69,8 +68,9 @@ class SearchResultFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-
-
+        binding.backBtn.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     override fun onDestroyView() {

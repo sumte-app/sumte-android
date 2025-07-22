@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/search_result_arrow_left_iv"
+        android:id="@+id/back_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_left"
