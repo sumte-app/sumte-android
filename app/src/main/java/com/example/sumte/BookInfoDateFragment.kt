@@ -44,21 +44,21 @@ class BookInfoDateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-        startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
-        endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
+            val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+            startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
+            endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
 
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+            val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
 
-        binding.startDate.text = startDate!!.format(formatter)
-        binding.endDate.text = endDate!!.format(formatter)
-        binding.dateCount.text = "${nights}박"
+            binding.startDate.text = startDate!!.format(formatter)
+            binding.endDate.text = endDate!!.format(formatter)
+            binding.dateCount.text = "${nights}박"
 
-        val adultCount = viewModel.adultCount
-        val childCount = viewModel.childCount
+            val adultCount = viewModel.adultCount
+            val childCount = viewModel.childCount
 
-        binding.adultCount.text = "성인 $adultCount"
-        binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
+            binding.adultCount.text = "성인 $adultCount"
+            binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -206,8 +206,16 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.applyBtn.setOnClickListener {
-            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-            startActivity(intent)
+            val fragment = SearchResultFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
+
+//        binding.applyBtn.setOnClickListener {
+//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }

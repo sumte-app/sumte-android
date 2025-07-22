@@ -139,11 +139,25 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/bottom_nav_my"/>
             <TextView
-                android:id="@+id/search_result_people"
+                android:id="@+id/adult_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="성인 1 "
+                android:layout_marginStart="4dp"
+                android:text="성인 1"
+                android:textSize="12sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text=","
+                android:visibility="gone"
+                android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/child_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="아동 1"
                 android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
