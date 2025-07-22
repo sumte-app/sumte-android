@@ -1,17 +1,22 @@
 package com.example.sumte
 
 import android.graphics.Color
+import android.graphics.Rect
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 
@@ -99,6 +104,28 @@ class HouseDetailFragment : Fragment() {
         binding.rvReviewList.adapter = reviewAdapter
         binding.rvReviewList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+
+        //rvInfo 아이템 사이 간격
+        val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL).apply {
+            ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let {
+                setDrawable(it)
+            }
+        }
+        binding.rvInfo.addItemDecoration(divider)
+
+        binding.rvInfo.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+            ) {
+                val position = parent.getChildAdapterPosition(view)
+
+
+                outRect.top = if (position == 0) 0 else dpToPx(12)
+                outRect.bottom = dpToPx(12)
+            }
+        })
+
+
         return binding.root
     }
 
@@ -120,6 +147,12 @@ class HouseDetailFragment : Fragment() {
         binding.tvPageIndicator.text = spannable
     }
 
+    //dp px 변환
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
+        ).toInt()
+    }
 
 
 }

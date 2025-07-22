@@ -42,6 +42,14 @@ class LoginActivity : AppCompatActivity() {
 
         authService = RetrofitClient.instance.create(AuthService::class.java)
 
+        val token = getSharedPreferences("auth", MODE_PRIVATE).getString("access_token", null)
+        if (!token.isNullOrEmpty()) {
+
+            Log.d("AuthToken", "Saved token: $token")
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
         //서버 닫혀있을 때
 //        authService = if (BuildConfig.DEBUG) {
 //            object : AuthService {
@@ -141,16 +149,18 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        //회원가입 클릭시 SignupActivity로 전환
-//        binding.tvSignUp.setOnClickListener {
-//            startActivity(Intent(this, SignUpActivity::class.java))
-//        }
+
 
         binding.tvSignUp.setOnClickListener {
             val intent = Intent(this, EmailInputActivity::class.java)
             startActivity(intent)
         }
+
     }
+
+
+
+
     //test용
     private fun fakeLogin(email: String, password: String) {
         lifecycleScope.launch {
@@ -205,6 +215,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun resetValidationState() {
         binding.tvEmailError.visibility = View.GONE
