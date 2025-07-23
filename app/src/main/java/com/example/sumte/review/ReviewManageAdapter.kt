@@ -1,12 +1,12 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.sumte.MyReview
+import com.example.sumte.R
 import com.example.sumte.databinding.ItemReviewBinding
 
 class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHolder>() {
@@ -30,7 +30,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
     }
 
     inner class ReviewViewHolder(private val binding: ItemReviewBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(item:MyReview)=with(binding){
+        fun bind(item: MyReview)=with(binding){
             itemReviewTitleTv.text=item.authorNickname
             itemReviewDateTv.text=item.createdAt.substring(0, 10)
 
@@ -79,12 +79,12 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ReviewManageAdapter.ReviewViewHolder {
+    ): ReviewViewHolder {
         val binding=ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReviewViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ReviewManageAdapter.ReviewViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         holder.bind(items[position])
     }
 

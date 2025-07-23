@@ -1,11 +1,9 @@
-package com.example.sumte
+package com.example.sumte.review
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -18,9 +16,10 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sumte.ApiClient
+import com.example.sumte.PhotoOptionsBottomSheet
+import com.example.sumte.R
 import com.example.sumte.databinding.ActivityReviewWriteBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

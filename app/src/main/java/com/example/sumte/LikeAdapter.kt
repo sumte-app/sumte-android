@@ -7,9 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class LikeAdapter(
-    private val items: List<GuestHouse>,
-    private val viewModel: GuestHouseViewModel
+    private val items: MutableList<GuestHouse>,
+    private val viewModel: GuestHouseViewModel,
+    private val onLikeRemovedListener: OnLikeRemovedListener
 ) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
+
+    interface OnLikeRemovedListener {
+        fun onLikeRemoved(guestHouse: GuestHouse)
+    }
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -37,7 +42,11 @@ class LikeAdapter(
 
             guesthouseHeartIv.setOnClickListener {
                 viewModel.toggleLike(guestHouse)
+                items.removeAt(position)
                 notifyItemRemoved(position)
+
+                // Fragment에 찜 삭제 이벤트 알림
+                onLikeRemovedListener.onLikeRemoved(guestHouse)
             }
         }
     }

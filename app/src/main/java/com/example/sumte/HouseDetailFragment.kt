@@ -1,7 +1,6 @@
 package com.example.sumte
 
 import android.graphics.Color
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -10,10 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.databinding.FragmentHouseDetailBinding
+import com.example.sumte.review.Review
+import com.example.sumte.review.ReviewCardAdapter
 
 class HouseDetailFragment : Fragment() {
 
