@@ -36,4 +36,10 @@ interface ReviewService {
 
     @DELETE("/api/reviews/{id}")
     suspend fun deleteReview(@Path("id") reviewId: Long): Response<Unit>
+
+    @GET("/api/reviews")
+    suspend fun getAllReviews(
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 10
+    ): Response<ReviewResponse>
 }

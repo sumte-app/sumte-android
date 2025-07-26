@@ -27,4 +27,6 @@ class ReviewAdapter(private val reviewList:List<Review>) :RecyclerView.Adapter<R
         holder.bind(reviewList[position])
     }
 
+
+
 }
