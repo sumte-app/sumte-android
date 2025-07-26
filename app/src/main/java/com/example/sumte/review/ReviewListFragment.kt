@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.FragmentReviewListBinding
 import kotlinx.coroutines.launch
 

@@ -2,7 +2,6 @@ package com.example.sumte
 
 import android.graphics.Color
 import android.graphics.Rect
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -13,12 +12,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.databinding.FragmentHouseDetailBinding
+import com.example.sumte.review.Review
+import com.example.sumte.review.ReviewCardAdapter
 
 class HouseDetailFragment : Fragment() {
 
