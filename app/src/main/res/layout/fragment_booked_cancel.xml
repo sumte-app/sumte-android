@@ -337,7 +337,31 @@
 
 
     <LinearLayout
-        android:id="@+id/apply_btn"
+        android:id="@+id/list_btn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round_style"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/home_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.45">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약내역 보기"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_btn"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@drawable/apply_btn_style"
@@ -346,15 +370,15 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_marginBottom="20dp"
-        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/list_btn">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="적용하기"
+            android:text="예약내역 보기"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
