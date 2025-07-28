@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.login
 
 data class LoginResponse(
     val success: Boolean,

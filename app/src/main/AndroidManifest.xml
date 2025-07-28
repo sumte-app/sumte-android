@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -16,10 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sumte"
         tools:targetApi="31">
-        <activity android:name=".ReviewWriteActivity"
-            android:exported="false"/>
-        <activity android:name=".ReviewManageActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".RoomRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".payment.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewWriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewManageActivity"
+            android:exported="false" />
         <activity
             android:name=".MyReviewActivity"
             android:exported="false" />
@@ -36,11 +48,11 @@
             android:name=".SearchResultActivity"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
-            android:exported="true"/>
+            android:name=".login.LoginActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -64,7 +76,6 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-
         </provider>
     </application>
 

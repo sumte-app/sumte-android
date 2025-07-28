@@ -3,6 +3,7 @@ package com.example.sumte
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.databinding.FragmentHomeBinding
+import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.login.LoginActivity
 import kotlinx.coroutines.launch
+import kotlin.apply
+import kotlin.text.clear
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -29,7 +34,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         // ReviewWrite 실행을 위한 임시 클릭리스너
         binding.mainLogoIv.setOnClickListener {
             val intent = Intent(activity, ReviewWriteActivity::class.java)
@@ -43,8 +48,8 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
         val guestList = listOf(
             GuestHouse("서귀포 섬게스트하우스", "서귀포항 근처", "19,000", R.drawable.sample_house1, "16:00", 1L),
-            GuestHouse("제주 꿀림 365", "애월읍", "23,000", R.drawable.sample_house2, "16:00",2L),
-            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000", R.drawable.sample_house3, "16:00",3L),
+            GuestHouse("제주 꿀림 365", "애월읍", "23,000", R.drawable.sample_house2, "16:00", 2L),
+            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000", R.drawable.sample_house3, "16:00", 3L),
             // ...
         )
         adapter = GuestHouseAdapter(
@@ -83,14 +88,12 @@ class HomeFragment : Fragment() {
         binding.searchBoxLl.setOnClickListener {
             (activity as? MainActivity)?.navigateToSearchFragment()
         }
-    }
 
         binding.adsTv.setOnClickListener {
             logout()
         }
-
-
     }
+
 
     private fun logout() {
         requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
@@ -98,8 +101,14 @@ class HomeFragment : Fragment() {
             .clear()
             .apply()
 
-        startActivity(Intent(requireContext(), LoginActivity::class.java))
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+        val prefs = requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
+        val token = prefs.getString("access_token", null)
+        Log.d("LogoutCheck", "Token after logout: $token")
+
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }
+

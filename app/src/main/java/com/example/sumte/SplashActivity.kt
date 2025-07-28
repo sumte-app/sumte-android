@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivitySplashBinding
+import com.example.sumte.login.LoginActivity
 
 
 class SplashActivity : AppCompatActivity() {
@@ -19,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
 
         // 2초 대기 후 LoginActivity로 전환
         android.os.Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 2000)
     }

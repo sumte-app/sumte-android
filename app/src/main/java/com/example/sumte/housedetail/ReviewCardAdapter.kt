@@ -1,13 +1,12 @@
-package com.example.sumte
+package com.example.sumte.housedetail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.sumte.databinding.ItemReviewCardBinding
+import com.example.sumte.R
 import com.example.sumte.Review
-
-
+import com.example.sumte.databinding.ItemReviewCardBinding
 
 class ReviewCardAdapter(private val reviews: List<Review>) :
     RecyclerView.Adapter<ReviewCardAdapter.ReviewCardViewHolder>() {

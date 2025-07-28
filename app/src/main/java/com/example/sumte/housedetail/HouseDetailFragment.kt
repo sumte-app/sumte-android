@@ -1,23 +1,30 @@
-package com.example.sumte
+package com.example.sumte.housedetail
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.sumte.HouseImageAdapter
+import com.example.sumte.R
+import com.example.sumte.Review
+import com.example.sumte.housedetail.ReviewCardAdapter
+import com.example.sumte.housedetail.RoomInfo
+import com.example.sumte.housedetail.RoomInfoAdapter
+import com.example.sumte.RoomRegisterActivity
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 
 class HouseDetailFragment : Fragment() {
@@ -102,7 +109,8 @@ class HouseDetailFragment : Fragment() {
 
         val reviewAdapter = ReviewCardAdapter(sampleReviews)
         binding.rvReviewList.adapter = reviewAdapter
-        binding.rvReviewList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvReviewList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
 
         //rvInfo 아이템 사이 간격
@@ -124,6 +132,14 @@ class HouseDetailFragment : Fragment() {
                 outRect.bottom = dpToPx(12)
             }
         })
+
+        binding.shareIcon.setOnClickListener {
+            Log.d("HouseDetailFragment", "Share icon clicked")
+            val intent = Intent(requireContext(), RoomRegisterActivity::class.java)
+            intent.putExtra("guesthouseId", 1)
+            startActivity(intent)
+        }
+
 
 
         return binding.root

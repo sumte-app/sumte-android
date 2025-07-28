@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.login
 
 import com.google.gson.annotations.SerializedName
 

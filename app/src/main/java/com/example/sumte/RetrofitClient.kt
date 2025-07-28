@@ -20,4 +20,8 @@ object RetrofitClient {
             .build()
             .create(ApiService::class.java)
     }
+
+    val roomService: RoomService by lazy {
+        instance.create(RoomService::class.java)
+    }
 }
