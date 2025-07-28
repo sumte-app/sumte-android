@@ -34,8 +34,8 @@ class BookInfoCountFragment : Fragment() {
         val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
 
         binding.startDate.text = start.format(formatter)
-        binding.endDate.text = "${end.format(formatter)}"
-        binding.dateCount.text = ", ${nights}박"
+        binding.endDate.text = end.format(formatter)
+        binding.dateCount.text = "${nights}박"
 
         var adultCount = viewModel.adultCount
         var childCount = viewModel.childCount
@@ -43,7 +43,7 @@ class BookInfoCountFragment : Fragment() {
         binding.adultCount.text = adultCount.toString()
         binding.childCount.text = childCount.toString()
         binding.adultCountText.text = "성인 $adultCount"
-        binding.childCountText.text = if (childCount > 0) ", 아동 $childCount" else ""
+        binding.childCountText.text = if (childCount > 0) "아동 $childCount" else ""
 
 
         binding.adultPlusBtn.setOnClickListener {
@@ -73,13 +73,13 @@ class BookInfoCountFragment : Fragment() {
                 binding.childMinusBtn.setImageResource(R.drawable.minus_green)
             }
             binding.childCount.text = childCount.toString()
-            binding.childCountText.text = String.format(", 아동 %d", childCount)
+            binding.childCountText.text = String.format("아동 %d", childCount)
         }
         binding.childMinusBtn.setOnClickListener {
             if (childCount > 0) {
                 childCount--
                 binding.childCount.text = childCount.toString()
-                binding.childCountText.text = String.format(", 아동 %d", childCount)
+                binding.childCountText.text = String.format("아동 %d", childCount)
             }
             if (childCount == 0){
                 binding.childMinusBtn.setImageResource(R.drawable.minus_gray)

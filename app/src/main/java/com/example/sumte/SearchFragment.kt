@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.sumte.databinding.FragmentSearchBinding
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
@@ -22,9 +25,10 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentSearchBinding.inflate(inflater, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.bookInfo.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
@@ -35,26 +39,16 @@ class SearchFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        fun getKoreanDayOfWeek(date: LocalDate): String {
-            return when (date.dayOfWeek) {
-                java.time.DayOfWeek.MONDAY -> "월"
-                java.time.DayOfWeek.TUESDAY -> "화"
-                java.time.DayOfWeek.WEDNESDAY -> "수"
-                java.time.DayOfWeek.THURSDAY -> "목"
-                java.time.DayOfWeek.FRIDAY -> "금"
-                java.time.DayOfWeek.SATURDAY -> "토"
-                java.time.DayOfWeek.SUNDAY -> "일"
+        startDate?.let { start ->
+            endDate?.let { end ->
+                val nights = ChronoUnit.DAYS.between(start, end)
+
+                binding.startDate.text = start.format(formatter)
+                binding.endDate.text = end.format(formatter)
+                binding.dateCount.text = "${nights}박"
             }
         }
-
-        val currentDay = LocalDate.now(seoulZone)
-        val dayOfWeekKor = getKoreanDayOfWeek(currentDay)
-        val endPlusOne = currentDay.plusDays(1)
-        val endDayOfWeekKor = getKoreanDayOfWeek(endPlusOne)
-
-        binding.startDate.text = String.format("%d.%02d %s", currentDay.monthValue, currentDay.dayOfMonth, dayOfWeekKor)
-        binding.endDate.text = String.format("%d.%02d %s,", endPlusOne.monthValue, endPlusOne.dayOfMonth, endDayOfWeekKor)
     }
-
 }
