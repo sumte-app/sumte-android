@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.sumte.databinding.ActivityLoginBinding
 import com.example.sumte.databinding.DialogLoginFailedBinding
+import com.example.sumte.signup.EmailInputActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Response

@@ -257,6 +257,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.9"
+        style="@style/Signup.Sumte"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
