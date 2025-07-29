@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.example.sumte.NicknameResponse
+import com.example.sumte.R
+import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivitySignupProfileBinding
 import retrofit2.Call
 import retrofit2.Callback
