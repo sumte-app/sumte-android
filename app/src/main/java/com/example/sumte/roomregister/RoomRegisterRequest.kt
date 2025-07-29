@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.roomregister
 
 data class RoomRegisterRequest(
     val name: String,

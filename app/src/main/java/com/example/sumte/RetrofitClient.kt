@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import com.example.sumte.roomregister.RoomService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue

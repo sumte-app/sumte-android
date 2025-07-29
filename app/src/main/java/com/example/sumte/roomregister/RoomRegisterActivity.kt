@@ -1,9 +1,10 @@
-package com.example.sumte
+package com.example.sumte.roomregister
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityRoomRegisterBinding
 import retrofit2.Call
 import retrofit2.Callback

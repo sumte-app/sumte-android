@@ -24,7 +24,7 @@ import com.example.sumte.Review
 import com.example.sumte.housedetail.ReviewCardAdapter
 import com.example.sumte.housedetail.RoomInfo
 import com.example.sumte.housedetail.RoomInfoAdapter
-import com.example.sumte.RoomRegisterActivity
+import com.example.sumte.roomregister.RoomRegisterActivity
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 
 class HouseDetailFragment : Fragment() {

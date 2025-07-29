@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.roomregister
 
 import retrofit2.Call
 import retrofit2.http.Body
