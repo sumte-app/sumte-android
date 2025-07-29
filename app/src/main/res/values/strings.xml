@@ -15,4 +15,6 @@
     <string name="no_review_content">
         첫 후기를 남겨보세요
     </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

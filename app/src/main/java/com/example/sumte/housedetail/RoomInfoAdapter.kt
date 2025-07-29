@@ -1,9 +1,8 @@
-package com.example.sumte
+package com.example.sumte.housedetail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.databinding.ItemRoomDetailBinding
 
 class RoomInfoAdapter(

@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.housedetail
 
 data class RoomInfo(
     val name: String,

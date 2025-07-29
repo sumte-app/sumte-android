@@ -2,6 +2,7 @@ package com.example.sumte
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.ImageUpload.ImageUploadActivity
 import com.example.sumte.databinding.FragmentHomeBinding
+
+import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.login.LoginActivity
+import kotlinx.coroutines.launch
+import kotlin.apply
+import kotlin.text.clear
+
 import com.example.sumte.review.ReviewWriteActivity
+
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -28,7 +37,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding=FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         // ReviewWrite 실행을 위한 임시 클릭리스너
         binding.mainLogoIv.setOnClickListener {
             val intent = Intent(activity, ReviewWriteActivity::class.java)
@@ -93,15 +102,28 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     private fun logout() {
         requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
             .edit()
             .clear()
             .apply()
 
+
+        Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+        val prefs = requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
+        val token = prefs.getString("access_token", null)
+        Log.d("LogoutCheck", "Token after logout: $token")
+
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
         startActivity(Intent(requireContext(), LoginActivity::class.java))
         fun showToast(message: String) {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
+
     }
 }
+

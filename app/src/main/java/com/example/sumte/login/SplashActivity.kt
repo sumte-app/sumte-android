@@ -1,13 +1,11 @@
-package com.example.sumte
+package com.example.sumte.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivitySplashBinding
-
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -18,7 +16,11 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 2초 대기 후 LoginActivity로 전환
+<<<<<<< HEAD:app/src/main/java/com/example/sumte/login/SplashActivity.kt
+        Handler(Looper.getMainLooper()).postDelayed({
+=======
         android.os.Handler(Looper.getMainLooper()).postDelayed({
+>>>>>>> main:app/src/main/java/com/example/sumte/SplashActivity.kt
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 2000)

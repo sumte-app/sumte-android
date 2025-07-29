@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/etRoomName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="객실 이름"
+            />
+
+        <EditText
+            android:id="@+id/etRoomContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="객실 설명"
+            android:minLines="3" />
+
+        <EditText
+            android:id="@+id/etRoomPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="가격 (원)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etStandardCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="기준 인원"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etTotalCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="최대 인원"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etImageUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이미지 URL" />
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="등록하기"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,6 +1,5 @@
-package com.example.sumte
+package com.example.sumte.login
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,18 +11,18 @@ import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.sumte.EmailInputActivity
+import com.example.sumte.login.LoginRequest
+import com.example.sumte.MainActivity
+import com.example.sumte.R
+import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityLoginBinding
 import com.example.sumte.databinding.DialogLoginFailedBinding
 import com.example.sumte.signup.EmailInputActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import kotlin.jvm.java
 
 class LoginActivity : AppCompatActivity() {
 
