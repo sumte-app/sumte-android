@@ -1,6 +1,5 @@
-package com.example.sumte
+package com.example.sumte.search
 
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.sumte.R
 import com.example.sumte.databinding.CalendarDayLayoutBinding
 import com.example.sumte.databinding.FragmentBookInfoDateBinding
 import com.kizitonwose.calendar.core.CalendarDay
@@ -73,7 +73,9 @@ class BookInfoDateFragment : Fragment() {
                 container.textView.setTypeface(null, Typeface.BOLD)
 
                 container.textView.setBackgroundResource(0)
-                container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                container.textView.setTextColor(ContextCompat.getColor(requireContext(),
+                    R.color.black
+                ))
                 container.textView.alpha = 1f
                 container.textView.isClickable = true
 
@@ -89,7 +91,9 @@ class BookInfoDateFragment : Fragment() {
                         when (date) {
                             startDate -> container.textView.setBackgroundResource(R.drawable.selcted_circle_start)
                             endDate -> container.textView.setBackgroundResource(R.drawable.selcted_circle_end)
-                            in (startDate!!..endDate!!) -> container.textView.setBackgroundResource(R.drawable.selcted_middle)
+                            in (startDate!!..endDate!!) -> container.textView.setBackgroundResource(
+                                R.drawable.selcted_middle
+                            )
                             else -> container.textView.background = null
                         }
                     } else if (startDate != null) {
@@ -107,7 +111,9 @@ class BookInfoDateFragment : Fragment() {
 
                 //일요일. 공휴일은 api도입 고려중
                 if (date.dayOfWeek == java.time.DayOfWeek.SUNDAY) {
-                    container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    container.textView.setTextColor(ContextCompat.getColor(requireContext(),
+                        R.color.red
+                    ))
                 }
                 //오늘 이전
                 if (date.isBefore(LocalDate.now(seoulZone))) {

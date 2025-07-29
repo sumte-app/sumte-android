@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.search
 
 import android.content.Intent
 import android.os.Bundle

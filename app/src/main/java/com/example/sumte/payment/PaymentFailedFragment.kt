@@ -21,10 +21,7 @@ class PaymentFailedFragment: DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.btnRetry.setOnClickListener {
-            dismiss()
 
-        }
     }
 
     override fun onDestroyView() {

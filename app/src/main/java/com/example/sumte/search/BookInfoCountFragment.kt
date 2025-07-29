@@ -1,13 +1,12 @@
-package com.example.sumte
+package com.example.sumte.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.replace
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookInfoCountBinding
 import java.time.format.DateTimeFormatter
 import java.util.Locale

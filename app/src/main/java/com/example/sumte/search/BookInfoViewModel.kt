@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.search
 
 import androidx.lifecycle.ViewModel
 import java.time.LocalDate

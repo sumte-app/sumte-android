@@ -1,6 +1,5 @@
-package com.example.sumte
+package com.example.sumte.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.sumte.FilterOptions
+import com.example.sumte.FilterViewModel
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentFilteringBinding
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 
 class FilteringFragment: Fragment() {
     lateinit var binding: FragmentFilteringBinding
@@ -66,8 +65,12 @@ class FilteringFragment: Fragment() {
             val maxPrice = slider.values[1].toInt()
             binding.filteringMinpriceTv.text = "${minPrice}원"
             binding.filteringMaxpriceTv.text="${maxPrice}원+"
-            binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary))
-            binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary))
+            binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
+                R.color.primary
+            ))
+            binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
+                R.color.primary
+            ))
         }
 
         //인원 선택 드롭다운 부분
@@ -80,7 +83,9 @@ class FilteringFragment: Fragment() {
             popup.setOnMenuItemClickListener { menuItem ->
                 val selected = menuItem.title.toString()
                 binding.filteringPeopleCountTv.text = selected
-                binding.filteringPeopleCountTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray600))
+                binding.filteringPeopleCountTv.setTextColor(ContextCompat.getColor(requireContext(),
+                    R.color.gray600
+                ))
                 true
             }
             popup.show()
@@ -94,7 +99,9 @@ class FilteringFragment: Fragment() {
             popup.setOnMenuItemClickListener { menuItem ->
                 val selected = menuItem.title.toString()
                 binding.filteringPeopleCountTv.text = selected
-                binding.filteringPeopleCountTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray600))
+                binding.filteringPeopleCountTv.setTextColor(ContextCompat.getColor(requireContext(),
+                    R.color.gray600
+                ))
                 true
             }
             popup.show()
@@ -106,12 +113,16 @@ class FilteringFragment: Fragment() {
                 val isSelected = textView.tag=="selected"
                 if(isSelected){
                     textView.setBackgroundResource(R.drawable.filtering_unselected)
-                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.gray800))
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context,
+                        R.color.gray800
+                    ))
                     textView.tag = "unselected"
                 }
                 else{
                     textView.setBackgroundResource(R.drawable.filtering_selected)
-                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary))
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context,
+                        R.color.primary
+                    ))
                     textView.tag = "selected"
                 }
             }
@@ -123,12 +134,16 @@ class FilteringFragment: Fragment() {
                 val isSelected=textView.tag=="selected"
                 if(isSelected){
                     textView.setBackgroundResource(R.drawable.filtering_unselected)
-                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.gray800))
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context,
+                        R.color.gray800
+                    ))
                     textView.tag = "unselected"
                 }
                 else{
                     textView.setBackgroundResource(R.drawable.filtering_selected)
-                    textView.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary))
+                    textView.setTextColor(ContextCompat.getColor(binding.root.context,
+                        R.color.primary
+                    ))
                     textView.tag = "selected"
                 }
             }
@@ -201,9 +216,15 @@ class FilteringFragment: Fragment() {
         binding.filteringResetLl.setOnClickListener{
             binding.filteringCheckbox.isChecked = false
             binding.filteringRangeslider.values = listOf(1000f, 100000f)
-            binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
-            binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
-            binding.filteringPricemidTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
+            binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
+                R.color.gray400
+            ))
+            binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
+                R.color.gray400
+            ))
+            binding.filteringPricemidTv.setTextColor(ContextCompat.getColor(requireContext(),
+                R.color.gray400
+            ))
             binding.filteringPeopleCountTv.setText("인원 선택")
             resetLinearLayoutTextViews(binding.filteringExtraServiceLl)
             resetLinearLayoutTextViews(binding.filteringTargetLl)
@@ -218,7 +239,9 @@ class FilteringFragment: Fragment() {
                 val view = linearLayout.getChildAt(i)
                 if (view is TextView) {
                     val background = view.background
-                    if (background.constantState == ContextCompat.getDrawable(requireContext(), R.drawable.filtering_selected)?.constantState) {
+                    if (background.constantState == ContextCompat.getDrawable(requireContext(),
+                            R.drawable.filtering_selected
+                        )?.constantState) {
                         selectedItems.add(view.text.toString())
                     }
                 }

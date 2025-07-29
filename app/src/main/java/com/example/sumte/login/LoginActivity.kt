@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.sumte.EmailInputActivity
 import com.example.sumte.login.LoginRequest
 import com.example.sumte.MainActivity
 import com.example.sumte.R

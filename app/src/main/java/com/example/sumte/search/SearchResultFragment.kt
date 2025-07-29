@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.sumte.FilterOptions
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchResultBinding
 import java.time.format.DateTimeFormatter
 import java.util.Locale

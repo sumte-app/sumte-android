@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.HouseImageAdapter
 import com.example.sumte.R
-import com.example.sumte.Review
-import com.example.sumte.housedetail.ReviewCardAdapter
 import com.example.sumte.housedetail.RoomInfo
 import com.example.sumte.housedetail.RoomInfoAdapter
 import com.example.sumte.roomregister.RoomRegisterActivity

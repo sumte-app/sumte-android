@@ -1,10 +1,11 @@
-package com.example.sumte
+package com.example.sumte.myid
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentMyIdMainBinding
 
 class MyIdMainFragment : Fragment(){

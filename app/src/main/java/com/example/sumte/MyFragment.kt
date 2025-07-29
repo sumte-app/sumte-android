@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.sumte.databinding.FragmentMyBinding
+import com.example.sumte.mybook.BookedListActivity
+import com.example.sumte.myid.MyIdActivity
 import com.example.sumte.review.ReviewManageActivity
 
 class MyFragment : Fragment(){

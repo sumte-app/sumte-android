@@ -1,6 +1,5 @@
-package com.example.sumte
+package com.example.sumte.myid
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentMyIdEditBinding
 
 class MyIdEditFragment : Fragment() {

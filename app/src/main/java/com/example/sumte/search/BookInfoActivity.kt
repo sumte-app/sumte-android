@@ -1,7 +1,8 @@
-package com.example.sumte
+package com.example.sumte.search
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sumte.R
 
 class BookInfoActivity : AppCompatActivity() {
 
