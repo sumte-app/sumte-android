@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.net.Uri
 import android.view.LayoutInflater

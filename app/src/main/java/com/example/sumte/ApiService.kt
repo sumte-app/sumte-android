@@ -1,6 +1,7 @@
 package com.example.sumte
 
 
+import com.example.sumte.review.ReviewResponse
 import com.example.sumte.signup.SignUpRequest
 import retrofit2.Call
 import retrofit2.Response

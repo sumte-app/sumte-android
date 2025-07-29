@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
 
         // 2초 대기 후 LoginActivity로 전환
         android.os.Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 2000)
     }

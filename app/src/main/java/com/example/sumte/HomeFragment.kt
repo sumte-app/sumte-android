@@ -1,6 +1,5 @@
 package com.example.sumte
 
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.ImageUpload.ImageUploadActivity
 import com.example.sumte.databinding.FragmentHomeBinding
-import kotlinx.coroutines.launch
+import com.example.sumte.review.ReviewWriteActivity
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
@@ -35,6 +34,11 @@ class HomeFragment : Fragment() {
             val intent = Intent(activity, ReviewWriteActivity::class.java)
             startActivity(intent)
         }
+
+        binding.adsIv.setOnClickListener {
+            val intent2 = Intent(activity, ImageUploadActivity::class.java)
+            startActivity(intent2)
+        }
         return binding.root
     }
 
@@ -43,8 +47,8 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
         val guestList = listOf(
             GuestHouse("서귀포 섬게스트하우스", "서귀포항 근처", "19,000", R.drawable.sample_house1, "16:00", 1L),
-            GuestHouse("제주 꿀림 365", "애월읍", "23,000", R.drawable.sample_house2, "16:00",2L),
-            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000", R.drawable.sample_house3, "16:00",3L),
+            GuestHouse("제주 꿀림 365", "애월읍", "23,000", R.drawable.sample_house2, "16:00", 2L),
+            GuestHouse("제주 달숲 게스트하우스", "협재 버스정류장", "80,000", R.drawable.sample_house3, "16:00", 3L),
             // ...
         )
         adapter = GuestHouseAdapter(
@@ -83,13 +87,10 @@ class HomeFragment : Fragment() {
         binding.searchBoxLl.setOnClickListener {
             (activity as? MainActivity)?.navigateToSearchFragment()
         }
-    }
 
         binding.adsTv.setOnClickListener {
             logout()
         }
-
-
     }
 
     private fun logout() {
@@ -99,7 +100,8 @@ class HomeFragment : Fragment() {
             .apply()
 
         startActivity(Intent(requireContext(), LoginActivity::class.java))
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        fun showToast(message: String) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
     }
 }
