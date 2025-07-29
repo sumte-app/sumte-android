@@ -1,5 +1,4 @@
-package com.example.sumte
-
+package com.example.sumte.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sumte.R
+import com.example.sumte.VerificationInputActivity
 import com.example.sumte.databinding.ActivityEmailInputBinding
 
 class EmailInputActivity : AppCompatActivity() {

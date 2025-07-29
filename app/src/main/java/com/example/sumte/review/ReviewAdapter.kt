@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import com.example.sumte.databinding.ItemReviewBinding
 class ReviewAdapter(private val reviewList:List<Review>) :RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>(){
 
     inner class ReviewViewHolder(val binding: ItemReviewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(review:Review){
+        fun bind(review: Review){
             binding.itemReviewTitleTv.text=review.title
             binding.itemReviewContentTv.text=review.content
             binding.itemReviewDateTv.text=review.date

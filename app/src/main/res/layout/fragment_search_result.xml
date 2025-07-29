@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/search_result_arrow_left_iv"
+        android:id="@+id/back_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_left"
@@ -74,6 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <LinearLayout
+            android:id="@+id/date_change_bar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"
@@ -127,6 +128,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/count_change_bar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4.5"
@@ -139,11 +141,25 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/bottom_nav_my"/>
             <TextView
-                android:id="@+id/search_result_people"
+                android:id="@+id/adult_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="성인 1 "
+                android:layout_marginStart="4dp"
+                android:text="성인 1"
+                android:textSize="12sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text=","
+                android:visibility="gone"
+                android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/child_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="아동 1"
                 android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>

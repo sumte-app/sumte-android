@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.signup
 
 data class SignUpRequest(
     val password: String,

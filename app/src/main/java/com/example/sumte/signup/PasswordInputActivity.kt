@@ -1,5 +1,4 @@
-package com.example.sumte
-
+package com.example.sumte.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +7,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sumte.R
 import com.example.sumte.databinding.ActivityPasswordInputBinding
 
 class PasswordInputActivity : AppCompatActivity() {

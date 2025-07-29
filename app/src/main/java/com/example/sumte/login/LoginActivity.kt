@@ -20,6 +20,7 @@ import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityLoginBinding
 import com.example.sumte.databinding.DialogLoginFailedBinding
+import com.example.sumte.signup.EmailInputActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

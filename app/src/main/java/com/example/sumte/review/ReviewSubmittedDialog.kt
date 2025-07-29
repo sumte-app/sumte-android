@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.app.Dialog
 import android.graphics.Color

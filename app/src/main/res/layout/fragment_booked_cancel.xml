@@ -27,13 +27,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
                 android:gravity="center"
-                android:text="상세 예약 내역"
+                android:text=""
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
             <View
                 android:layout_width="12dp"
-                android:layout_height="12dp" />
+                android:layout_height="12dp"/>
         </LinearLayout>
 
         <View
@@ -45,26 +45,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top_text" />
 
-        <TextView
-            android:id="@+id/book_date_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:text="예약 일시 : "
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_text" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="2025.06.17 (화) 03:09"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@id/book_date_text"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_text" />
+
+    <TextView
+        android:id="@+id/canceled_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="예약을 취소했습니다."
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <LinearLayout
+        android:id="@+id/cancel_time_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/canceled_text">
+
+        <TextView
+            android:id="@+id/cancel_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="취소 일시 : "
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/cancel_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/canceled_text" />
+        <TextView
+            android:id="@+id/cancel_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025.06.17(화) 04:09"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancel_time_text"
+            app:layout_constraintTop_toBottomOf="@+id/canceled_text" />
+
+
+
+
+
+    </LinearLayout>
+
 
     <View
         android:id="@+id/boarder2"
@@ -74,18 +110,19 @@
         android:background="@color/gray100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/book_date_text" />
+        app:layout_constraintTop_toBottomOf="@+id/cancel_time_box" />
 
 
     <TextView
         android:id="@+id/booked_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="예약 정보"
+        android:text="취소 예약"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@+id/book_date_text"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/boarder2" />
 
     <ImageView
@@ -94,7 +131,7 @@
         android:layout_height="92dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/sumte_main_logo"
-        app:layout_constraintStart_toStartOf="@+id/book_date_text"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/booked_info" />
 
         <TextView
@@ -222,27 +259,27 @@
         android:text="취소/환불 규정"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/book_date_text"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/boarder3" />
 
     <TextView
         android:id="@+id/refund_policy1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="이용 8일전 : 결제 금액에 대한 취소 수수료 없음"
         android:textSize="14sp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@+id/book_date_text"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/refund_policy" />
 
     <TextView
         android:id="@+id/refund_policy2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="이용 7일전 : 결제 금액에 대한 20% 차감 후 환불"
         android:textSize="14sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/book_date_text"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/refund_policy1" />
 
     <View
@@ -267,7 +304,7 @@
             android:id="@+id/price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="결제 금액"
+            android:text="예상 환불 금액"
             android:layout_marginStart="16dp"
             android:textSize="14sp"/>
 
@@ -280,7 +317,7 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="23000원"
+            android:text="18400원"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginEnd="16dp"/>
@@ -300,7 +337,31 @@
 
 
     <LinearLayout
-        android:id="@+id/apply_btn"
+        android:id="@+id/list_btn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round_style"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/home_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.45">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약내역 보기"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_btn"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@drawable/apply_btn_style"
@@ -309,99 +370,19 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_marginBottom="20dp"
-        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/list_btn">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="적용하기"
+            android:text="예약내역 보기"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/popupOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000"
-        android:visibility="gone">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:background="@drawable/popup_background"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/cancel_ask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="예약을 취소할까요?"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="취소/환불 규정을 꼭 확인해주세요!\n취소/환불은 숙소 정책에 따라 처리됩니다."
-                android:textColor="@color/gray400"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cancel_ask" />
-
-            <LinearLayout
-                android:id="@+id/cancel_btn"
-                android:layout_width="122dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/round_style"
-                android:gravity="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="취소"
-                    android:textColor="@color/primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/hold_btn"
-                android:layout_width="122dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/round_style_apply"
-                android:gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="유지"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

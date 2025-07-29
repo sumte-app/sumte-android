@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.Patterns
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityVerificationInputBinding
+import com.example.sumte.signup.PasswordInputActivity
 
 class VerificationInputActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.signup
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

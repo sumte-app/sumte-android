@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.sumte.databinding.FragmentMyBinding
+import com.example.sumte.review.ReviewManageActivity
 
 class MyFragment : Fragment(){
     lateinit var binding: FragmentMyBinding

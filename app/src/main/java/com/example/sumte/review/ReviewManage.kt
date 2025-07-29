@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.ApiClient
 import com.example.sumte.databinding.FragmentReviewManageBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 class ReviewManage: Fragment() {
     private var _binding: FragmentReviewManageBinding? = null
     private val binding get() = _binding!!
-    private val adapter by lazy{ReviewManageAdapter(this)}
+    private val adapter by lazy{ ReviewManageAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,13 +50,13 @@ class ReviewManage: Fragment() {
                     val body = response.body()
                     if (body != null) {
                         val reviewList = body.content
-                        val totalPages = body.totalPages
+                        val totalElements = body.totalElements
 
-                        if (totalPages != 0) {
+                        if (totalElements != 0) {
                             // 리뷰가 있을 때
                             binding.reviewManageRv.visibility = View.VISIBLE
                             binding.noReviewLl.visibility = View.GONE
-                            binding.reviewMyreviewCountTv.text = totalPages.toString()
+                            binding.reviewMyreviewCountTv.text = totalElements.toString()
 
                             // 리뷸 어뎁터 통해서 화면에 띄우는 기능 추가해야함
 
@@ -74,7 +76,7 @@ class ReviewManage: Fragment() {
         }
     }
 
-     fun deleteReview(reviewId: Long, position: Int) {
+    fun deleteReview(reviewId: Long, position: Int) {
         lifecycleScope.launch {
             try {
                 val resp = ApiClient.reviewService.deleteReview(reviewId)
@@ -84,7 +86,13 @@ class ReviewManage: Fragment() {
                     // 총 개수 텍스트뷰 갱신
                     val newCount = adapter.itemCount
                     binding.reviewMyreviewCountTv.text = newCount.toString()
-                    Toast.makeText(requireContext(), "리뷰가 삭제되었습니다", Toast.LENGTH_SHORT).show()
+
+                    Snackbar.make(binding.root, "삭제가 완료되었습니다.", Snackbar.LENGTH_LONG) // 메시지가 긴 경우 LENGTH_LONG 사용
+                        .setAction("실행 취소") {
+                            // 실행 취소 버튼을 눌렀을 때 실행될 로직을 작성
+                            Toast.makeText(requireContext(), "삭제가 취소되었습니다", Toast.LENGTH_SHORT).show()
+                        }
+                        .show()
                 } else {
                     Toast.makeText(requireContext(),
                         "삭제 실패: ${resp.code()}",

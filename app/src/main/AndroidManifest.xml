@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sumte"
         tools:targetApi="31">
+
         <activity
             android:name=".roomregister.RoomRegisterActivity"
             android:exported="false" />
@@ -32,6 +33,12 @@
         <activity
             android:name=".ReviewManageActivity"
             android:exported="false" />
+
+        <activity android:name=".review.ReviewWriteActivity"
+            android:exported="false"/>
+        <activity android:name=".review.ReviewManageActivity"
+            android:exported="false"/>
+
         <activity
             android:name=".MyReviewActivity"
             android:exported="false" />
@@ -44,9 +51,9 @@
         <activity
             android:name=".BookInfoActivity"
             android:exported="false" />
-        <activity
-            android:name=".SearchResultActivity"
-            android:exported="true" />
+<!--        <activity-->
+<!--            android:name=".SearchResultActivity"-->
+<!--            android:exported="true" />-->
         <activity
             android:name=".login.LoginActivity"
             android:exported="true" />
@@ -62,11 +69,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EmailInputActivity" />
+
+        <activity android:name=".ImageUpload.ImageUploadActivity"/>
+        <activity android:name=".signup.EmailInputActivity" />
         <activity android:name=".VerificationInputActivity" />
-        <activity android:name=".PasswordInputActivity" />
-        <activity android:name=".SignupProfileActivity" />
-        <activity android:name=".SignupCompleteActivity" />
+        <activity android:name=".signup.PasswordInputActivity" />
+        <activity android:name=".signup.SignupProfileActivity" />
+        <activity android:name=".signup.SignupCompleteActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
