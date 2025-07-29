@@ -250,9 +250,16 @@ class FilteringFragment: Fragment() {
             )
             filterViewModel.applyFilters(filterOptions)
             //activity로 값들 전달
-            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-            intent.putExtra("filterOptions", filterOptions)
-            startActivity(intent)
+//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
+//            intent.putExtra("filterOptions", filterOptions)
+//            startActivity(intent)
+
+            filterViewModel.applyFilters(filterOptions)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.search_result_all_cl, SearchResultFragment())
+                .addToBackStack(null)
+                .commit()
+
         }
 
         //fragment한테 전달할거면 이거로

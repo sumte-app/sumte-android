@@ -88,12 +88,19 @@ class BookInfoCountFragment : Fragment() {
             viewModel.childCount = childCount
         }
 
-        binding.applyBtn.setOnClickListener {
-            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-            startActivity(intent)
-        }
+//        binding.applyBtn.setOnClickListener {
+//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
+//            startActivity(intent)
+//        }
         binding.calendar.setOnClickListener {
             val fragment = BookInfoDateFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        binding.applyBtn.setOnClickListener {
+            val fragment = SearchResultFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
                 .addToBackStack(null)
