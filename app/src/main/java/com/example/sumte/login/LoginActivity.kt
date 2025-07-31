@@ -27,11 +27,16 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private var isPasswordVisible = false
+
+    private var isAllChecked = false
     private lateinit var authService: AuthService
+
     private val passwordRegex = Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#\$%^&*()_+{}\\[\\]:;\"'<>,.?/~`-]).{6,}$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -148,12 +153,18 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-
-
         binding.tvSignUp.setOnClickListener {
+            binding.termsContainer.visibility = View.VISIBLE
+        }
+
+
+
+        binding.btnTermsConfirm.setOnClickListener {
             val intent = Intent(this, EmailInputActivity::class.java)
             startActivity(intent)
         }
+
+        setupAgreementLogic()
 
     }
 
@@ -268,6 +279,82 @@ class LoginActivity : AppCompatActivity() {
             view.clearFocus()
         }
     }
+
+    private fun setupAgreementLogic() {
+        val essentialButtons = listOf(
+            binding.essentialBtn1,
+            binding.essentialBtn2,
+            binding.essentialBtn3
+        )
+        val optionalButtons = listOf(
+            binding.selectBtn1,
+            binding.selectBtn2,
+            binding.selectBtn3
+        )
+
+        binding.agreeBtn.setOnClickListener {
+            isAllChecked = !isAllChecked
+            val checkDrawable = if (isAllChecked) R.drawable.check_check else R.drawable.check
+            val agreeBtnBackground = if (isAllChecked) R.drawable.all_agree_true_button else R.drawable.all_agree_button
+
+            binding.agreeBtn.setBackgroundResource(agreeBtnBackground)
+
+            (essentialButtons + optionalButtons).forEach {
+                it.setBackgroundResource(checkDrawable)
+                it.tag = isAllChecked
+            }
+
+            updateConfirmButtonState()
+        }
+
+
+        (essentialButtons + optionalButtons).forEach { btn ->
+            btn.setOnClickListener {
+                val isChecked = (btn.tag as? Boolean) ?: false
+                val nowChecked = !isChecked
+                val res = if (nowChecked) R.drawable.check_check else R.drawable.check
+
+                btn.setBackgroundResource(res)
+                btn.tag = nowChecked
+
+                updateAllAgreeState(essentialButtons + optionalButtons)
+                updateConfirmButtonState()
+            }
+        }
+    }
+
+
+    private fun updateAllAgreeState(allButtons: List<View>) {
+        val allChecked = allButtons.all { (it.tag as? Boolean) == true }
+        isAllChecked = allChecked
+
+        val agreeBtnRes = if (allChecked) R.drawable.all_agree_true_button else R.drawable.all_agree_button
+        binding.agreeBtn.setBackgroundResource(agreeBtnRes)
+    }
+
+    private fun updateConfirmButtonState() {
+        val essentialButtons = listOf(
+            binding.essentialBtn1,
+            binding.essentialBtn2,
+            binding.essentialBtn3
+        )
+        val allEssentialChecked = essentialButtons.all { (it.tag as? Boolean) == true }
+
+        binding.btnTermsConfirm.isEnabled = allEssentialChecked
+        binding.btnTermsConfirm.alpha = if (allEssentialChecked) 1f else 0.5f
+
+        if (allEssentialChecked) {
+            binding.btnTermsConfirm.setBackgroundResource(R.drawable.input_field_true)
+        } else {
+            binding.btnTermsConfirm.setBackgroundResource(R.drawable.login_button_unable)
+        }
+    }
+
+
+
+
+
+
 
 
 }

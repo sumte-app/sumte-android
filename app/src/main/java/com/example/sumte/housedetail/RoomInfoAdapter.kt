@@ -1,8 +1,10 @@
 package com.example.sumte.housedetail
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sumte.housedetail.ActivityRoomDetail
 import com.example.sumte.databinding.ItemRoomDetailBinding
 
 class RoomInfoAdapter(
@@ -23,6 +25,12 @@ class RoomInfoAdapter(
             binding.ivReserve.setOnClickListener {
                 onReserveClick(room)
             }
+
+            binding.tvRoomDetail.setOnClickListener {
+                val intent = Intent(binding.root.context, ActivityRoomDetail::class.java)
+                binding.root.context.startActivity(intent)
+            }
+
         }
     }
 
@@ -35,6 +43,8 @@ class RoomInfoAdapter(
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         holder.bind(roomList[position])
+
+
     }
 
     override fun getItemCount(): Int = roomList.size

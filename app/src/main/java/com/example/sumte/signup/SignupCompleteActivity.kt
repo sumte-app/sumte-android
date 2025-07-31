@@ -1,8 +1,10 @@
 package com.example.sumte.signup
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivitySignupCompleteBinding
+import com.example.sumte.login.LoginActivity
 
 
 class SignupCompleteActivity : AppCompatActivity() {
@@ -20,8 +22,9 @@ class SignupCompleteActivity : AppCompatActivity() {
 
         // 확인 버튼 클릭 시 동작
         binding.btnConfirm.setOnClickListener {
-            // 예: 메인 화면으로 이동 or finish()
-            finish()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
     }
 }

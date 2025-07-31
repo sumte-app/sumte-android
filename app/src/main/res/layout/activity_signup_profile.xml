@@ -178,7 +178,9 @@
             android:paddingEnd="8dp"
             android:text="여성"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:theme="@style/Signup.Sumte"
+            />
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbMale"
@@ -190,7 +192,9 @@
             android:paddingEnd="8dp"
             android:text="남성"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:theme="@style/Signup.Sumte"
+            />
     </RadioGroup>
 
     <TextView

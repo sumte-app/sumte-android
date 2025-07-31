@@ -187,4 +187,250 @@
         />
 
 
+    <FrameLayout
+        android:id="@+id/termsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layoutTerms"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/rectangle_40070"
+            android:orientation="vertical"
+            android:padding="24dp"
+            app:layout_constraintWidth_percent="0.9">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="숨터를 이용하려면\n약관 동의가 필요해요"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/agree_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/all_agree_button"
+                android:layout_marginTop="20dp"
+                android:visibility="visible"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/essential_btn1"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[필수] 이용약관 동의"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/essential_btn2"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[필수] 만 14세 이상 확인"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/essential_btn3"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[필수] 개인정보 수집 및 이용 동의"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/select_btn1"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[선택] 개인정보 수집 및 이용 동의"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/select_btn2"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[선택] 마케팅 알림 수신 동의"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/select_btn3"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/check"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[선택] 위치기반 서비스 이용약관 동의"
+                        android:textSize="14sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/arrow_right_primary"
+                        android:backgroundTint="#A8A8A8"
+                        />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnTermsConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/login_button_unable"
+                android:enabled="false"
+                android:text="동의하고 시작하기"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
