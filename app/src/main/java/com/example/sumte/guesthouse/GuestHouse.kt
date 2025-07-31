@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.guesthouse
 
 data class GuestHouse(
     val title: String,

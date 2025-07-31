@@ -1,6 +1,7 @@
 package com.example.sumte.review
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.ApiClient
+import com.example.sumte.SharedPreferencesManager
 import com.example.sumte.databinding.FragmentReviewManageBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -17,6 +20,9 @@ class ReviewManage: Fragment() {
     private var _binding: FragmentReviewManageBinding? = null
     private val binding get() = _binding!!
     private val adapter by lazy{ ReviewManageAdapter(this) }
+    private var currentPage = 0
+    private var isLastPage = false
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,39 +45,68 @@ class ReviewManage: Fragment() {
         }
         binding.reviewManageRv.adapter = adapter
         binding.reviewManageRv.layoutManager = LinearLayoutManager(requireContext())
-        loadUserReviews()
+        loadUserReviews(0)
+
+        binding.reviewManageRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = adapter.itemCount
+
+                if (!isLoading && !isLastPage && lastVisibleItem >= totalItemCount - 3) {
+                    currentPage++
+                    loadUserReviews(currentPage)
+                }
+            }
+        })
     }
 
-    fun loadUserReviews() {
+    fun loadUserReviews(page: Int) {
+        isLoading = true
+
+        val token = SharedPreferencesManager.authToken
+        Log.d("REVIEW_API", "access_token=$token")
+        Log.d("REVIEW_API", "요청 page=$page, size=10, sort=createdAt,DESC")
+
         lifecycleScope.launch {
             try {
-                val response = ApiClient.reviewService.getMyReviews()
+                val response = ApiClient.reviewService.getMyReviews(page = page)
                 if (response.isSuccessful) {
                     val body = response.body()
+                    Log.d("리뷰 응답", body.toString())
                     if (body != null) {
                         val reviewList = body.content
                         val totalElements = body.totalElements
+                        isLastPage = body.last
 
-                        if (totalElements != 0) {
-                            // 리뷰가 있을 때
+                        if (reviewList.isNotEmpty()) {
+                            if (page == 0) {
+                                adapter.setItems(reviewList)
+                            } else {
+                                adapter.addItems(reviewList)
+                            }
                             binding.reviewManageRv.visibility = View.VISIBLE
                             binding.noReviewLl.visibility = View.GONE
                             binding.reviewMyreviewCountTv.text = totalElements.toString()
-
-                            // 리뷸 어뎁터 통해서 화면에 띄우는 기능 추가해야함
-
-                            adapter.setItems(reviewList)
-                        } else {
-                            // 리뷰가 없을 때 (기본 레이아웃 상태 유지)
+                        } else if (page == 0) {
+                            // 첫 페이지부터 빈 경우
                             binding.reviewManageRv.visibility = View.GONE
                             binding.noReviewLl.visibility = View.VISIBLE
+                            binding.reviewMyreviewCountTv.text = "0"
                         }
+                        Log.d("REVIEW_API", "불러온 리뷰 수: ${reviewList.size}")
                     }
                 } else {
-                    Toast.makeText(requireContext(), "리뷰 불러오기 실패", Toast.LENGTH_SHORT).show()
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("REVIEW_API", "실패 코드: ${response.code()}, 메시지: $errorBody")
+                    Log.e("리뷰 불러오기 실패", "코드: ${response.code()}, 메시지: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
+                Log.e("REVIEW_API", "예외 발생: ${e.message}", e)
                 Toast.makeText(requireContext(), "네트워크 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+            finally {
+                isLoading = false
             }
         }
     }
@@ -87,21 +122,17 @@ class ReviewManage: Fragment() {
                     val newCount = adapter.itemCount
                     binding.reviewMyreviewCountTv.text = newCount.toString()
 
-                    Snackbar.make(binding.root, "삭제가 완료되었습니다.", Snackbar.LENGTH_LONG) // 메시지가 긴 경우 LENGTH_LONG 사용
+                    Snackbar.make(binding.root, "삭제가 완료되었습니다.", Snackbar.LENGTH_LONG)
                         .setAction("실행 취소") {
                             // 실행 취소 버튼을 눌렀을 때 실행될 로직을 작성
                             Toast.makeText(requireContext(), "삭제가 취소되었습니다", Toast.LENGTH_SHORT).show()
                         }
                         .show()
                 } else {
-                    Toast.makeText(requireContext(),
-                        "삭제 실패: ${resp.code()}",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "삭제 실패: ${resp.code()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(),
-                    "네트워크 오류: ${e.localizedMessage}",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "네트워크 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
     }

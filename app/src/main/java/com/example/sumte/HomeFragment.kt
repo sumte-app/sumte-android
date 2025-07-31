@@ -13,12 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.ImageUpload.ImageUploadActivity
 import com.example.sumte.databinding.FragmentHomeBinding
+import com.example.sumte.guesthouse.GuestHouse
+import com.example.sumte.guesthouse.GuestHouseAdapter
+import com.example.sumte.guesthouse.GuestHouseViewModel
 
 import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.login.LoginActivity
-import kotlinx.coroutines.launch
-import kotlin.apply
-import kotlin.text.clear
 
 import com.example.sumte.review.ReviewWriteActivity
 

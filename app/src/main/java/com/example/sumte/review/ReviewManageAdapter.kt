@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.MyReview
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemReviewBinding
@@ -12,11 +13,10 @@ import com.example.sumte.databinding.ItemReviewBinding
 class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<ReviewManageAdapter.ReviewViewHolder>() {
     private val items = mutableListOf<MyReview>()
 
-    // 외부에서 새 리스트 넣어줄 때 호출
-    fun submitList(list:List<MyReview>){
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
+    fun addItems(newItems: List<MyReview>) {
+        val start = items.size
+        items.addAll(newItems)
+        notifyItemRangeInserted(start, newItems.size)
     }
     fun setItems(newList:List<MyReview>){
         items.clear()
@@ -46,11 +46,8 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
             itemReviewContentTv.text=item.contents
 
             // 사진 부분
-//            itemReviewContentTv.text=item.contents
 //            Glide.with(root).load(item.imageUrl)
-//                .placeholder(R.drawable.like_house2)
-//                .error(R.drawable.like_house2)
-//                .into(photoImageView)
+//                .into(reviewImageIv)
 
             itemReviewEditIv.setOnClickListener {
 
