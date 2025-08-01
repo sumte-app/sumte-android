@@ -144,6 +144,8 @@ class HouseDetailFragment : Fragment() {
 
 
 
+
+
         return binding.root
     }
 

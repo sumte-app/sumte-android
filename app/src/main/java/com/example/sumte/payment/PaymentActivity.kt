@@ -16,9 +16,20 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            view.setPadding(0, statusBarHeight, 0, 0)
+            insets
+        }
+
+
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
         setupPaymentButtons()
         setupAgreementLogic()
         updatePayButtonState()
@@ -45,7 +56,6 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun setupAgreementLogic() {
-        val allAgreeImage = binding.ivAllAgree
         val termsList = listOf(
             binding.cbTerms1,
             binding.cbTerms2,
@@ -54,23 +64,36 @@ class PaymentActivity : AppCompatActivity() {
             binding.cbTerms5
         )
 
-        binding.clAllAgree.setOnClickListener {
-            isAllChecked = !isAllChecked
-            termsList.forEach { it.isChecked = isAllChecked }
+        fun updateAllAgreeState() {
+            val allChecked = termsList.all { it.isChecked }
+            isAllChecked = allChecked
+            binding.clAllAgree.isSelected = allChecked
             updateAllAgreeVisual()
             updatePayButtonState()
         }
 
-        // 개별 체크박스 변경 시 전체 동의 상태 반영
-        termsList.forEach { checkBox ->
-            checkBox.setOnCheckedChangeListener { _, _ ->
-                val allChecked = termsList.all { it.isChecked }
-                isAllChecked = allChecked
-                updateAllAgreeVisual()
-                updatePayButtonState()
+        // ✅ 전체 동의 클릭 시 모든 체크박스 상태 동기화
+        binding.clAllAgree.setOnClickListener {
+            isAllChecked = !isAllChecked
+
+            // 리스너 잠시 제거
+            termsList.forEach { it.setOnCheckedChangeListener(null) }
+            termsList.forEach { it.isChecked = isAllChecked }
+            termsList.forEach { it.setOnCheckedChangeListener { _, _ -> updateAllAgreeState() } }
+
+            binding.clAllAgree.isSelected = isAllChecked
+            updateAllAgreeVisual()
+            updatePayButtonState()
+        }
+
+        // ✅ 개별 항목 클릭 시 전체 상태 업데이트
+        termsList.forEach { cb ->
+            cb.setOnCheckedChangeListener { _, _ ->
+                updateAllAgreeState()
             }
         }
     }
+
 
     private fun updateAllAgreeVisual() {
         // 체크 상태에 따라 이미지 변경

@@ -53,10 +53,26 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
+        <View
+            android:id="@+id/vDivder"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray50"
+            app:layout_constraintTop_toBottomOf="@id/clHeaderBar"
+            app:layout_constraintStart_toStartOf="parent"/>
 
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/dividerTop"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/clHeaderBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -301,11 +317,16 @@
                 android:layout_height="116dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPrice"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
                 android:layout_marginTop="12dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray50"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                
+
 
                 <TextView
                     android:id="@+id/tvCancelPolicyTitle"
@@ -315,7 +336,10 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="20dp" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="16dp"
+                    />
 
 
                 <TextView
@@ -326,7 +350,8 @@
                     android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/tvCancelPolicyTitle"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="12dp" />
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="16dp"/>
 
                 <TextView
                     android:id="@+id/tvPolicy2"
@@ -336,7 +361,15 @@
                     android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/tvPolicy1"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="2dp" />
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="16dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray50"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -385,20 +418,33 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     />
+
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:id="@+id/vDivder2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clPaymentButtons"
+                android:layout_marginTop="20dp"
+                />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clAllAgree"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/btn_login_background"
-                android:enabled="false"
+                android:background="@drawable/btn_agree_selector"
                 android:paddingVertical="8dp"
-                app:layout_constraintTop_toBottomOf="@id/clPaymentButtons"
+                app:layout_constraintTop_toBottomOf="@id/vDivder2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
 
                 <ImageView
                     android:id="@+id/ivAllAgree"
@@ -441,6 +487,7 @@
                 android:layout_height="20dp"
                 android:text="[필수] 숙소 이용규칙 및 취소/환불 동의"
                 android:button="@drawable/custom_check"
+                app:buttonTint="@null"
                 app:layout_constraintTop_toBottomOf="@id/clAllAgree"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="12dp" />
@@ -451,6 +498,7 @@
                 android:layout_height="20dp"
                 android:text="[필수] 개인정보 수집 이용 동의"
                 android:button="@drawable/custom_check"
+                app:buttonTint="@null"
                 app:layout_constraintTop_toBottomOf="@id/cbTerms1"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp" />
@@ -460,6 +508,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:text="[필수] 개인정보 제3자 제공 동의"
+                app:buttonTint="@null"
                 android:button="@drawable/custom_check"
                 app:layout_constraintTop_toBottomOf="@id/cbTerms2"
                 app:layout_constraintStart_toStartOf="parent"
@@ -471,6 +520,7 @@
                 android:layout_height="20dp"
                 android:text="[필수] 서비스 이용 동의"
                 android:button="@drawable/custom_check"
+                app:buttonTint="@null"
                 android:drawablePadding="8dp"
                 app:layout_constraintTop_toBottomOf="@id/cbTerms3"
                 app:layout_constraintStart_toStartOf="parent"
@@ -482,6 +532,7 @@
                 android:layout_height="20dp"
                 android:text="[필수] 만 14세 이상 확인"
                 android:button="@drawable/custom_check"
+                app:buttonTint="@null"
                 android:drawablePadding="8dp"
                 app:layout_constraintTop_toBottomOf="@id/cbTerms4"
                 app:layout_constraintStart_toStartOf="parent"
@@ -494,9 +545,9 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:text="결제하기"
-                android:backgroundTint="#CCCCCC"
-                android:textColor="#FFFFFF"
+                app:backgroundTint="@null"
                 android:enabled="false"
+                android:textColor="#FFFFFF"
                 android:background="@drawable/btn_login_background"
                 app:layout_constraintTop_toBottomOf="@id/cbTerms5"
                 app:layout_constraintStart_toStartOf="parent"
