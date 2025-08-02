@@ -3,9 +3,11 @@ package com.example.sumte.housedetail
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.housedetail.ActivityRoomDetail
 import com.example.sumte.databinding.ItemRoomDetailBinding
+import com.example.sumte.payment.PaymentActivity
 
 class RoomInfoAdapter(
     private val roomList: List<RoomInfo>,
@@ -23,6 +25,8 @@ class RoomInfoAdapter(
             binding.ivRoomImage.setImageResource(room.imageResId)
 
             binding.ivReserve.setOnClickListener {
+                val intent = Intent(binding.root.context, PaymentActivity::class.java)
+                binding.root.context.startActivity(intent)
                 onReserveClick(room)
             }
 
