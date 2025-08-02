@@ -141,6 +141,23 @@ class ReviewManage: Fragment() {
         }
     }
 
+    fun updateReview(reviewId: Long, updatedRequest: ReviewRequest, position: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.reviewService.patchReview(reviewId, updatedRequest)
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "리뷰 수정 성공!", Toast.LENGTH_SHORT).show()
+                    // UI 업데이트
+                    adapter.updateItem(position, updatedRequest)
+                } else {
+                    Toast.makeText(requireContext(), "리뷰 수정 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "네트워크 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

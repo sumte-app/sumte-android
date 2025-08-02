@@ -6,5 +6,6 @@ data class MyReview(
     val contents: String,
     val score: Int,
     val authorNickname: String,
-    val createdAt: String
+    val createdAt: String,
+    val roomId: Long
 )
