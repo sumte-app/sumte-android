@@ -100,6 +100,10 @@ class ReviewManage: Fragment() {
                     val errorBody = response.errorBody()?.string()
                     Log.e("REVIEW_API", "실패 코드: ${response.code()}, 메시지: $errorBody")
                     Log.e("리뷰 불러오기 실패", "코드: ${response.code()}, 메시지: ${response.errorBody()?.string()}")
+                    val rawResponse = response.raw().toString()
+                    val responseText = response.errorBody()?.string()
+                    Log.e("REVIEW_API_RAW", "raw=${rawResponse}")
+                    Log.e("REVIEW_API_RAW_BODY", "text=$responseText")
                 }
             } catch (e: Exception) {
                 Log.e("REVIEW_API", "예외 발생: ${e.message}", e)
