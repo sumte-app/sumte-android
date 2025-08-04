@@ -1,5 +1,6 @@
 package com.example.sumte.myid
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,14 @@ class MyIdMainFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val nickname = sharedPref.getString("nickname", "닉네임 없음")
+        val email = sharedPref.getString("email", "이메일 없음")
+
+        binding.myId.text  = nickname
+        binding.myEmail.text = email
+
+
         binding.editBtn.setOnClickListener {
             val fragment = MyIdEditFragment()
             requireActivity().supportFragmentManager.beginTransaction()

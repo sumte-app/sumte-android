@@ -1,5 +1,6 @@
 package com.example.sumte.myid
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,11 @@ class MyIdEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val nickname = sharedPref.getString("nickname", "닉네임 없음")
+        binding.editNickname.setText(nickname)
+
 
         binding.editNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
