@@ -1,10 +1,12 @@
 package com.example.sumte.review
 
 import com.example.sumte.MyReviewPage
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -43,4 +45,10 @@ interface ReviewService {
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 10
     ): Response<ReviewResponse>
+
+    @PATCH("/api/reviews/{id}")
+    suspend fun patchReview(
+        @Path("reviewId") reviewId: Long,
+        @Body body: ReviewRequest
+    ): Response<Unit>
 }

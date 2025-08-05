@@ -1,6 +1,9 @@
 package com.example.sumte.review
 
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +19,9 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.sumte.ApiClient
 import com.example.sumte.PhotoOptionsBottomSheet
 import com.example.sumte.R
@@ -49,6 +55,7 @@ class ReviewWriteActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityReviewWriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val isEditMode = intent.getBooleanExtra("isEditMode", false)
 
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -149,6 +156,45 @@ class ReviewWriteActivity:AppCompatActivity() {
             binding.reviewContentEt.clearFocus()
             hideKeyboard()
         }
+
+        // 리뷰 수정 모드
+        if (isEditMode) {
+            selectedRating = intent.getIntExtra("score", 0)
+            val content = intent.getStringExtra("contents").orEmpty()
+            val imageUrl = intent.getStringExtra("imageUrl")
+
+            updateStars(listOf(
+                binding.starEmpty1Iv, binding.starEmpty2Iv,
+                binding.starEmpty3Iv, binding.starEmpty4Iv, binding.starEmpty5Iv
+            ), selectedRating)
+
+            binding.reviewContentEt.setText(content)
+            binding.reviewApplyTv.text = "완료"
+
+            imageUrl?.let {
+                binding.reviewPicShowLl.visibility = View.VISIBLE
+                Glide.with(this).load(it).into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                        val bitmap = (resource as BitmapDrawable).bitmap
+                        val uri = saveBitmapToCache(bitmap)
+                        photoList.add(uri)
+                        reviewPhotoAdapter.notifyDataSetChanged()
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+            }
+
+            binding.reviewWriteTitleTv.text = "후기 수정하기"
+        }
+    }
+
+    private fun saveBitmapToCache(bitmap: Bitmap): Uri {
+        val file = File(cacheDir, "edit_review_image_${System.currentTimeMillis()}.jpg")
+        file.outputStream().use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
+        }
+        return FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
     }
 
     //키보드 숨기기
@@ -221,36 +267,9 @@ class ReviewWriteActivity:AppCompatActivity() {
         }
     }
 
-    // 이미지 -> s3 업로드 후 url 얻기
-//    private suspend fun uploadFirstPhotoViaPresignedUrl(): String? = withContext(Dispatchers.IO) {
-//        if (photoList.isEmpty()) return@withContext null
-//
-//        val uri         = photoList.first()
-//        val mimeType    = contentResolver.getType(uri) ?: "image/jpeg"
-//        val fileName    = "review_${System.currentTimeMillis()}.jpg"
-//
-//        // presigned URL 요청
-//        val preResp = ApiClient.reviewService.getPresignedUrl(fileName, mimeType)
-//        if (!preResp.isSuccessful) throw HttpException(preResp)
-//        val presignedUrl = preResp.body() ?: throw IllegalStateException("빈 PresignedURL")
-//
-//        // 파일 바이트 추출
-//        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
-//            ?: throw IllegalStateException("파일 읽기 실패")
-//
-//        // PUT 으로 업로드 (OkHttp)
-//        val request = Request.Builder()
-//            .url(presignedUrl)
-//            .put(bytes.toRequestBody(mimeType.toMediaType()))
-//            .build()
-//
-//        val okResp = OkHttpClient().newCall(request).execute()
-//        if (!okResp.isSuccessful) throw IOException("S3 업로드 실패: ${okResp.code}")
-//
-//        presignedUrl.substringBefore("?")
-//    }
-
     private fun sendReviewToServer() = lifecycleScope.launch {
+        val isEditMode = intent.getBooleanExtra("isEditMode", false)
+        val reviewId = intent.getLongExtra("reviewId", -1)
         val roomId   = intent.getLongExtra("roomId", -1)
         val contents = binding.reviewContentEt.text.toString().trim()
         val score    = selectedRating
@@ -265,6 +284,7 @@ class ReviewWriteActivity:AppCompatActivity() {
             // 사진 1장을 S3 Presigned URL 로 업로드
             val imageUrl: String? = withContext(Dispatchers.IO) {
                 if (photoList.isEmpty()) return@withContext null
+                if (photoList.first().toString().startsWith("http")) return@withContext photoList.first().toString()
 
                 // Presigned URL 발급
                 val mimeType = contentResolver.getType(photoList.first()) ?: "image/jpeg"
@@ -294,26 +314,23 @@ class ReviewWriteActivity:AppCompatActivity() {
             }
 
             // 리뷰 JSON 전송
-            val body = ReviewRequest(roomId = roomId,
-                imageUrl = imageUrl,
-                contents = contents,
-                score = score)
+            val body = ReviewRequest(roomId = roomId, imageUrl = imageUrl, contents = contents, score = score)
 
-            val resp = ApiClient.reviewService.postReview(body)
+            val resp = if (isEditMode && reviewId != -1L) {
+                ApiClient.reviewService.patchReview(reviewId, body)
+            } else {
+                ApiClient.reviewService.postReview(body)
+            }
+
             if (resp.isSuccessful) {
-                Toast.makeText(this@ReviewWriteActivity,
-                    "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ReviewWriteActivity, "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
-                Toast.makeText(this@ReviewWriteActivity,
-                    "등록 실패: ${resp.code()}",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ReviewWriteActivity, "등록 실패: ${resp.code()}", Toast.LENGTH_SHORT).show()
             }
 
         } catch (e: Exception) {
-            Toast.makeText(this@ReviewWriteActivity,
-                "오류: ${e.localizedMessage}",
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ReviewWriteActivity, "오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }
 }

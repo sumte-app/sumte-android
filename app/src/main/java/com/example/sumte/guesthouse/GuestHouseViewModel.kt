@@ -1,10 +1,8 @@
-package com.example.sumte
+package com.example.sumte.guesthouse
 
-import android.graphics.Insets.add
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.common.collect.Iterables.removeIf
 
 class GuestHouseViewModel : ViewModel() {
     private val _likedList = MutableLiveData<MutableList<GuestHouse>>(mutableListOf())

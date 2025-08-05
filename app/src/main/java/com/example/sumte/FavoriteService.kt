@@ -37,21 +37,6 @@ data class FavoriteContent(
     // guesthouseId와 guesthouseName만 포함한다고 가정
 )
 
-data class Sort(
-    val empty: Boolean,
-    val unsorted: Boolean,
-    val sorted: Boolean
-)
-
-data class Pageable(
-    val offset: Long,
-    val sort: Sort,
-    val unpaged: Boolean,
-    val paged: Boolean,
-    val pageNumber: Int,
-    val pageSize: Int
-)
-
 interface FavoriteService {
     // 찜 추가
     @POST("/api/favorites/{guesthouseId}")
