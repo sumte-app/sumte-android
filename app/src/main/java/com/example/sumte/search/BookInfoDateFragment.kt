@@ -218,9 +218,5 @@ class BookInfoDateFragment : Fragment() {
                 .commit()
         }
 
-//        binding.applyBtn.setOnClickListener {
-//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-//            startActivity(intent)
-//        }
     }
 }

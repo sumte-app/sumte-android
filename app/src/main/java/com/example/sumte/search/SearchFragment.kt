@@ -30,15 +30,6 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.bookInfo.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.backBtn.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
-
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
         startDate?.let { start ->
@@ -49,6 +40,14 @@ class SearchFragment : Fragment() {
                 binding.endDate.text = end.format(formatter)
                 binding.dateCount.text = "${nights}박"
             }
+        }
+        binding.bookInfo.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 }
