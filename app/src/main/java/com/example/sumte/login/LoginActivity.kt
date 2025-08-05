@@ -195,36 +195,101 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val body = response.body()
 
-                    Log.d("LoginResponse", "서버 메시지: ${body?.message}")
-
                     if (body != null && body.success) {
                         val token = body.data?.accessToken ?: ""
 
-
+                        // 토큰 저장
                         getSharedPreferences("auth", MODE_PRIVATE)
                             .edit()
                             .putString("access_token", token)
                             .apply()
 
-                        Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                        // 프로필 정보 조회 API 호출
+                        fetchUserProfile(token)
 
-
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
                     } else {
                         showCustomErrorDialog()
                     }
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e("LoginResponse", "실패 응답: $errorBody")
                     showCustomErrorDialog()
                 }
             } catch (e: Exception) {
-                Log.e("LoginError", "서버 오류: ${e.localizedMessage}")
                 Toast.makeText(this@LoginActivity, "서버 오류: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         }
     }
+
+    // 프로필 API 호출 함수
+    private suspend fun fetchUserProfile(token: String) {
+        try {
+            val profileResponse = authService.getUserProfile("Bearer $token")
+            if (profileResponse.isSuccessful) {
+                val profile = profileResponse.body()
+                if (profile != null) {
+                    // 닉네임, 이메일 등 필요한 정보 저장하기
+                    val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    sharedPref.edit()
+                        .putString("nickname", profile.nickname)
+                        .putString("email", profile.email)
+                        .apply()
+
+                    Toast.makeText(this@LoginActivity, "로그인 및 프로필 조회 성공!", Toast.LENGTH_SHORT).show()
+
+                    // 메인 화면으로 이동
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
+
+                } else {
+                    Toast.makeText(this@LoginActivity, "프로필 조회 실패", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this@LoginActivity, "프로필 조회 실패: ${profileResponse.code()}", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this@LoginActivity, "프로필 API 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+//    private fun login(email: String, password: String) {
+//        val loginRequest = LoginRequest(loginId = email, password = password)
+//
+//        lifecycleScope.launch {
+//            try {
+//                val response = authService.login(loginRequest)
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//
+//                    Log.d("LoginResponse", "서버 메시지: ${body?.message}")
+//
+//                    if (body != null && body.success) {
+//                        val token = body.data?.accessToken ?: ""
+//
+//
+//                        getSharedPreferences("auth", MODE_PRIVATE)
+//                            .edit()
+//                            .putString("access_token", token)
+//                            .apply()
+//
+//                        Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+//
+//
+//                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+//                        finish()
+//                    } else {
+//                        showCustomErrorDialog()
+//                    }
+//                } else {
+//                    val errorBody = response.errorBody()?.string()
+//                    Log.e("LoginResponse", "실패 응답: $errorBody")
+//                    showCustomErrorDialog()
+//                }
+//            } catch (e: Exception) {
+//                Log.e("LoginError", "서버 오류: ${e.localizedMessage}")
+//                Toast.makeText(this@LoginActivity, "서버 오류: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
 
 
 

@@ -3,6 +3,7 @@ package com.example.sumte
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.sumte.ImageUpload.S3Service
+import com.example.sumte.login.AuthService
 import com.example.sumte.review.ReviewService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -70,5 +71,9 @@ object ApiClient {
 
     val s3Service: S3Service by lazy{
         retrofit.create(S3Service::class.java)
+    }
+
+    val authService: AuthService by lazy {
+        retrofit.create(AuthService::class.java)
     }
 }

@@ -15,7 +15,6 @@ class BookInfoCountFragment : Fragment() {
     lateinit var binding: FragmentBookInfoCountBinding
     private val viewModel: BookInfoViewModel by activityViewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +42,13 @@ class BookInfoCountFragment : Fragment() {
         binding.childCount.text = childCount.toString()
         binding.adultCountText.text = "성인 $adultCount"
         binding.childCountText.text = if (childCount > 0) "아동 $childCount" else ""
+
+        binding.adultMinusBtn.setImageResource(
+            if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
+        )
+        binding.childMinusBtn.setImageResource(
+            if (childCount > 0) R.drawable.minus_green else R.drawable.minus_gray
+        )
 
 
         binding.adultPlusBtn.setOnClickListener {
@@ -87,10 +93,6 @@ class BookInfoCountFragment : Fragment() {
             viewModel.childCount = childCount
         }
 
-//        binding.applyBtn.setOnClickListener {
-//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-//            startActivity(intent)
-//        }
         binding.calendar.setOnClickListener {
             val fragment = BookInfoDateFragment()
             requireActivity().supportFragmentManager.beginTransaction()

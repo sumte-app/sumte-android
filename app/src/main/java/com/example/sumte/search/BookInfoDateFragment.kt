@@ -43,7 +43,6 @@ class BookInfoDateFragment : Fragment() {
     private var currentYearMonth: YearMonth = YearMonth.now()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
             val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
             startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
             endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
@@ -219,9 +218,5 @@ class BookInfoDateFragment : Fragment() {
                 .commit()
         }
 
-//        binding.applyBtn.setOnClickListener {
-//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-//            startActivity(intent)
-//        }
     }
 }
