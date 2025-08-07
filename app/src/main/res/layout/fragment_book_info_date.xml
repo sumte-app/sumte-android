@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/cancel_btn"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:src="@drawable/cancel_btn" />

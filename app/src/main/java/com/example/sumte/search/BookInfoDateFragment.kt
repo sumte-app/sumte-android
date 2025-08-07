@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.replace
 import com.example.sumte.R
 import com.example.sumte.databinding.CalendarDayLayoutBinding
 import com.example.sumte.databinding.FragmentBookInfoDateBinding
@@ -46,7 +47,6 @@ class BookInfoDateFragment : Fragment() {
             val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
             startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
             endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
-
             val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
             binding.startDate.text = startDate!!.format(formatter)
             binding.endDate.text = endDate!!.format(formatter)
@@ -211,6 +211,13 @@ class BookInfoDateFragment : Fragment() {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
                 .addToBackStack(null)
+                .commit()
+        }
+
+        binding.cancelBtn.setOnClickListener {
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
                 .commit()
         }
 

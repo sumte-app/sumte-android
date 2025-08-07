@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchBinding
@@ -20,10 +22,12 @@ import java.util.Locale
 
 class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
+    private val viewModel: BookInfoViewModel by activityViewModels()
 
     val seoulZone = ZoneId.of("Asia/Seoul")
     private var startDate: LocalDate? = LocalDate.now(seoulZone)
     private var endDate: LocalDate? = LocalDate.now(seoulZone).plusDays(1)
+
 
     //리사이클러뷰 dummy
     private val historyList = listOf(
@@ -43,17 +47,24 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+        startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
+        endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
+        val nights = ChronoUnit.DAYS.between(startDate, endDate)
+        binding.startDate.text = startDate!!.format(formatter)
+        binding.endDate.text = endDate!!.format(formatter)
+        binding.dateCount.text = "${nights}박"
 
-        startDate?.let { start ->
-            endDate?.let { end ->
-                val nights = ChronoUnit.DAYS.between(start, end)
-
-                binding.startDate.text = start.format(formatter)
-                binding.endDate.text = end.format(formatter)
-                binding.dateCount.text = "${nights}박"
-            }
+        val adultCount = viewModel.adultCount
+        val childCount = viewModel.childCount
+        binding.adultCount.text = "성인 $adultCount"
+        if (childCount > 0) {
+            binding.childCount.visibility = View.VISIBLE
+            binding.childCount.text = "아동 $childCount"
+        } else {
+            binding.childCount.visibility = View.GONE
         }
 
+        //검색창
         binding.searchText.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)) {
@@ -61,11 +72,16 @@ class SearchFragment : Fragment() {
                 val keyword = binding.searchText.text.toString()
 
                 if (keyword.isNotBlank()) {
-                    val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
-                        putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_SEARCH_RESULT)
-                        putExtra(BookInfoActivity.EXTRA_KEYWORD, keyword)
+                    val fragment = SearchResultFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(BookInfoActivity.EXTRA_KEYWORD, keyword)
+                        }
                     }
-                    startActivity(intent)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.book_info_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+
                 }
 
                 true
@@ -81,17 +97,19 @@ class SearchFragment : Fragment() {
 
 
         binding.dateChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
-                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
-            }
-            startActivity(intent)
+            val fragment = BookInfoDateFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.countChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
-                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
-            }
-            startActivity(intent)
+            val fragment = BookInfoCountFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
 
 

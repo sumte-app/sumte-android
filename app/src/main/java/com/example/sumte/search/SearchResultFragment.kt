@@ -59,10 +59,15 @@ class SearchResultFragment : Fragment() {
             // 키워드가 있을 때 처리
             binding.searchText.setText(keyword)
         }
+
         binding.searchText.setOnClickListener{
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+
         }
-
-
 
         binding.searchResultAdjustmentsLl.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -90,8 +95,20 @@ class SearchResultFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        binding.searchText.setOnClickListener {
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.backBtn.setOnClickListener {
-            requireActivity().finish()
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
