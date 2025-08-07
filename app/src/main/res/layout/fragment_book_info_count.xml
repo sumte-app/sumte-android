@@ -95,13 +95,14 @@
                     android:text="6.19 목"
                     android:textStyle="bold"
                     android:textSize="16dp" />
+
                 <TextView
                     android:id="@+id/date_comma"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text=","
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textStyle="bold"
                     android:textSize="16dp" />
 

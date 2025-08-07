@@ -44,6 +44,8 @@ class SearchResultFragment : Fragment() {
         binding.childCount.text =
             if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
 
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
         binding.searchResultAdjustmentsLl.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, FilteringFragment())

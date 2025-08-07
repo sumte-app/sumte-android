@@ -35,8 +35,13 @@ class BookInfoCountFragment : Fragment() {
         binding.endDate.text = end.format(formatter)
         binding.dateCount.text = "${nights}박"
 
+
+
         var adultCount = viewModel.adultCount
         var childCount = viewModel.childCount
+
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
 
         binding.adultCount.text = adultCount.toString()
         binding.childCount.text = childCount.toString()
@@ -45,6 +50,7 @@ class BookInfoCountFragment : Fragment() {
 
         binding.adultMinusBtn.setImageResource(
             if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
+
         )
         binding.childMinusBtn.setImageResource(
             if (childCount > 0) R.drawable.minus_green else R.drawable.minus_gray
@@ -76,6 +82,7 @@ class BookInfoCountFragment : Fragment() {
             viewModel.childCount = childCount
             if (childCount > 0) {
                 binding.childMinusBtn.setImageResource(R.drawable.minus_green)
+                binding.countComma.visibility = View.VISIBLE
             }
             binding.childCount.text = childCount.toString()
             binding.childCountText.text = String.format("아동 %d", childCount)
@@ -89,6 +96,7 @@ class BookInfoCountFragment : Fragment() {
             if (childCount == 0){
                 binding.childMinusBtn.setImageResource(R.drawable.minus_gray)
                 binding.childCountText.text = null
+                binding.countComma.visibility = View.GONE
             }
             viewModel.childCount = childCount
         }

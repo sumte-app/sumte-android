@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text=","
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textStyle="bold"
                     android:textSize="16dp"/>
 

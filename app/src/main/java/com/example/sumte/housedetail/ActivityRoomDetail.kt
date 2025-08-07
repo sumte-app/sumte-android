@@ -16,7 +16,7 @@ class ActivityRoomDetail : AppCompatActivity() {
 
         // intent로 넘어온 데이터 받기
         val roomId = intent.getIntExtra("roomId", -1)
-
-
     }
+
+
 }

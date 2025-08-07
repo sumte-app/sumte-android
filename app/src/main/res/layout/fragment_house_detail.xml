@@ -40,8 +40,8 @@
 
             <ImageView
                 android:id="@+id/ivBack"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="8dp"
+                android:layout_height="16dp"
                 android:src="@drawable/arrow_left"
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toTopOf="parent"

@@ -48,21 +48,20 @@ class BookInfoDateFragment : Fragment() {
             endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
 
             val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-
             binding.startDate.text = startDate!!.format(formatter)
             binding.endDate.text = endDate!!.format(formatter)
             binding.dateCount.text = "${nights}박"
 
             val adultCount = viewModel.adultCount
             val childCount = viewModel.childCount
-
             binding.adultCount.text = "성인 $adultCount"
             binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
+            //comma 컨트롤
+            binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
         }
-
         binding.customCalendar.dayBinder = object : MonthDayBinder<DayViewContainer>{
             override fun create(view: View) = DayViewContainer(view)
 
@@ -77,7 +76,6 @@ class BookInfoDateFragment : Fragment() {
                 ))
                 container.textView.alpha = 1f
                 container.textView.isClickable = true
-
                 //선택 가능한 때 정의
                 val selected = when {
                     startDate != null && endDate != null ->
@@ -130,13 +128,11 @@ class BookInfoDateFragment : Fragment() {
                         container.textView.setBackgroundResource(R.drawable.today_circle)
                     }
                 }
-
                 container.textView.setOnClickListener {
                     val clickedDate = date
                     if (startDate != null && endDate == null && clickedDate == startDate) {
                         return@setOnClickListener
                     }
-
                     when {
                         startDate == null || endDate != null -> {
                             startDate = clickedDate
@@ -149,9 +145,6 @@ class BookInfoDateFragment : Fragment() {
                             endDate = clickedDate
                         }
                     }
-
-                    //val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
                     startDate?.let {
                         binding.startDate.text = it.format(formatter)
                     }
@@ -166,6 +159,9 @@ class BookInfoDateFragment : Fragment() {
                         binding.endDate.text = ""
                         binding.dateCount.text = ""
                     }
+
+                    binding.dateComma.visibility = if (endDate != null) View.VISIBLE else View.GONE
+
 
                     if (startDate != null && endDate != null) {
                         viewModel.startDate = startDate!!
