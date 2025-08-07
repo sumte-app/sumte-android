@@ -83,7 +83,6 @@ class SearchFragment : Fragment() {
                         .commit()
 
                 }
-
                 true
             } else {
                 false
