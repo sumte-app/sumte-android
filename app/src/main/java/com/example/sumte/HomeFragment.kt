@@ -21,6 +21,7 @@ import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.login.LoginActivity
 
 import com.example.sumte.review.ReviewWriteActivity
+import com.example.sumte.search.BookInfoActivity
 
 
 class HomeFragment : Fragment() {
@@ -94,36 +95,12 @@ class HomeFragment : Fragment() {
 //        }
 
         binding.searchBoxLl.setOnClickListener {
-            (activity as? MainActivity)?.navigateToSearchFragment()
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
+            startActivity(intent)
         }
 
-//        binding.adsTv.setOnClickListener {
-//            logout()
-//        }
     }
 
-
-//    private fun logout() {
-//        requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
-//            .edit()
-//            .clear()
-//            .apply()
-//
-//
-//        Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
-//        val prefs = requireActivity().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
-//        val token = prefs.getString("access_token", null)
-//        Log.d("LogoutCheck", "Token after logout: $token")
-//
-//        val intent = Intent(requireContext(), LoginActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        startActivity(intent)
-//
-//        startActivity(Intent(requireContext(), LoginActivity::class.java))
-//        fun showToast(message: String) {
-//            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-//        }
-//
-//    }
 }
 

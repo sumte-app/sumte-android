@@ -31,8 +31,10 @@ class BookInfoActivity : AppCompatActivity() {
                         }
                     }
                 }
+                "search" -> SearchFragment() // ★ 여기 추가
                 else -> BookInfoDateFragment()
             }
+
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)

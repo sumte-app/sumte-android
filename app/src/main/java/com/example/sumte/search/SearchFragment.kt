@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.R
@@ -95,7 +96,8 @@ class SearchFragment : Fragment() {
 
 
         binding.backBtn.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().setResult(AppCompatActivity.RESULT_OK)
+            requireActivity().finish()
         }
     }
 }
