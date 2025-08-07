@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.search
 
 data class History(
     val houseName: String,

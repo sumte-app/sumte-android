@@ -32,13 +32,11 @@
             android:layout_height="12dp" />
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_bar"
         android:layout_width="0dp"
         android:layout_height="96dp"
         android:background="@drawable/round_style"
-        android:clickable="true"
-        android:focusable="true"
         android:orientation="vertical"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,9 +47,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight="1"
             android:paddingHorizontal="16dp"
-            android:gravity="center_vertical">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/boarder">
             <ImageView
                 android:id="@+id/search_icon"
                 android:layout_width="20dp"
@@ -64,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:hint ="지역, 숙소명으로 검색해보세요"
                 android:textColorHint="@color/primary"
+                android:imeOptions="actionDone"
                 android:background="@null"
                 android:textColor="@color/primary"
                 android:textSize="14sp"
@@ -71,55 +71,63 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/boarder"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_weight="0.05"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:background="@color/gray100"/>
+            android:background="@color/gray100"
+            app:layout_constraintTop_toBottomOf="@id/search_with_name"
+            app:layout_constraintBottom_toTopOf="@id/date_change_bar"/>
 
         <LinearLayout
-            android:id="@+id/book_info"
-            android:layout_width="match_parent"
+            android:id="@+id/date_change_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boarder">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/calendar_check"/>
+                android:src="@drawable/calendar_check" />
+
             <TextView
                 android:id="@+id/start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.18 수"
-                android:textStyle="bold"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="-"
-                android:textStyle="bold"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.19 목"
-                android:textStyle="bold"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=","
                 android:layout_marginStart="4dp"
+                android:text=","
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -129,23 +137,37 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="1박"
-                android:textStyle="bold"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/count_change_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="@id/date_change_bar"
+            app:layout_constraintStart_toEndOf="@id/date_change_bar">
+
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/bottom_nav_my"/>
+                android:src="@drawable/bottom_nav_my" />
+
             <TextView
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="성인 1"
-                android:textStyle="bold"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/history"
@@ -181,6 +203,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/history_text"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
