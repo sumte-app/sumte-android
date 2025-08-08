@@ -5,36 +5,39 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.housedetail.ActivityRoomDetail
 import com.example.sumte.databinding.ItemRoomDetailBinding
 import com.example.sumte.payment.PaymentActivity
 
+
 class RoomInfoAdapter(
-    private val roomList: List<RoomInfo>,
+    private var roomList: List<RoomInfo>,
     private val onReserveClick: (RoomInfo) -> Unit
 ) : RecyclerView.Adapter<RoomInfoAdapter.RoomViewHolder>() {
 
     inner class RoomViewHolder(private val binding: ItemRoomDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(room: RoomInfo) {
-            binding.tvRoomName.text = room.name
-            binding.tvRoomPrice.text = "${String.format("%,d", room.price)}원"
-            binding.tvRoomCapacity.text = "기준인원 ${room.person}인 (정원 ${room.maxPerson}인)"
-            binding.tvCheckInOut.text = "체크인 ${room.checkInTime} · 체크아웃 ${room.checkOutTime}"
-            binding.ivRoomImage.setImageResource(room.imageResId)
+        fun bind(room: RoomInfo) = with(binding) {
+            tvRoomName.text = room.name
+            tvRoomPrice.text = "${String.format("%,d", room.price)}원"
+            tvRoomCapacity.text = "기준인원 ${room.standardCount}인 (정원 ${room.totalCount}인)"
+            tvCheckInOut.text = "체크인 ${room.checkin} · 체크아웃 ${room.checkout}"
 
-            binding.ivReserve.setOnClickListener {
-                val intent = Intent(binding.root.context, PaymentActivity::class.java)
-                binding.root.context.startActivity(intent)
+            Glide.with(ivRoomImage.context)
+                .load(room.imageUrl)
+                .placeholder(android.R.color.darker_gray)
+                .error(android.R.color.darker_gray)
+                .into(ivRoomImage)
+
+            ivReserve.setOnClickListener {
+                root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
                 onReserveClick(room)
             }
-
-            binding.tvRoomDetail.setOnClickListener {
-                val intent = Intent(binding.root.context, ActivityRoomDetail::class.java)
-                binding.root.context.startActivity(intent)
+            tvRoomDetail.setOnClickListener {
+                root.context.startActivity(Intent(root.context, ActivityRoomDetail::class.java))
             }
-
         }
     }
 
@@ -47,9 +50,13 @@ class RoomInfoAdapter(
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         holder.bind(roomList[position])
-
-
     }
 
     override fun getItemCount(): Int = roomList.size
+
+    /** ViewModel에서 받은 리스트로 갱신 */
+    fun submitList(newList: List<RoomInfo>) {
+        roomList = newList
+        notifyDataSetChanged()
+    }
 }

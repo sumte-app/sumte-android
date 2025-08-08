@@ -5,7 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface RoomService {
+interface RoomRegisterService {
 
     @POST("guesthouses/{id}/rooms")
     fun registerRoom(

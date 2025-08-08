@@ -1,10 +1,11 @@
 package com.example.sumte
 
 import com.example.sumte.guesthouse.GuesthouseApi
-import com.example.sumte.roomregister.RoomService
+import com.example.sumte.roomregister.RoomRegisterService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
+import com.example.sumte.housedetail.RoomService
 
 object RetrofitClient {
     private const val BASE_URL = "https://sumteapi.duckdns.org/"
@@ -23,13 +24,13 @@ object RetrofitClient {
             .create(ApiService::class.java)
     }
 
-    val roomService: RoomService by lazy {
-        instance.create(RoomService::class.java)
-    }
+    // 조회 API
+    val roomService: RoomService by lazy { instance.create(RoomService::class.java)}
+
+    // 등록 API
+    val roomRegisterService: RoomRegisterService by lazy { instance.create(RoomRegisterService::class.java)}
 
     val api: GuesthouseApi by lazy {
         instance.create(GuesthouseApi::class.java)
     }
-
-
 }
