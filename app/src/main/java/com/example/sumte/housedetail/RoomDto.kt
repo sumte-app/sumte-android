@@ -1,12 +1,13 @@
 package com.example.sumte.housedetail
 
-data class RoomInfo(
+data class RoomDto(
+    val id: Int,
     val name: String,
-    val content: String,
+    val content: String?,
     val price: Int,
     val checkin: String,
     val checkout: String,
     val standardCount: Int,
     val totalCount: Int,
-    val imageUrl: String?
+    val imageUrls: String?
 )

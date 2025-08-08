@@ -35,7 +35,7 @@ class RoomRegisterActivity : AppCompatActivity() {
             )
             Log.d(TAG, "Sending room register request: $room")
 
-            RetrofitClient.roomService.registerRoom(guesthouseId, room)
+            RetrofitClient.roomRegisterService.registerRoom(guesthouseId, room)
                 .enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
