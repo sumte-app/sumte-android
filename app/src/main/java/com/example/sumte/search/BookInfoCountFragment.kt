@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookInfoCountBinding
 import java.time.format.DateTimeFormatter
@@ -13,7 +15,14 @@ import java.util.Locale
 
 class BookInfoCountFragment : Fragment() {
     lateinit var binding: FragmentBookInfoCountBinding
-    private val viewModel: BookInfoViewModel by activityViewModels()
+    //private val viewModel: BookInfoViewModel by activityViewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,11 +125,21 @@ class BookInfoCountFragment : Fragment() {
                 .commit()
         }
         binding.cancelBtn.setOnClickListener {
-            val fragment = SearchFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .commit()
+            val fragmentManager = requireActivity().supportFragmentManager
+            if (fragmentManager.backStackEntryCount > 0) {
+                // 같은 액티비티의 이전 프래그먼트로 돌아감
+                fragmentManager.popBackStack()
+            } else {
+                // 다른 액티비티에서 왔다면 현재 액티비티 종료
+                requireActivity().finish()
+            }
         }
+//        binding.cancelBtn.setOnClickListener {
+//            val fragment = SearchFragment()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.book_info_container, fragment)
+//                .commit()
+//        }
 
     }
 

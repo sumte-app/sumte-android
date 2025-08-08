@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.sumte.App
 import com.example.sumte.FilterOptions
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchResultBinding
@@ -19,7 +21,13 @@ class SearchResultFragment : Fragment() {
 
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: BookInfoViewModel by activityViewModels()
+    //private val viewModel: BookInfoViewModel by activityViewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
     private var keyword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

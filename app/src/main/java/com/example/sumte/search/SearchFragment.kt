@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchBinding
 import java.time.LocalDate
@@ -22,7 +23,14 @@ import java.util.Locale
 
 class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
-    private val viewModel: BookInfoViewModel by activityViewModels()
+    //private val viewModel: BookInfoViewModel by activityViewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
+
 
     val seoulZone = ZoneId.of("Asia/Seoul")
     private var startDate: LocalDate? = LocalDate.now(seoulZone)
@@ -93,7 +101,6 @@ class SearchFragment : Fragment() {
         val adapter = HistoryAdapter(historyList)
         binding.historyRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecyclerview.adapter = adapter
-
 
         binding.dateChangeBar.setOnClickListener {
             val fragment = BookInfoDateFragment()

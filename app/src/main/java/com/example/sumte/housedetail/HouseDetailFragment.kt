@@ -15,11 +15,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.sumte.App
 import com.example.sumte.HouseImageAdapter
 import com.example.sumte.R
 import com.example.sumte.housedetail.RoomInfo
@@ -28,11 +30,23 @@ import com.example.sumte.roomregister.RoomRegisterActivity
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
+import com.example.sumte.search.BookInfoActivity
+import com.example.sumte.search.BookInfoCountFragment
+import com.example.sumte.search.BookInfoDateFragment
+import com.example.sumte.search.BookInfoViewModel
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class HouseDetailFragment : Fragment() {
 
     lateinit var binding : FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
 
     val sampleRooms = listOf(
         RoomInfo("남자 도미토리 4인", 28000, 4, 8, "17:00", "11:00", R.drawable.sample_room1),
@@ -59,21 +73,11 @@ class HouseDetailFragment : Fragment() {
         )
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater,container,false)
-
-
 
         val imageList = listOf(
             R.drawable.sample_house1,
@@ -143,9 +147,6 @@ class HouseDetailFragment : Fragment() {
         }
 
 
-
-
-
         return binding.root
     }
 
@@ -174,5 +175,34 @@ class HouseDetailFragment : Fragment() {
         ).toInt()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
+        val startDate = viewModel.startDate
+        val endDate = viewModel.endDate
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+
+        binding.startDate.text = startDate.format(formatter)
+        binding.endDate.text = endDate.format(formatter)
+        binding.dateCount.text = "${nights}박"
+
+        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.childCount.text =
+            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
+        binding.dateChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            startActivity(intent)
+        }
+
+        binding.countChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            startActivity(intent)
+        }
+    }
 }

@@ -30,17 +30,4 @@ class MyIdViewModel : ViewModel() {
         }
     }
 
-//    fun updateNickname(nickname: String) {
-//        viewModelScope.launch {
-//            try {
-//                val response = ApiClient.authService.updateNickname(
-//                    token = "", // Interceptor가 자동으로 Authorization 추가
-//                    request = AuthService.UpdateNicknameRequest(nickname)
-//                )
-//                _updateResult.value = response.isSuccessful
-//            } catch (e: Exception) {
-//                _updateResult.value = false
-//            }
-//        }
-//    }
 }

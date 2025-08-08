@@ -24,7 +24,6 @@ class BookedAdapter(
                 binding.dateCount.text = bookedData.dateCount
                 binding.adultCount.text = "${bookedData.adultCount}명"
                 binding.childCount.text = "${bookedData.childCount}명"
-
             }
         }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookedViewHolder {
