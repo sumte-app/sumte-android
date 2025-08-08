@@ -15,8 +15,9 @@ interface ApiService {
     fun signUp(@Body request: SignUpRequest): Call<Void>
 
     // ApiService.kt
-    @GET("/users/signup/duplicate/nickname")
+    @GET("users/signup/duplicate/nickname")
     fun checkNickname(@Query("nickname") nickname: String): Call<NicknameResponse>
+
 
     @GET("/api/reviews")
     suspend fun getAllReviews(

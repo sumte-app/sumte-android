@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import com.example.sumte.guesthouse.GuesthouseApi
 import com.example.sumte.roomregister.RoomService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,4 +26,10 @@ object RetrofitClient {
     val roomService: RoomService by lazy {
         instance.create(RoomService::class.java)
     }
+
+    val api: GuesthouseApi by lazy {
+        instance.create(GuesthouseApi::class.java)
+    }
+
+
 }
