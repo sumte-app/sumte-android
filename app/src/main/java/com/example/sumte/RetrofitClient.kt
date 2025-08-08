@@ -23,9 +23,7 @@ object RetrofitClient {
             .create(ApiService::class.java)
     }
 
-    // 조회 API
-    val roomService: RoomService by lazy { instance.create(RoomService::class.java)}
-
-    // 등록 API
-    val roomRegisterService: RoomRegisterService by lazy { instance.create(RoomRegisterService::class.java)}
+    val roomService: RoomService by lazy {
+        instance.create(RoomService::class.java)
+    }
 }

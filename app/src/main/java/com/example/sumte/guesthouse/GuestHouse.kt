@@ -6,5 +6,6 @@ data class GuestHouse(
     val price: String,
     val imageResId: Int,
     val time: String,
-    val id: Long
+    val id: Long ,
+    val imageUrl: String? = null
 )
