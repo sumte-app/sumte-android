@@ -7,19 +7,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.databinding.ItemHistoryBinding
 
 class HistoryAdapter(
-    private val items: List<History>
+    private val items: MutableList<History>,
+    private val saveHistory: (List<History>) -> Unit   // 저장 콜백 받음
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(history: History) {
-            binding.houseName.text = history.houseName
+            binding.keyword.text = history.keyword
             binding.startDate.text = history.startDate
             binding.endDate.text = history.endDate
             binding.adultCount.text = "성인 ${history.adultCount}"
 
-            // 아동 수가 0이면 childCount와 컴마 숨기기
             if (history.childCount > 0) {
                 binding.childCount.visibility = View.VISIBLE
                 binding.childCount.text = "아동 ${history.childCount}"
@@ -28,8 +28,17 @@ class HistoryAdapter(
                 binding.childCount.visibility = View.GONE
                 binding.comma.visibility = View.GONE
             }
-//            // endDate가 비어있으면 dateComma 숨기기
-//            binding.dateComma.visibility = if (history.endDate.isNotEmpty()) View.VISIBLE else View.GONE
+
+            binding.removeBtn.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    items.removeAt(position)
+                    notifyItemRemoved(position)
+
+                    // SharedPreferences에 저장하는 콜백 호출
+                    saveHistory(items)
+                }
+            }
         }
     }
 
@@ -43,4 +52,11 @@ class HistoryAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun addItem(item: History) {
+        items.add(0, item)        // 리스트 맨 앞에 새 아이템 추가
+        notifyItemInserted(0)     // 0번 인덱스에 아이템 추가 알림
+        saveHistory(items)        // 변경된 리스트 저장 콜백 호출
+    }
+
 }

@@ -10,11 +10,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/history_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/house_name"
+        app:layout_constraintEnd_toStartOf="@id/keyword"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/house_name"
+        android:id="@+id/keyword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="애월 게스트하우스"
@@ -30,8 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/house_name"
-        app:layout_constraintTop_toBottomOf="@id/house_name">
+        app:layout_constraintStart_toStartOf="@id/keyword"
+        app:layout_constraintTop_toBottomOf="@id/keyword">
 
         <TextView
             android:id="@+id/start_date"
@@ -114,6 +114,7 @@
 
 
     <ImageView
+        android:id="@+id/remove_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/cancel_btn"
