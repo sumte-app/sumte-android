@@ -24,9 +24,9 @@ import java.util.Locale
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
+
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var historyList: MutableList<History>
-
     private val viewModel by lazy {
         ViewModelProvider(
             App.instance,
@@ -129,6 +129,11 @@ class SearchFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             requireActivity().setResult(AppCompatActivity.RESULT_OK)
             requireActivity().finish()
+        }
+
+        binding.allDeleteBtn.setOnClickListener {
+            historyAdapter.clearAll()
+            saveHistoryList(emptyList())
         }
     }
 

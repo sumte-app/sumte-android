@@ -29,7 +29,7 @@ class HistoryAdapter(
                 binding.comma.visibility = View.GONE
             }
 
-            binding.removeBtn.setOnClickListener {
+            binding.deleteBtn.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     items.removeAt(position)
@@ -57,6 +57,12 @@ class HistoryAdapter(
         items.add(0, item)        // 리스트 맨 앞에 새 아이템 추가
         notifyItemInserted(0)     // 0번 인덱스에 아이템 추가 알림
         saveHistory(items)        // 변경된 리스트 저장 콜백 호출
+    }
+
+    fun clearAll() {
+        val size = items.size
+        items.clear()
+        notifyItemRangeRemoved(0, size)
     }
 
 }
