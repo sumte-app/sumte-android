@@ -3,25 +3,25 @@ package com.example.sumte.guesthouse
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class GuestHouseAdapter(
-    private val items: List<GuestHouse>,
     private val viewModel: GuestHouseViewModel,
     private val onItemClick: (GuestHouse) -> Unit
-//    private val onHeartClick: (GuestHouse) -> Unit
 ) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
 
+    // 불변 리스트 유지
+    var items: List<GuestHouse> = emptyList()
+        private set
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGuesthouseBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return ViewHolder(binding)
     }
@@ -34,27 +34,41 @@ class GuestHouseAdapter(
             guesthouseTitleTv.text = guestHouse.title
             guesthouseLocationTv.text = guestHouse.location
             guesthousePriceTv.text = guestHouse.price
-            guesthouseIv.setImageResource(guestHouse.imageResId)
+            // URL 있으면 Glide, 없으면 로컬 리소스
+            val ph = guestHouse.imageResId
+            if (!guestHouse.imageUrl.isNullOrBlank()) {
+                Glide.with(root).load(guestHouse.imageUrl)
+                    .placeholder(ph).error(ph).into(guesthouseIv)
+            } else {
+                guesthouseIv.setImageResource(ph)
+            }
 
             val isLiked = viewModel.isLiked(guestHouse)
             guesthouseHeartIv.setImageResource(
                 if (isLiked) R.drawable.heart_home_filled else R.drawable.heart_home_empty
             )
 
-            //클릭 이벤트
-            root.setOnClickListener {
-                onItemClick(guestHouse)
-            }
+            root.setOnClickListener { onItemClick(guestHouse) }
 
             guesthouseHeartIv.setOnClickListener {
                 viewModel.toggleLike(guestHouse)
-//                onHeartClick(guestHouse)
-                val position = holder.adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    notifyItemChanged(position)
-                }
+                val pos = holder.bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) notifyItemChanged(pos)
             }
         }
     }
-}
 
+
+    fun replaceAll(newItems: List<GuestHouse>) {
+        items = newItems.toList()
+        notifyDataSetChanged()
+    }
+
+    // 다음 페이지 “붙이기” (copy-on-write)
+    fun append(newItems: List<GuestHouse>) {
+        if (newItems.isEmpty()) return
+        val start = items.size
+        items = items + newItems
+        notifyItemRangeInserted(start, newItems.size)
+    }
+}
