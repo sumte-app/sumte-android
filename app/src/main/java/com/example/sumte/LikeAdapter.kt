@@ -3,18 +3,18 @@ package com.example.sumte
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.databinding.ItemGuesthouseBinding
 import com.example.sumte.guesthouse.GuestHouse
 import com.example.sumte.guesthouse.GuestHouseViewModel
 
 class LikeAdapter(
-    private val items: MutableList<GuestHouse>,
-    private val viewModel: GuestHouseViewModel,
+    private val items: MutableList<GuestHouseResponse>,
     private val onLikeRemovedListener: OnLikeRemovedListener
 ) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
 
     interface OnLikeRemovedListener {
-        fun onLikeRemoved(guestHouse: GuestHouse)
+        fun onLikeRemoved(guestHouse: GuestHouseResponse)
     }
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
@@ -32,23 +32,37 @@ class LikeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val guestHouse = items[position]
         with(holder.binding) {
-            guesthouseTitleTv.text = guestHouse.title
-            guesthouseLocationTv.text = guestHouse.location
-            guesthousePriceTv.text = guestHouse.price
-            guesthouseIv.setImageResource(guestHouse.imageResId)
+            guesthouseTitleTv.text = guestHouse.name
+            guesthouseLocationTv.text = guestHouse.addressRegion
+            guesthousePriceTv.text = guestHouse.minPrice.toString()
+            Glide.with(root.context)
+                .load(guestHouse.imageUrls)
+                .into(guesthouseIv)
 
-            guesthouseHeartIv.setImageResource(
-                if (viewModel.isLiked(guestHouse)) R.drawable.heart_home_filled else R.drawable.heart_home_empty
-            )
+            guesthouseHeartIv.setImageResource(R.drawable.heart_home_filled)
 
             guesthouseHeartIv.setOnClickListener {
-                viewModel.toggleLike(guestHouse)
-                items.removeAt(position)
-                notifyItemRemoved(position)
-
-                // Fragment에 찜 삭제 이벤트 알림
                 onLikeRemovedListener.onLikeRemoved(guestHouse)
             }
         }
+    }
+
+    fun setItems(newItems: List<GuestHouseResponse>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    fun removeItem(guestHouse: GuestHouseResponse) {
+        val index = items.indexOfFirst { it.id == guestHouse.id }
+        if (index != -1) {
+            items.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
+    fun addItem(guestHouse: GuestHouseResponse) {
+        items.add(0, guestHouse)
+        notifyItemInserted(0)
     }
 }

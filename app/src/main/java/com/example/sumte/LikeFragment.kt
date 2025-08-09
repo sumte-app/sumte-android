@@ -1,6 +1,7 @@
 package com.example.sumte
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,57 +9,83 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.databinding.CustomSnackbarBinding
 import com.example.sumte.databinding.FragmentLikeBinding
 import com.example.sumte.guesthouse.GuestHouse
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
-    lateinit var binding: FragmentLikeBinding
-    private lateinit var viewModel: GuestHouseViewModel
+    private lateinit var binding: FragmentLikeBinding
     private lateinit var adapter: LikeAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val likeService = ApiClient.likeService
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding=FragmentLikeBinding.inflate(inflater, container, false)
+    ): View {
+        binding = FragmentLikeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
-        viewModel.likedList.observe(viewLifecycleOwner) { likedItems ->
-            adapter = LikeAdapter(likedItems.toMutableList(), viewModel, this)
-            binding.likeRv.layoutManager = LinearLayoutManager(requireContext())
-            binding.likeRv.adapter = adapter
+        super.onViewCreated(view, savedInstanceState)
+        adapter = LikeAdapter(mutableListOf(), this)
+        binding.likeRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.likeRv.adapter = adapter
+
+        loadFavorites()
+    }
+
+    private fun loadFavorites() {
+        lifecycleScope.launch {
+            try {
+                val response = likeService.getLikes()
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    body?.let {
+                        adapter.setItems(it.content)
+                    }
+                } else {
+                    Log.e("LikeFragment", "Failed: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
-    override fun onLikeRemoved(guestHouse: GuestHouse) {
-        val message = "찜 목록에서 삭제했어요."
-//        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
-//            .setAction("실행 취소") {
-//                // 실행 취소 버튼을 눌렀을 때의 로직
-//                // 뷰모델의 찜 목록에 다시 추가하는 로직을 구현.
-//                viewModel.toggleLike(guestHouse)
-//                // RecyclerView를 다시 그린다.
-//                adapter.notifyDataSetChanged()
-//            }
-//            .show()
-        showCustomSnackbar(binding.root, message, { onUndoAction(guestHouse) }, R.id.bottom_nav_view)
+    override fun onLikeRemoved(guestHouse: GuestHouseResponse) {
+        lifecycleScope.launch {
+            try {
+                val response = likeService.removeLikes(guestHouse.id)
+                if (response.isSuccessful) {
+                    adapter.removeItem(guestHouse)
+                    showCustomSnackbar(binding.root, "찜 목록에서 삭제했어요.", {
+                        undoRemove(guestHouse)
+                    }, R.id.bottom_nav_view)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
-    private fun onUndoAction(guestHouse: GuestHouse) {
-        viewModel.toggleLike(guestHouse)
-        adapter.notifyDataSetChanged()
+    private fun undoRemove(guestHouse: GuestHouseResponse) {
+        lifecycleScope.launch {
+            try {
+                val response = likeService.addLikes(guestHouse.id)
+                if (response.isSuccessful) {
+                    adapter.addItem(guestHouse)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun showCustomSnackbar(rootView: View, message: String, onAction: () -> Unit, anchorViewId: Int? = null) {
@@ -76,18 +103,13 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         )
 
         customBinding.snackbarTextLikedTv.text = message
-
         customBinding.snackbarActionCancelTv.setOnClickListener {
-            onAction.invoke() // 전달받은 실행 취소 로직 호출
-            snackbar.dismiss() // 스낵바 닫기
+            onAction.invoke()
+            snackbar.dismiss()
         }
 
         snackbarView.addView(customBinding.root, 0, layoutParams)
-
-        anchorViewId?.let { id ->
-            snackbar.setAnchorView(id)
-        }
-
+        anchorViewId?.let { snackbar.setAnchorView(it) }
         snackbar.show()
     }
 }
