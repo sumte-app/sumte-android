@@ -1,18 +1,32 @@
 package com.example.sumte.payment
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.databinding.ActivityPaymentBinding
+import com.example.sumte.search.BookInfoViewModel
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class PaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPaymentBinding
     private var selectedPaymentMethod: String = "kakao"
     private var isAllChecked = false
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +39,23 @@ class PaymentActivity : AppCompatActivity() {
             view.setPadding(0, statusBarHeight, 0, 0)
             insets
         }
+
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val startDate = viewModel.startDate
+        val endDate = viewModel.endDate
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+
+        binding.startDate.text = startDate.format(formatter)
+        binding.endDate.text = endDate.format(formatter)
+        binding.dateCount.text = "${nights}박"
+
+        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.childCount.text =
+            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
 
 
         binding.ivBack.setOnClickListener {
@@ -114,5 +145,6 @@ class PaymentActivity : AppCompatActivity() {
         binding.btnPay.isEnabled = isEnabled
         binding.btnPay.alpha = if (isEnabled) 1f else 0.5f
     }
+
 
 }

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.sumte.App
 import com.example.sumte.HouseImageAdapter
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
@@ -32,11 +33,24 @@ import com.example.sumte.roomregister.RoomRegisterActivity
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
+import com.example.sumte.search.BookInfoActivity
+import com.example.sumte.search.BookInfoCountFragment
+import com.example.sumte.search.BookInfoDateFragment
+import com.example.sumte.search.BookInfoViewModel
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class HouseDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
 
     // ViewModel
     private val vm: HouseDetailViewModel by lazy {
@@ -52,8 +66,6 @@ class HouseDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater, container, false)
-
-        // --- 상단 이미지 뷰페이저 (기존 유지) ---
         val imageList = listOf(
             R.drawable.sample_house1,
             R.drawable.sample_house2,
@@ -156,6 +168,67 @@ class HouseDetailFragment : Fragment() {
             0, currentLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.tvPageIndicator.text = spannable
+    }
+
+    //dp px 변환
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
+        ).toInt()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val startDate = viewModel.startDate
+        val endDate = viewModel.endDate
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+
+        binding.startDate.text = startDate.format(formatter)
+        binding.endDate.text = endDate.format(formatter)
+        binding.dateCount.text = "${nights}박"
+
+        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.childCount.text =
+            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
+        binding.dateChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            startActivity(intent)
+        }
+
+        binding.countChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            startActivity(intent)
+        }
+    }
+    //재시작할 때
+    override fun onResume() {
+        super.onResume()
+        updateUIFromViewModel()
+    }
+
+    private fun updateUIFromViewModel() {
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val sDate = viewModel.startDate
+        val eDate = viewModel.endDate
+
+        if (sDate != null && eDate != null) {
+            binding.startDate.text = sDate.format(formatter)
+            binding.endDate.text = eDate.format(formatter)
+            val nights = ChronoUnit.DAYS.between(sDate, eDate)
+            binding.dateCount.text = "${nights}박"
+        }
+
+        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.childCount.text = if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
     }
 
     // dp → px

@@ -127,8 +127,8 @@
             app:layout_constraintStart_toStartOf="@+id/booked_name">
 
             <ImageView
-                android:layout_width="9.48dp"
-                android:layout_height="10.67dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/calendar_check" />
 
             <TextView
@@ -174,8 +174,8 @@
             app:layout_constraintStart_toStartOf="@+id/booked_name">
 
             <ImageView
-                android:layout_width="9.33dp"
-                android:layout_height="11.33dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/bottom_nav_my" />
 
             <TextView

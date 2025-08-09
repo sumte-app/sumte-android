@@ -1,11 +1,16 @@
 package com.example.sumte.search
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.sumte.App
 import com.example.sumte.FilterOptions
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchResultBinding
@@ -16,8 +21,20 @@ class SearchResultFragment : Fragment() {
 
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
+    //private val viewModel: BookInfoViewModel by activityViewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
+    private var keyword: String? = null
 
-    private val viewModel: BookInfoViewModel by activityViewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // arguments가 없거나 키워드가 없을 수도 있으므로 null 체크
+        keyword = arguments?.getString("keyword")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +60,22 @@ class SearchResultFragment : Fragment() {
         binding.adultCount.text = "성인 ${viewModel.adultCount}"
         binding.childCount.text =
             if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
+        if (!keyword.isNullOrBlank()) {
+            // 키워드가 있을 때 처리
+            binding.searchText.setText(keyword)
+        }
+
+        binding.searchText.setOnClickListener{
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+
+        }
 
         binding.searchResultAdjustmentsLl.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -70,8 +103,20 @@ class SearchResultFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        binding.searchText.setOnClickListener {
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.backBtn.setOnClickListener {
-            requireActivity().finish()
+            val fragment = SearchFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.book_info_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 

@@ -8,6 +8,7 @@
 
 
     <ImageButton
+        android:id="@+id/back_btn"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:src="@drawable/arrow_left"
