@@ -231,7 +231,4 @@ class HouseDetailFragment : Fragment() {
         binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
     }
 
-    // dp → px
-    private fun dpToPx(dp: Int): Int =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
 }
