@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityMainBinding
+import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.SearchFragment
 
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             val current = supportFragmentManager.findFragmentById(R.id.main_container)
 
             binding.bottomNavView.visibility =
-                if (current is SearchFragment) View.GONE else View.VISIBLE
+                if (current is SearchFragment || current is HouseDetailFragment) View.GONE else View.VISIBLE
 
             val targetId = when (current) {
                 is HomeFragment -> R.id.fragment_home

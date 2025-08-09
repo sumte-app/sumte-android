@@ -35,6 +35,7 @@ import com.example.sumte.search.BookInfoCountFragment
 import com.example.sumte.search.BookInfoDateFragment
 import com.example.sumte.search.BookInfoViewModel
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class HouseDetailFragment : Fragment() {
@@ -146,7 +147,6 @@ class HouseDetailFragment : Fragment() {
             startActivity(intent)
         }
 
-
         return binding.root
     }
 
@@ -205,4 +205,28 @@ class HouseDetailFragment : Fragment() {
             startActivity(intent)
         }
     }
+    //재시작할 때
+    override fun onResume() {
+        super.onResume()
+        updateUIFromViewModel()
+    }
+
+    private fun updateUIFromViewModel() {
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val sDate = viewModel.startDate
+        val eDate = viewModel.endDate
+
+        if (sDate != null && eDate != null) {
+            binding.startDate.text = sDate.format(formatter)
+            binding.endDate.text = eDate.format(formatter)
+            val nights = ChronoUnit.DAYS.between(sDate, eDate)
+            binding.dateCount.text = "${nights}박"
+        }
+
+        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.childCount.text = if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+    }
+
 }
