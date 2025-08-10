@@ -1,5 +1,7 @@
 package com.example.sumte.guesthouse
 
+import com.google.gson.annotations.SerializedName
+
 data class TimeDto(
     val hour: Int,
     val minute: Int,
@@ -20,6 +22,7 @@ data class RoomDto(
 )
 
 data class GuesthouseDto(
+    @SerializedName(value = "id", alternate = ["guestHouseId"])
     val id: Long,
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
