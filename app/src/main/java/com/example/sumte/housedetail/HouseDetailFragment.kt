@@ -51,14 +51,13 @@ class HouseDetailFragment : Fragment() {
     //게하 id값 받아오기
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
-        private const val TEST_GUESTHOUSE_ID = 2
 
-        fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
-            arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
+        fun newInstance(guesthouseId: Long) = HouseDetailFragment().apply {
+            arguments = Bundle().apply { putLong(ARG_GUESTHOUSE_ID, guesthouseId) }
         }
     }
 
-    private var guesthouseId: Int = TEST_GUESTHOUSE_ID //임시 수정 필요
+    private var guesthouseId: Long = -1
 
     // ViewModel
     private val vm: HouseDetailViewModel by lazy {
@@ -72,11 +71,12 @@ class HouseDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val argId = arguments?.getInt(ARG_GUESTHOUSE_ID)
-        if (argId != null && argId > 0) {
-            guesthouseId = argId
-        } else {
-            Log.w("HD/F", "No guesthouseId in args. Using TEST_GUESTHOUSE_ID=$guesthouseId")
+        guesthouseId = arguments?.getLong(ARG_GUESTHOUSE_ID) ?: -1
+        if (guesthouseId <= 0) {
+            // 인자 없으면 즉시 종료(개발 중엔 토스트 + 로그)
+            Log.e("HD/F", "guesthouseId missing. args=$arguments")
+            Toast.makeText(requireContext(), "잘못된 접근입니다.", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
         }
     }
 
@@ -138,13 +138,13 @@ class HouseDetailFragment : Fragment() {
         observeState()
         observeHeader()
 
-        // 실제 API 호출 (게스트하우스/날짜는 실제 값으로 교체)
-        //val guesthouseId = 2
-        val startDate = "2025-08-08"
-        val endDate = "2025-08-29"
-        vm.loadRooms(guesthouseId, startDate, endDate)
-        Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
-        vm.loadGuesthouse(guesthouseId)
+        if (guesthouseId > 0){
+            val startDate = "2025-08-08"
+            val endDate   = "2025-08-29"
+            Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
+            vm.loadGuesthouse(guesthouseId)
+            Log.d("HD/F", "call loadRooms($guesthouseId)")
+            vm.loadRooms(guesthouseId, startDate, endDate)}
 
         return binding.root
     }

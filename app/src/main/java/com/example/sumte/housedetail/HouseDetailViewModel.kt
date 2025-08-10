@@ -35,7 +35,7 @@ class HouseDetailViewModel(
     val review: LiveData<Review?> = _review
 
     // 단건 조회 (roomId로)
-    fun loadRoom(roomId: Int) {
+    fun loadRoom(roomId: Long) {
         _state.value = RoomUiState.Loading
         viewModelScope.launch {
             try {
@@ -48,7 +48,7 @@ class HouseDetailViewModel(
     }
 
     // 목록 조회 (guesthouseId + 날짜 범위)
-    fun loadRooms(guesthouseId: Int, startDate: String, endDate: String) {
+    fun loadRooms(guesthouseId: Long, startDate: String, endDate: String) {
         _state.value = RoomUiState.Loading
         viewModelScope.launch {
             try {
@@ -60,7 +60,7 @@ class HouseDetailViewModel(
         }
     }
 
-    fun loadGuesthouse(guesthouseId: Int) {
+    fun loadGuesthouse(guesthouseId: Long) {
         viewModelScope.launch {
             try {
 

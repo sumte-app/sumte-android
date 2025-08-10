@@ -6,7 +6,7 @@ class RoomRepository(
     private val service: RoomService
 ) {
     // 단일 방 조회
-    suspend fun fetchRoom(roomId: Int): RoomInfo {
+    suspend fun fetchRoom(roomId: Long): RoomInfo {
         // 1. service.getRoom은 이제 SingleRoomResponse를 반환
         val response = service.getRoom(roomId)
         // 2. 그 안의 result(RoomDto)를 꺼내서 toRoomInfo() 호출
@@ -17,7 +17,7 @@ class RoomRepository(
 
     // 게스트하우스 방 목록 조회 (날짜 범위 필요)
     suspend fun fetchRooms(
-        guesthouseId: Int,
+        guesthouseId: Long,
         startDate: String,
         endDate: String
     ): List<RoomInfo> {
@@ -29,7 +29,7 @@ class RoomRepository(
     }
 
     //게스트하우스 정보
-    suspend fun fetchGuesthouse(guesthouseId: Int): GuesthouseInfo {
+    suspend fun fetchGuesthouse(guesthouseId: Long): GuesthouseInfo {
         val response = service.getGuesthouse(guesthouseId)
         return response.data.toGuesthouseInfo()
     }
