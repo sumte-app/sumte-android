@@ -123,7 +123,7 @@ class HouseDetailFragment : Fragment() {
         observeState()
 
         // 실제 API 호출 (게스트하우스/날짜는 실제 값으로 교체)
-        val guesthouseId = 1
+        val guesthouseId = 2
         val startDate = "2025-08-08"
         val endDate = "2025-08-29"
         vm.loadRooms(guesthouseId, startDate, endDate)

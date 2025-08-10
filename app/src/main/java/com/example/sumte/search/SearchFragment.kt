@@ -92,8 +92,30 @@ class SearchFragment : Fragment() {
                         adultCount = viewModel.adultCount,
                         childCount = viewModel.childCount
                     )
-                    historyAdapter.addItem(newHistory)
 
+                    // 중복이 있으면 삭제
+                    if (historyList.contains(newHistory)) {
+                        historyAdapter.removeItem(newHistory)
+                        historyList.remove(newHistory)
+                    }
+
+                    // 새 아이템 맨 앞에 추가
+                    historyList.add(0, newHistory)
+
+
+                    // 최대 10개 유지
+                    if (historyList.size > 10) {
+                        val removeCount = historyList.size - 10
+                        for (i in 1..removeCount) {
+                            val removedItem = historyList.removeAt(historyList.size - 1)
+                            historyAdapter.removeItem(removedItem)
+                        }
+                    }
+
+                    // SharedPreferences 저장
+                    saveHistoryList(historyList)
+
+                    // 화면 전환
                     val fragment = SearchResultFragment().apply {
                         arguments = Bundle().apply {
                             putString(BookInfoActivity.EXTRA_KEYWORD, keyword)
