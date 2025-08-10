@@ -27,5 +27,11 @@ class RoomRepository(
         // 2. RoomResponse 객체 안의 'result' 리스트를 꺼내서 매핑합니다.
         return response.data.map { roomDto -> roomDto.toRoomInfo() }
     }
+
+    //게스트하우스 정보
+    suspend fun fetchGuesthouse(guesthouseId: Int): GuesthouseInfo {
+        val response = service.getGuesthouse(guesthouseId)
+        return response.data.toGuesthouseInfo()
+    }
 }
 

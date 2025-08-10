@@ -24,18 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.App
-import com.example.sumte.HouseImageAdapter
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
-import com.example.sumte.housedetail.RoomInfo
-import com.example.sumte.housedetail.RoomInfoAdapter
-import com.example.sumte.roomregister.RoomRegisterActivity
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
 import com.example.sumte.search.BookInfoActivity
-import com.example.sumte.search.BookInfoCountFragment
-import com.example.sumte.search.BookInfoDateFragment
 import com.example.sumte.search.BookInfoViewModel
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -45,11 +39,28 @@ class HouseDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
+    private lateinit var imageAdapter: HouseImageAdapter
+
     private val viewModel by lazy {
         ViewModelProvider(
             App.instance,
             ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
         )[BookInfoViewModel::class.java]
+    }
+
+    //게하 id값 받아오기
+    companion object {
+        private const val ARG_GUESTHOUSE_ID = "guesthouseId"
+
+        fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
+            arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
+        }
+    }
+
+    private val guesthouseId: Int by lazy {
+        requireArguments().getInt(ARG_GUESTHOUSE_ID).also {
+            require(it > 0) { "guesthouseId is invalid: $it" }
+        }
     }
 
     // ViewModel
@@ -66,20 +77,15 @@ class HouseDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater, container, false)
-        val imageList = listOf(
-            R.drawable.sample_house1,
-            R.drawable.sample_house2,
-            R.drawable.sample_house3
-        )
-        binding.vpHouseImage.adapter = HouseImageAdapter(imageList)
+
+        imageAdapter = HouseImageAdapter(emptyList()) // 아래에 submit(List<String>)가 있는 버전
+        binding.vpHouseImage.adapter = imageAdapter
         binding.vpHouseImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                updatePageIndicator(position + 1, imageList.size)
+                updatePageIndicator(position + 1, imageAdapter.itemCount)
             }
         })
-        updatePageIndicator(1, imageList.size)
-
-        // --- 객실 리스트 어댑터 (실데이터) ---
+        updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             // 예약 버튼 클릭 시 처리 (필요시 구현)
@@ -121,9 +127,10 @@ class HouseDetailFragment : Fragment() {
 
         // ViewModel 상태 관찰
         observeState()
+        observeHeader()
 
         // 실제 API 호출 (게스트하우스/날짜는 실제 값으로 교체)
-        val guesthouseId = 1
+        val guesthouseId = 2
         val startDate = "2025-08-08"
         val endDate = "2025-08-29"
         vm.loadRooms(guesthouseId, startDate, endDate)
@@ -155,6 +162,16 @@ class HouseDetailFragment : Fragment() {
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
+        }
+    }
+
+    private fun observeHeader() {
+        vm.header.observe(viewLifecycleOwner) { h ->
+            binding.tvTitle.text = h.name
+            binding.tvLocation.text = h.address ?: ""
+
+            imageAdapter.submit(h.imageUrls)           // URL 리스트 주입
+            updatePageIndicator(1, h.imageUrls.size)
         }
     }
 
