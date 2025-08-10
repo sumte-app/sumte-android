@@ -68,10 +68,6 @@ class HistoryAdapter(
         }
     }
 
-    fun addItemAtTop(item: History) {
-        items.add(0, item)
-        notifyItemInserted(0)
-    }
 
     fun clearAll() {
         val size = items.size

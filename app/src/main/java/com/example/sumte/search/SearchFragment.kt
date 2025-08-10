@@ -2,6 +2,7 @@ package com.example.sumte.search
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -100,7 +101,7 @@ class SearchFragment : Fragment() {
                     }
 
                     // 새 아이템 맨 앞에 추가
-                    historyList.add(0, newHistory)
+                    historyAdapter.addItem(newHistory)
 
 
                     // 최대 10개 유지
@@ -110,6 +111,10 @@ class SearchFragment : Fragment() {
                             val removedItem = historyList.removeAt(historyList.size - 1)
                             historyAdapter.removeItem(removedItem)
                         }
+                    }
+                    Log.d("SearchFragment", "현재 historyList 상태:")
+                    historyList.forEachIndexed { index, history ->
+                        Log.d("SearchFragment", "$index: $history")
                     }
 
                     // SharedPreferences 저장
