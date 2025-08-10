@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.like
 
 import retrofit2.Response
 import retrofit2.http.DELETE

@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.like
 
 import android.os.Bundle
 import android.util.Log
@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.ApiClient
+import com.example.sumte.R
 import com.example.sumte.databinding.CustomSnackbarBinding
 import com.example.sumte.databinding.FragmentLikeBinding
-import com.example.sumte.guesthouse.GuestHouse
-import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -91,7 +90,9 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
     private fun showCustomSnackbar(rootView: View, message: String, onAction: () -> Unit, anchorViewId: Int? = null) {
         val snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG)
         val snackbarView = snackbar.view as ViewGroup
-        snackbarView.background = ContextCompat.getDrawable(rootView.context, R.drawable.round_style_black)
+        snackbarView.background = ContextCompat.getDrawable(rootView.context,
+            R.drawable.round_style_black
+        )
 
         val defaultTextView = snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
         defaultTextView?.visibility = View.INVISIBLE

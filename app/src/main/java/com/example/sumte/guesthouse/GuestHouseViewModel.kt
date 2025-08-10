@@ -60,6 +60,7 @@ class GuestHouseViewModel(
                     likeService.removeLikes(guestHouse.id)
                 } else {
                     // 찜하지 않은 상태 -> 찜 추가 API 호출
+                    Log.d("LikeAPI", "addLikes 호출 guesthouseId=${guestHouse.id}")
                     likeService.addLikes(guestHouse.id)
                 }
 
@@ -122,6 +123,7 @@ class GuestHouseViewModel(
         Log.d("GH", "fetchPage() called page=$serverPage size=$pageSize")
         return try {
             val res = api.getGuesthousesHome(serverPage, pageSize)
+            Log.d("GH", "raw body: ${res.errorBody()?.string() ?: res.body()}")
             Log.d("GH", "/guesthouse/home -> ${res.code()}")
             if (res.isSuccessful) {
                 val dtos = res.body()?.data?.content.orEmpty()

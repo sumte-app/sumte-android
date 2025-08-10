@@ -1,6 +1,5 @@
-package com.example.sumte
+package com.example.sumte.like
 
-import com.example.sumte.guesthouse.GuesthouseDto
 import com.example.sumte.guesthouse.RoomDto
 
 data class LikeListResponse (

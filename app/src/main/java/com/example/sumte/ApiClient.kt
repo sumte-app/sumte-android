@@ -3,6 +3,7 @@ package com.example.sumte
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.sumte.ImageUpload.S3Service
+import com.example.sumte.like.LikeService
 import com.example.sumte.login.AuthService
 import com.example.sumte.review.ReviewService
 import okhttp3.Interceptor

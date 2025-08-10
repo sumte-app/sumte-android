@@ -1,12 +1,11 @@
-package com.example.sumte
+package com.example.sumte.like
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.sumte.R
 import com.example.sumte.databinding.ItemGuesthouseBinding
-import com.example.sumte.guesthouse.GuestHouse
-import com.example.sumte.guesthouse.GuestHouseViewModel
 
 class LikeAdapter(
     private val items: MutableList<GuestHouseResponse>,
