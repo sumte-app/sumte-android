@@ -85,6 +85,7 @@ class SearchFragment : Fragment() {
 
                 val keyword = binding.searchText.text.toString()
 
+                // SearchFragment.kt
                 if (keyword.isNotBlank()) {
                     val newHistory = History(
                         keyword = keyword,
@@ -94,31 +95,17 @@ class SearchFragment : Fragment() {
                         childCount = viewModel.childCount
                     )
 
-                    // 중복이 있으면 삭제
-                    if (historyList.contains(newHistory)) {
+                    if (historyAdapter.contains(newHistory)) {
                         historyAdapter.removeItem(newHistory)
-                        historyList.remove(newHistory)
                     }
 
-                    // 새 아이템 맨 앞에 추가
                     historyAdapter.addItem(newHistory)
+                    historyAdapter.trimToMaxSize(10)
 
-
-                    // 최대 10개 유지
-                    if (historyList.size > 10) {
-                        val removeCount = historyList.size - 10
-                        for (i in 1..removeCount) {
-                            val removedItem = historyList.removeAt(historyList.size - 1)
-                            historyAdapter.removeItem(removedItem)
-                        }
-                    }
                     Log.d("SearchFragment", "현재 historyList 상태:")
                     historyList.forEachIndexed { index, history ->
                         Log.d("SearchFragment", "$index: $history")
                     }
-
-                    // SharedPreferences 저장
-                    saveHistoryList(historyList)
 
                     // 화면 전환
                     val fragment = SearchResultFragment().apply {
