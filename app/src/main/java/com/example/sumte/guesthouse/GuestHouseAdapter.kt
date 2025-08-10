@@ -71,4 +71,5 @@ class GuestHouseAdapter(
         items = items + newItems
         notifyItemRangeInserted(start, newItems.size)
     }
+
 }
