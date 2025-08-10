@@ -74,4 +74,14 @@ class MyFragment : Fragment(){
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
+    override fun onResume() {
+        val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val nickname = sharedPref.getString("nickname", "닉네임 없음")
+        val email = sharedPref.getString("email", "이메일 없음")
+
+        super.onResume()
+        binding.myId.text = nickname
+        binding.myEmail.text = email
+    }
+
 }
