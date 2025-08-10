@@ -17,7 +17,7 @@ interface RoomService {
         @Query("endDate") endDate: String
     ): RoomResponse<List<RoomDto>>
 
-    @GET("guesthouses/{guesthouseId}")
+    @GET("guesthouse/{guesthouseId}")
     suspend fun getGuesthouse(
         @Path("guesthouseId") guesthouseId: Int
     ): SingleGuesthouseResponse

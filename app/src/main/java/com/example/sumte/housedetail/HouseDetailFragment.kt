@@ -51,17 +51,14 @@ class HouseDetailFragment : Fragment() {
     //게하 id값 받아오기
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
+        private const val TEST_GUESTHOUSE_ID = 2
 
         fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
             arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
         }
     }
 
-    private val guesthouseId: Int by lazy {
-        requireArguments().getInt(ARG_GUESTHOUSE_ID).also {
-            require(it > 0) { "guesthouseId is invalid: $it" }
-        }
-    }
+    private var guesthouseId: Int = TEST_GUESTHOUSE_ID //임시 수정 필요
 
     // ViewModel
     private val vm: HouseDetailViewModel by lazy {
@@ -71,6 +68,16 @@ class HouseDetailFragment : Fragment() {
             override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 HouseDetailViewModel(repo) as T
         }.create(HouseDetailViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val argId = arguments?.getInt(ARG_GUESTHOUSE_ID)
+        if (argId != null && argId > 0) {
+            guesthouseId = argId
+        } else {
+            Log.w("HD/F", "No guesthouseId in args. Using TEST_GUESTHOUSE_ID=$guesthouseId")
+        }
     }
 
     override fun onCreateView(
@@ -125,15 +132,19 @@ class HouseDetailFragment : Fragment() {
             startActivity(intent)
         }
 
+        Log.d("HD/F", "ARG id=" + arguments?.getInt("guesthouseId")) // ① 전달 확인
+        Log.d("HD/F", "use id=$guesthouseId")
         // ViewModel 상태 관찰
         observeState()
         observeHeader()
 
         // 실제 API 호출 (게스트하우스/날짜는 실제 값으로 교체)
-        val guesthouseId = 2
+        //val guesthouseId = 2
         val startDate = "2025-08-08"
         val endDate = "2025-08-29"
         vm.loadRooms(guesthouseId, startDate, endDate)
+        Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
+        vm.loadGuesthouse(guesthouseId)
 
         return binding.root
     }
@@ -167,6 +178,7 @@ class HouseDetailFragment : Fragment() {
 
     private fun observeHeader() {
         vm.header.observe(viewLifecycleOwner) { h ->
+            Log.d("HD/F", "header updated: name=${h.name}, addr=${h.address}, imgs=${h.imageUrls.size}")
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
 
