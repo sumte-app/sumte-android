@@ -11,13 +11,13 @@ interface LikeService {
     // 찜 추가
     @POST("/api/favorites/{guesthouseId}")
     suspend fun addLikes(
-        @Path("guesthouseId") guesthouseId: Long
+        @Path("guesthouseId") guesthouseId: Int
     ): Response<Unit>
 
     // 찜 취소
     @DELETE("/api/favorites/{guesthouseId}")
     suspend fun removeLikes(
-        @Path("guesthouseId") guesthouseId: Long
+        @Path("guesthouseId") guesthouseId: Int
     ): Response<Unit>
 
     // 사용자 찜 목록 조회

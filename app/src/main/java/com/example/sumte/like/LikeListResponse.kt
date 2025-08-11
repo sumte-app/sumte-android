@@ -9,7 +9,7 @@ data class LikeListResponse (
 )
 
 data class GuestHouseResponse(
-    val id: Long,
+    val id: Int,
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
     val addressDetail: String?,      // ← nullable

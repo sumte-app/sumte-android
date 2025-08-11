@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-private val likeService = ApiClient.likeService
 class GuestHouseViewModel(
     private val api: GuesthouseApi = RetrofitClient.api
 ) : ViewModel() {
+    private val likeService = ApiClient.likeService
 
-    // 1. 찜 상태를 Guesthouse 객체 전체가 아닌, ID(Long)의 Set으로 관리.
-    private val _likedGuestHouseIds = MutableStateFlow<Set<Long>>(emptySet())
-    val likedGuestHouseIds: StateFlow<Set<Long>> = _likedGuestHouseIds
+    // 1. 찜 상태를 Guesthouse 객체 전체가 아닌, ID Set으로 관리.
+    private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
+    val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
 
     init {
         // 2. ViewModel이 생성될 때, 서버에서 현재 찜 목록을 가져와 상태를 초기화
@@ -33,8 +33,11 @@ class GuestHouseViewModel(
                 val response = likeService.getLikes(size = 200)
                 if (response.isSuccessful) {
                     // 성공 시, 응답받은 찜 목록의 ID들만 추출하여 Set으로 만듭니다.
-                    val likedIds = response.body()?.content?.map { it.id }?.toSet()
-                    _likedGuestHouseIds.value = likedIds ?: emptySet()
+                    val likedIds: Set<Int> = response.body()?.content
+                        ?.map { it.id.toInt() }  // 여기서 Int로 변환
+                        ?.toSet()
+                        ?: emptySet()
+                    _likedGuestHouseIds.value = likedIds
                 } else {
                     Log.e("GuestHouseViewModel", "초기 찜 목록 로딩 실패: ${response.code()}")
                 }
@@ -51,34 +54,30 @@ class GuestHouseViewModel(
 
     // 4. toggleLike 함수가 서버 API를 직접 호출하도록
     fun toggleLike(guestHouse: GuestHouse) {
-        // 코루틴 스코프에서 비동기 작업을 실행합니다.
         viewModelScope.launch {
             val isCurrentlyLiked = isLiked(guestHouse)
+            val id = guestHouse.id
+
             try {
                 val response = if (isCurrentlyLiked) {
-                    // 이미 찜한 상태 -> 찜 취소 API 호출
                     likeService.removeLikes(guestHouse.id)
                 } else {
-                    // 찜하지 않은 상태 -> 찜 추가 API 호출
-                    Log.d("LikeAPI", "addLikes 호출 guesthouseId=${guestHouse.id}")
                     likeService.addLikes(guestHouse.id)
                 }
 
-                // 5. API 호출이 성공했을 때만 로컬 상태(UI)를 변경.
                 if (response.isSuccessful) {
                     val currentIds = _likedGuestHouseIds.value.toMutableSet()
-                    if (isCurrentlyLiked) {
-                        currentIds.remove(guestHouse.id)
-                    } else {
-                        currentIds.add(guestHouse.id)
-                    }
+                    if (isCurrentlyLiked) currentIds.remove(guestHouse.id) else currentIds.add(guestHouse.id)
                     _likedGuestHouseIds.value = currentIds
                 } else {
-                    // API 호출 실패 시 사용자에게 알림 등의 예외 처리를 할 수 있습니다.
-                    Log.e("GuestHouseViewModel", "찜 상태 변경 실패: ${response.code()}")
+                    val errorBody = response.errorBody()?.string()
+                    Log.e(
+                        "GuestHouseViewModel",
+                        "찜 상태 변경 실패: code=${response.code()}, error=$errorBody"
+                    )
                 }
             } catch (e: Exception) {
-                Log.e("GuestHouseViewModel", "찜 상태 변경 중 에러", e)
+                Log.e("GuestHouseViewModel", "에러 발생", e)
             }
         }
     }
