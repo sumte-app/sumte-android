@@ -38,6 +38,12 @@ class BookedDetailFragment : Fragment() {
                 // 필요하면 더 바인딩 추가
             }
         }
+        binding.cancelBtn.setOnClickListener {
+            binding.popupOverlay.visibility = View.VISIBLE
+        }
+        binding.noBtn.setOnClickListener {
+            binding.popupOverlay.visibility = View.GONE
+        }
         binding.backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

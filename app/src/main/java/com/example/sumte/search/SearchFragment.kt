@@ -53,10 +53,22 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        historyAdapter = HistoryAdapter(historyList) { updatedList ->
-            saveHistoryList(updatedList)
-        }
+        binding.history.visibility = if (loadHistoryVisibility()) View.VISIBLE else View.GONE
 
+        historyAdapter = HistoryAdapter(
+            historyList,
+            { updatedList ->
+                // 아이템이 있으면 뷰 보이게, 없으면 숨기고 상태 저장
+                val isVisible = updatedList.isNotEmpty()
+                binding.history.visibility = if (isVisible) View.VISIBLE else View.GONE
+                saveHistoryList(updatedList, isVisible)
+            },
+            {
+                // 0개 됐을 때 콜백 (혹시 별도 처리 필요하면)
+                binding.history.visibility = View.GONE
+                saveHistoryList(emptyList(), false)
+            }
+        )
         binding.historyRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecyclerview.adapter = historyAdapter
 
@@ -148,16 +160,23 @@ class SearchFragment : Fragment() {
         binding.allDeleteBtn.setOnClickListener {
             historyAdapter.clearAll()
             saveHistoryList(emptyList())
+            binding.history.visibility = View.GONE
         }
     }
 
-    private fun saveHistoryList(list: List<History>) {
+    private fun saveHistoryList(list: List<History>, isHistoryVisible: Boolean = true) {
         val prefs = requireContext().getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         val json = Gson().toJson(list)
         editor.putString("history_list", json)
+        editor.putBoolean("history_visible", isHistoryVisible)
         editor.apply()
     }
+    private fun loadHistoryVisibility(): Boolean {
+        val prefs = requireContext().getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("history_visible", true) // 기본값은 보여짐
+    }
+
 
     private fun loadHistoryList(): MutableList<History> {
         val prefs = requireContext().getSharedPreferences("search_prefs", Context.MODE_PRIVATE)

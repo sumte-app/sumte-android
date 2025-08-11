@@ -11,7 +11,8 @@ import com.example.sumte.databinding.ItemHistoryBinding
 
 class HistoryAdapter(
     private val items: MutableList<History>,
-    private val saveHistory: (List<History>) -> Unit   // 저장 콜백 받음
+    private val saveHistory: (List<History>) -> Unit,
+    private val onEmptyList: () -> Unit
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
@@ -62,7 +63,6 @@ class HistoryAdapter(
                     ?.commit()
             }
 
-
             binding.deleteBtn.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -71,11 +71,13 @@ class HistoryAdapter(
 
                     // SharedPreferences에 저장하는 콜백 호출
                     saveHistory(items)
+                    if (items.isEmpty()) {
+                        onEmptyList()
+                    }
                 }
             }
         }
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val binding = ItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HistoryViewHolder(binding)

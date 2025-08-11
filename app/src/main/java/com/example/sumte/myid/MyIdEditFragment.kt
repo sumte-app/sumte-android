@@ -32,7 +32,6 @@ class MyIdEditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val originalNickname = sharedPref.getString("nickname", "닉네임 없음") ?: "닉네임 없음"
         binding.editNickname.setText(originalNickname)
