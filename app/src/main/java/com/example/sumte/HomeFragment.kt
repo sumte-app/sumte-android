@@ -54,12 +54,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
 
-
         adapter = GuestHouseAdapter(
             viewModel = viewModel,
             onItemClick = { guestHouse ->
+                val id = guestHouse.id
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.main_container, HouseDetailFragment())
+                    .replace(R.id.main_container, HouseDetailFragment.newInstance(id))
                     .addToBackStack(null)
                     .commit()
             }

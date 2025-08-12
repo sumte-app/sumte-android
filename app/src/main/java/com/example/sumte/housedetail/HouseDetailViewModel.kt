@@ -9,12 +9,30 @@ sealed interface RoomUiState {
     data class Error(val msg: String) : RoomUiState
 }
 
+data class GuesthouseInfo(
+    val name: String,
+    val address: String?,
+    val imageUrls: List<String>
+)
+
+
+data class Review(
+    val rating: Double,
+    val count: Int
+)
+
 class HouseDetailViewModel(
     private val repo: RoomRepository
 ) : ViewModel() {
 
     private val _state = MutableLiveData<RoomUiState>()
     val state: LiveData<RoomUiState> = _state
+
+    private val _header = MutableLiveData<GuesthouseInfo>()
+    val header: LiveData<GuesthouseInfo> = _header
+
+    private val _review = MutableLiveData<Review?>()
+    val review: LiveData<Review?> = _review
 
     // 단건 조회 (roomId로)
     fun loadRoom(roomId: Int) {
@@ -39,6 +57,28 @@ class HouseDetailViewModel(
             } catch (e: Exception) {
                 _state.value = RoomUiState.Error(e.message ?: "네트워크 오류")
             }
+        }
+    }
+
+    fun loadGuesthouse(guesthouseId: Int) {
+        viewModelScope.launch {
+            try {
+
+                val d = repo.fetchGuesthouse(guesthouseId)
+                _header.value = GuesthouseInfo(
+                    name = d.name,
+                    address = d.address,
+                    imageUrls = d.imageUrls ?: emptyList()
+                )
+            } catch (_: Exception) {
+                // 헤더 실패 시 조용히 무시(필요하면 별도 에러 상태 추가 가능)
+            }
+        }
+    }
+
+    fun loadReview(guesthouseId: Int){
+        viewModelScope.launch {
+            _review.value = Review(rating = 4.5, count = 2)
         }
     }
 }

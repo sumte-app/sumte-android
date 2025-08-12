@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/top_text"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:weightSum="10"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:gravity="center"
+            android:text=""
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="12dp"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/boarder1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_text" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_text" />
+
+    <TextView
+        android:id="@+id/canceled_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="예약이 완료되었습니다.."
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <LinearLayout
+        android:id="@+id/cancel_time_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/canceled_text">
+
+        <TextView
+            android:id="@+id/cancel_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약 : "
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/cancel_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/canceled_text" />
+        <TextView
+            android:id="@+id/cancel_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025.06.17(화) 04:09"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancel_time_text"
+            app:layout_constraintTop_toBottomOf="@+id/canceled_text" />
+
+
+
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/boarder2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_time_box" />
+
+
+    <TextView
+        android:id="@+id/booked_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="예약 정보"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boarder2" />
+
+    <ImageView
+        android:id="@+id/detail_img"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/sumte_main_logo"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
+        app:layout_constraintTop_toBottomOf="@+id/booked_info" />
+
+    <TextView
+        android:id="@+id/booked_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="제주 끌림 365 게스트하우스"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/detail_img"
+        app:layout_constraintTop_toTopOf="@+id/detail_img" />
+
+    <TextView
+        android:id="@+id/room_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여자도미토리(4인)"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/booked_name"
+        app:layout_constraintTop_toBottomOf="@+id/booked_name" />
+
+    <LinearLayout
+        android:id="@+id/selected_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/selected_count"
+        app:layout_constraintStart_toStartOf="@+id/booked_name">
+
+        <ImageView
+            android:layout_width="9.48dp"
+            android:layout_height="10.67dp"
+            android:src="@drawable/calendar_check" />
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6.18 수"
+            android:layout_marginStart="4dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="-"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="6.19 목"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/date_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text=", 1박"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/selected_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_img"
+        app:layout_constraintStart_toStartOf="@+id/booked_name">
+
+        <ImageView
+            android:layout_width="9.33dp"
+            android:layout_height="11.33dp"
+            android:src="@drawable/bottom_nav_my" />
+
+        <TextView
+            android:id="@+id/adult_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="성인 1"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/count_comma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text=","
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/child_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text=""
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/boarder3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_img" />
+
+    <TextView
+        android:id="@+id/refund_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="취소/환불 규정"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
+        app:layout_constraintTop_toBottomOf="@+id/boarder3" />
+
+    <TextView
+        android:id="@+id/refund_policy1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="이용 8일전 : 결제 금액에 대한 취소 수수료 없음"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
+        app:layout_constraintTop_toBottomOf="@+id/refund_policy" />
+
+    <TextView
+        android:id="@+id/refund_policy2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="이용 7일전 : 결제 금액에 대한 20% 차감 후 환불"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/booked_info"
+        app:layout_constraintTop_toBottomOf="@+id/refund_policy1" />
+
+    <View
+        android:id="@+id/boarder4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refund_policy2" />
+
+    <LinearLayout
+        android:id="@+id/price_box"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/boarder4">
+
+        <TextView
+            android:id="@+id/price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="결제 금액"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="18400원"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="16dp"/>
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/boarder5"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_box"/>
+
+
+    <LinearLayout
+        android:id="@+id/list_btn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/round_style"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/home_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.45">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약내역 보기"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_btn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@drawable/apply_btn_style"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintWidth_percent="0.45"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/list_btn">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="홈으로 이동"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

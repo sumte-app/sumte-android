@@ -13,6 +13,15 @@ fun RoomDto.toRoomInfo(): RoomInfo {
     )
 }
 
+fun GuesthouseDto.toGuesthouseInfo(): GuesthouseInfo =
+    GuesthouseInfo(
+        name = name,
+        address = listOfNotNull(addressRegion, addressDetail)
+            .filter { it.isNotBlank() }
+            .joinToString(" "),
+        imageUrls = imageUrls ?: emptyList()
+    )
+
 private fun trimSec(s: String): String {
     return if (s.count { it == ':' } == 2 && s.endsWith(":00")) s.dropLast(3) else s
 }
