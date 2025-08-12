@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityMainBinding
 import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.like.LikeFragment
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.SearchFragment
 
