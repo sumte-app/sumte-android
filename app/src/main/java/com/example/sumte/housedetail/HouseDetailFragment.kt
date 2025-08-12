@@ -52,12 +52,12 @@ class HouseDetailFragment : Fragment() {
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
 
-        fun newInstance(guesthouseId: Long) = HouseDetailFragment().apply {
-            arguments = Bundle().apply { putLong(ARG_GUESTHOUSE_ID, guesthouseId) }
+        fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
+            arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
         }
     }
 
-    private var guesthouseId: Long = -1
+    private var guesthouseId: Int = -1
 
     // ViewModel
     private val vm: HouseDetailViewModel by lazy {
@@ -71,7 +71,7 @@ class HouseDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        guesthouseId = arguments?.getLong(ARG_GUESTHOUSE_ID) ?: -1
+        guesthouseId = arguments?.getInt(ARG_GUESTHOUSE_ID) ?: -1
         if (guesthouseId <= 0) {
             // 인자 없으면 즉시 종료(개발 중엔 토스트 + 로그)
             Log.e("HD/F", "guesthouseId missing. args=$arguments")

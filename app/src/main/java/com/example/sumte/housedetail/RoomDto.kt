@@ -1,7 +1,7 @@
 package com.example.sumte.housedetail
 
 data class RoomDto(
-    val id: Long,
+    val id: Int,
     val name: String,
     val content: String?,
     val price: Int,
