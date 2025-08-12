@@ -17,37 +17,43 @@ class GuestHouseViewModel(
 ) : ViewModel() {
     private val likeService = ApiClient.likeService
 
-    // 1. 찜 상태를 Guesthouse 객체 전체가 아닌, ID Set으로 관리.
+    // 찜 상태를 Guesthouse 객체 전체가 아닌, ID Set으로 관리.
     private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
     val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
 
+    private val _initialLikesLoaded = MutableStateFlow(false)
+    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
+
     init {
-        // 2. ViewModel이 생성될 때, 서버에서 현재 찜 목록을 가져와 상태를 초기화
+        // ViewModel이 생성될 때, 서버에서 현재 찜 목록을 가져와 상태를 초기화
         loadInitialLikes()
     }
 
     private fun loadInitialLikes() {
         viewModelScope.launch {
             try {
-                // 페이지 크기를 충분히 크게 설정하여 모든 찜 목록을 가져옵니다.
+                // 페이지 크기를 충분히 크게 설정하여 모든 찜 목록을 가져오기.
                 val response = likeService.getLikes(size = 200)
                 if (response.isSuccessful) {
-                    // 성공 시, 응답받은 찜 목록의 ID들만 추출하여 Set으로 만듭니다.
+                    // 성공 시, 응답받은 찜 목록의 ID들만 추출하여 Set으로.
                     val likedIds: Set<Int> = response.body()?.content
-                        ?.map { it.id.toInt() }  // 여기서 Int로 변환
+                        ?.map { it.id.toInt() }
                         ?.toSet()
                         ?: emptySet()
                     _likedGuestHouseIds.value = likedIds
+                    Log.d("ViewModel_Likes", "초기 찜 목록 ID 세트: ${_likedGuestHouseIds.value}")
                 } else {
                     Log.e("GuestHouseViewModel", "초기 찜 목록 로딩 실패: ${response.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("GuestHouseViewModel", "초기 찜 목록 로딩 중 에러", e)
+            }finally {
+                _initialLikesLoaded.value = true
             }
         }
     }
 
-    // 3. isLiked 함수를 StateFlow의 값을 직접 확인하도록 변경합니다.
+    // 3. isLiked 함수를 StateFlow의 값을 직접 확인하도록 변경.
     fun isLiked(guestHouse: GuestHouse): Boolean {
         return _likedGuestHouseIds.value.contains(guestHouse.id)
     }

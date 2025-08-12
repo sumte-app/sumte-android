@@ -1,5 +1,6 @@
 package com.example.sumte.guesthouse
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +43,8 @@ class GuestHouseAdapter(
             }
 
             val isLiked = viewModel.isLiked(guestHouse)
+            Log.d("Adapter_Check", "게스트하우스 ID: ${guestHouse.id} (타입: ${guestHouse.id::class.simpleName}) | isLiked 결과: $isLiked")
+
             guesthouseHeartIv.setImageResource(
                 if (isLiked) R.drawable.heart_home_filled else R.drawable.heart_home_empty
             )

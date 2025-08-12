@@ -20,10 +20,11 @@ import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.BookInfoActivity
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
-
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: GuestHouseViewModel
     private lateinit var adapter: GuestHouseAdapter
@@ -53,15 +54,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
 
-//        adapter = GuestHouseAdapter(viewModel) {
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_container, HouseDetailFragment())
-//                .addToBackStack(null)
-//                .commit()
-//        }
+
         adapter = GuestHouseAdapter(
-            viewModel = viewModel, // 1. viewModel 객체를 첫 번째 파라미터로 직접 전달합니다.
-            onItemClick = { guestHouse -> // 2. 아이템 클릭 시 실행될 람다 함수를 두 번째 파라미터로 전달합니다.
+            viewModel = viewModel,
+            onItemClick = { guestHouse ->
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.main_container, HouseDetailFragment())
                     .addToBackStack(null)
@@ -76,10 +72,15 @@ class HomeFragment : Fragment() {
         // ★ 캐시가 있으면 즉시 복원(네트워크 X)
         if (viewModel.items.isNotEmpty()) {
             adapter.replaceAll(viewModel.items)
-            page = viewModel.nextPage           // UI 기준 1-based
+            page = viewModel.nextPage
             isLastPage = viewModel.isLastPageCached
         } else {
-            loadMore()
+            viewLifecycleOwner.lifecycleScope.launch {
+                // initialLikesLoaded가 true가 될 때까지 기다렸다가 한 번만 실행
+                viewModel.initialLikesLoaded.filter { it }.first()
+                // 찜 목록 로딩이 완료되었으므로, 이제 게스트하우스 목록을 불러옴
+                loadMore()
+            }
         }
 
         // 페이징 스크롤
@@ -104,10 +105,17 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // viewModel의 찜 ID 목록(StateFlow)에 변경이 생길 때마다 이 블록이 실행됩니다.
-                viewModel.likedGuestHouseIds.collect { updatedLikedIds ->
-                    // 어댑터에 최신 찜 목록을 전달하여 UI를 갱신합니다.
-                    adapter.updateLikes(updatedLikedIds)
+                // viewModel의 찜 ID 목록(StateFlow)에 변경이 생길 때마다 이 블록이 실행
+//                viewModel.likedGuestHouseIds.collect { updatedLikedIds ->
+//                    // 어댑터에 최신 찜 목록을 전달하여 UI를 갱신
+//                    adapter.updateLikes(updatedLikedIds)
+//                }
+                viewModel.likedGuestHouseIds.collect {
+                    // 찜 목록이 로딩되거나 변경되었을 때,
+                    // 어댑터에게 전체 데이터를 새로고침하라고 알려줍니다.
+                    if (adapter.itemCount > 0) {
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
         }

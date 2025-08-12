@@ -1,6 +1,7 @@
 package com.example.sumte.like
 
 import com.example.sumte.guesthouse.RoomDto
+import com.google.gson.annotations.SerializedName
 
 data class LikeListResponse (
     val content: List<GuestHouseResponse>,
@@ -9,6 +10,7 @@ data class LikeListResponse (
 )
 
 data class GuestHouseResponse(
+    @SerializedName("guesthouseId")
     val id: Int,
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
