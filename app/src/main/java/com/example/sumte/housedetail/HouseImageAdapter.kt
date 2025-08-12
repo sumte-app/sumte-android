@@ -4,38 +4,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemHouseImageBinding
 
 class HouseImageAdapter(
-    private var urls: List<String>
-) : RecyclerView.Adapter<HouseImageAdapter.VH>() {
+    private val onClick: (String) -> Unit = {}
+) : ListAdapter<String, HouseImageAdapter.VH>(DIFF) {
 
-    fun submit(newUrls: List<String>) {
-        urls = newUrls
-        notifyDataSetChanged()
+    companion object {
+        private val DIFF = object : DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+            override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+        }
     }
 
-    override fun getItemCount() = urls.size
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_house_image, parent, false)
-        return VH(v)
+        val binding = ItemHouseImageBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return VH(binding)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val url = urls[position]
-        Glide.with(holder.itemView)
-            .load(url)
-            .placeholder(R.drawable.sample_house1)
-            .error(R.drawable.sample_house1)
-            .into(holder.img)
+        val url = getItem(position)
+        with(holder.binding.ivPageImage) {
+            // 필요하면 사이즈 힌트: .override(width, height)
+            Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.sample_house1)
+                .error(R.drawable.sample_house1)
+                .into(this)
+        }
+        holder.binding.root.setOnClickListener { onClick(url) }
     }
 
-    class VH(v: View) : RecyclerView.ViewHolder(v) {
-        val img: ImageView = v.findViewById(R.id.ivImage)
+    override fun onViewRecycled(holder: VH) {
+        // 재활용 시 이미지 정리(깜박임/누수 예방)
+        Glide.with(holder.binding.ivPageImage).clear(holder.binding.ivPageImage)
+        super.onViewRecycled(holder)
     }
+
+    class VH(val binding: ItemHouseImageBinding) : RecyclerView.ViewHolder(binding.root)
 }
