@@ -56,7 +56,7 @@ class GuestHouseAdapter(
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
 
                 viewModel.toggleLike(guestHouse) {
-                    // ViewModel의 작업이 끝난 후 UI를 갱신합니다.
+                    // ViewModel의 작업이 끝난 후 UI를 갱신.
                     notifyItemChanged(pos)
                 }
             }
@@ -65,7 +65,7 @@ class GuestHouseAdapter(
 
     fun updateLikes(newLikedIds: Set<Int>) {
         this.likedIds = newLikedIds
-        notifyDataSetChanged() // 찜 목록이 바뀌었으니 화면 전체를 새로고침
+        notifyDataSetChanged()
     }
 
     fun replaceAll(newItems: List<GuestHouse>) {

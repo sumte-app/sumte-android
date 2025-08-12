@@ -12,6 +12,7 @@ data class LikeListResponse (
 data class GuestHouseResponse(
     @SerializedName("guesthouseId")
     val id: Int,
+    @SerializedName("guesthouseName")
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
     val addressDetail: String?,      // ← nullable

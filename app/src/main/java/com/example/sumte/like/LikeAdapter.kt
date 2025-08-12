@@ -31,12 +31,26 @@ class LikeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val guestHouse = items[position]
         with(holder.binding) {
-            guesthouseTitleTv.text = guestHouse.name
-            guesthouseLocationTv.text = guestHouse.addressRegion
-            guesthousePriceTv.text = guestHouse.minPrice.toString()
-            Glide.with(root.context)
-                .load(guestHouse.imageUrls)
-                .into(guesthouseIv)
+            guesthouseTitleTv.text = guestHouse.name ?: "이름 정보 없음"
+            guesthouseLocationTv.text = guestHouse.addressRegion ?: "위치 정보 없음"
+//            guesthousePriceTv.text = guestHouse.minPrice.toString()
+            guesthousePriceTv.text = if (guestHouse.minPrice != null && guestHouse.minPrice > 0) {
+                String.format("%,d원", guestHouse.minPrice)
+            } else {
+                "가격 정보 없음"
+            }
+
+            val thumbnailUrl = guestHouse.imageUrls?.firstOrNull()
+            if (!thumbnailUrl.isNullOrBlank()) {
+                Glide.with(root.context)
+                    .load(thumbnailUrl)
+                    .placeholder(R.drawable.sample_house3) // 로딩 중 표시할 이미지
+                    .error(R.drawable.sample_house3)       // 에러 시 표시할 이미지
+                    .into(guesthouseIv)
+            } else {
+                // 이미지 URL이 없는 경우 기본 이미지 표시
+                guesthouseIv.setImageResource(R.drawable.sample_house2)
+            }
 
             guesthouseHeartIv.setImageResource(R.drawable.heart_home_filled)
 

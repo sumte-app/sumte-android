@@ -105,14 +105,8 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // viewModel의 찜 ID 목록(StateFlow)에 변경이 생길 때마다 이 블록이 실행
-//                viewModel.likedGuestHouseIds.collect { updatedLikedIds ->
-//                    // 어댑터에 최신 찜 목록을 전달하여 UI를 갱신
-//                    adapter.updateLikes(updatedLikedIds)
-//                }
                 viewModel.likedGuestHouseIds.collect {
-                    // 찜 목록이 로딩되거나 변경되었을 때,
-                    // 어댑터에게 전체 데이터를 새로고침하라고 알려줍니다.
+                    // 찜 목록이 로딩되거나 변경되었을 때, 어댑터에게 전체 데이터를 새로고침하라고 알려줌.
                     if (adapter.itemCount > 0) {
                         adapter.notifyDataSetChanged()
                     }
