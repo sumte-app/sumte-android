@@ -137,7 +137,7 @@ class HouseDetailFragment : Fragment() {
         // ViewModel 상태 관찰
         observeState()
         observeHeader()
-
+        
         if (guesthouseId > 0){
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"

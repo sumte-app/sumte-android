@@ -56,8 +56,6 @@ class PaymentActivity : AppCompatActivity() {
 
         binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
 
-
-
         binding.ivBack.setOnClickListener {
             finish()
         }

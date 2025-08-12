@@ -1,7 +1,7 @@
 package com.example.sumte.search
 
 data class History(
-    val houseName: String,
+    val keyword: String,
     val startDate: String,
     val endDate: String,
     val adultCount: Int,

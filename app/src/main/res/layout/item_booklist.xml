@@ -28,25 +28,35 @@
         app:layout_constraintStart_toEndOf="@id/booked_date"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/booked_date"/>
-    <TextView
-        android:id="@+id/detail_btn"
+    <LinearLayout
+        android:id="@+id/detail_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="상세보기"
-        android:textSize="12sp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toStartOf="@id/detail_arrow"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/booked_date"/>
-    <ImageView
-        android:id="@+id/detail_arrow"
-        android:layout_width="8dp"
-        android:layout_height="16dp"
-        android:src="@drawable/arrow_right"
+        android:orientation="horizontal"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/detail_btn"/>
+        app:layout_constraintBottom_toBottomOf="@id/booked_date">
+        <TextView
+            android:id="@+id/detail_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="상세보기"
+            android:textSize="12sp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@id/detail_arrow"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/booked_date"/>
+        <ImageView
+            android:id="@+id/detail_arrow"
+            android:layout_width="8dp"
+            android:layout_height="16dp"
+            android:src="@drawable/arrow_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/detail_btn"/>
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/detail_img"
