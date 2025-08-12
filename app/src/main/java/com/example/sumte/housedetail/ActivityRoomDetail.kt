@@ -1,8 +1,10 @@
 package com.example.sumte.housedetail
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityRoomDetailBinding
+import com.example.sumte.payment.PaymentActivity
 
 class ActivityRoomDetail : AppCompatActivity() {
 
@@ -18,7 +20,12 @@ class ActivityRoomDetail : AppCompatActivity() {
 
         // 뒤로가기 버튼 클릭 시 이전 화면으로
         binding.backBtn.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.btnReserve.setOnClickListener {
+            val intent = Intent(this, PaymentActivity::class.java)
+            startActivity(intent)
         }
     }
 }
