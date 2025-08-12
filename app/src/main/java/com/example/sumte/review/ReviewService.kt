@@ -25,19 +25,19 @@ interface ReviewService {
         @Query("contentType") contentType: String
     ): Response<String>           // presigned URL 문자열 그대로 반환한다고 가정
 
-    @POST("/api/reviews")
+    @POST("reviews")
     suspend fun postReview(
         @Body body: ReviewRequest
     ): Response<Unit>
 
-    @GET("/api/reviews/myreviews")
+    @GET("reviews/myReviews")
     suspend fun getMyReviews(
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 10,
         @Query("sort") sort: String = "createdAt,DESC"
     ): Response<MyReviewPage>
 
-    @DELETE("/api/reviews/{id}")
+    @DELETE("reviews/{id}")
     suspend fun deleteReview(@Path("id") reviewId: Long): Response<Unit>
 
     @GET("/api/reviews")
@@ -46,7 +46,7 @@ interface ReviewService {
         @Query("size") size: Int = 10
     ): Response<ReviewResponse>
 
-    @PATCH("/api/reviews/{id}")
+    @PATCH("reviews/{id}")
     suspend fun patchReview(
         @Path("reviewId") reviewId: Long,
         @Body body: ReviewRequest

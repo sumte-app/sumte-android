@@ -1,5 +1,6 @@
 package com.example.sumte.guesthouse
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +13,8 @@ class GuestHouseAdapter(
     private val onItemClick: (GuestHouse) -> Unit
 ) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
 
-    // 불변 리스트 유지
-    var items: List<GuestHouse> = emptyList()
-        private set
-
+    private var items: List<GuestHouse> = emptyList()
+    private var likedIds: Set<Int> = emptySet()
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -35,7 +34,7 @@ class GuestHouseAdapter(
             guesthouseTitleTv.text = guestHouse.title
             guesthouseLocationTv.text = guestHouse.location
             guesthousePriceTv.text = guestHouse.price
-            // URL 있으면 Glide, 없으면 로컬 리소스
+
             val ph = guestHouse.imageResId
             if (!guestHouse.imageUrl.isNullOrBlank()) {
                 Glide.with(root).load(guestHouse.imageUrl)
@@ -45,6 +44,8 @@ class GuestHouseAdapter(
             }
 
             val isLiked = viewModel.isLiked(guestHouse)
+            Log.d("Adapter_Check", "게스트하우스 ID: ${guestHouse.id} (타입: ${guestHouse.id::class.simpleName}) | isLiked 결과: $isLiked")
+
             guesthouseHeartIv.setImageResource(
                 if (isLiked) R.drawable.heart_home_filled else R.drawable.heart_home_empty
             )
@@ -52,20 +53,27 @@ class GuestHouseAdapter(
             root.setOnClickListener { onItemClick(guestHouse) }
 
             guesthouseHeartIv.setOnClickListener {
-                viewModel.toggleLike(guestHouse)
                 val pos = holder.bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) notifyItemChanged(pos)
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+                viewModel.toggleLike(guestHouse) {
+                    // ViewModel의 작업이 끝난 후 UI를 갱신.
+                    notifyItemChanged(pos)
+                }
             }
         }
     }
 
+    fun updateLikes(newLikedIds: Set<Int>) {
+        this.likedIds = newLikedIds
+        notifyDataSetChanged()
+    }
 
     fun replaceAll(newItems: List<GuestHouse>) {
         items = newItems.toList()
         notifyDataSetChanged()
     }
 
-    // 다음 페이지 “붙이기” (copy-on-write)
     fun append(newItems: List<GuestHouse>) {
         if (newItems.isEmpty()) return
         val start = items.size

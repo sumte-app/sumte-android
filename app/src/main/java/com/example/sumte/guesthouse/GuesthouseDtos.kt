@@ -23,7 +23,7 @@ data class RoomDto(
 
 data class GuesthouseDto(
     @SerializedName(value = "id", alternate = ["guestHouseId"])
-    val id: Long,
+    val id: Int,
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
     val addressDetail: String?,      // ← nullable

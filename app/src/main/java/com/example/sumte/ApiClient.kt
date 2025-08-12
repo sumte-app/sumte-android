@@ -2,7 +2,9 @@ package com.example.sumte
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.sumte.ImageUpload.S3Service
+import com.example.sumte.like.LikeService
 import com.example.sumte.login.AuthService
 import com.example.sumte.review.ReviewService
 import okhttp3.Interceptor
@@ -32,7 +34,7 @@ class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val token = SharedPreferencesManager.authToken
-
+        Log.d("AuthInterceptor", "보낼 토큰 = $token") // 토큰 제대로 전송되는지 확인
         val requestBuilder = originalRequest.newBuilder()
 
         token?.let {
@@ -75,5 +77,9 @@ object ApiClient {
 
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
+    }
+
+    val likeService: LikeService by lazy {
+        retrofit.create(LikeService::class.java)
     }
 }

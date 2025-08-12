@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.ImageUpload.ImageUploadActivity
@@ -18,10 +20,11 @@ import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.BookInfoActivity
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
-
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: GuestHouseViewModel
     private lateinit var adapter: GuestHouseAdapter
@@ -51,13 +54,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
 
-        adapter = GuestHouseAdapter(viewModel) { guestHouse ->
-            val id = guestHouse.id
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, HouseDetailFragment.newInstance(id))
-                .addToBackStack(null)
-                .commit()
-        }
+        adapter = GuestHouseAdapter(
+            viewModel = viewModel,
+            onItemClick = { guestHouse ->
+                val id = guestHouse.id
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_container, HouseDetailFragment.newInstance(id))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        )
 
         val lm = LinearLayoutManager(requireContext())
         binding.guesthouseRv.layoutManager = lm
@@ -66,10 +72,15 @@ class HomeFragment : Fragment() {
         // ★ 캐시가 있으면 즉시 복원(네트워크 X)
         if (viewModel.items.isNotEmpty()) {
             adapter.replaceAll(viewModel.items)
-            page = viewModel.nextPage           // UI 기준 1-based
+            page = viewModel.nextPage
             isLastPage = viewModel.isLastPageCached
         } else {
-            loadMore()
+            viewLifecycleOwner.lifecycleScope.launch {
+                // initialLikesLoaded가 true가 될 때까지 기다렸다가 한 번만 실행
+                viewModel.initialLikesLoaded.filter { it }.first()
+                // 찜 목록 로딩이 완료되었으므로, 이제 게스트하우스 목록을 불러옴
+                loadMore()
+            }
         }
 
         // 페이징 스크롤
@@ -90,6 +101,17 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
             startActivity(intent)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likedGuestHouseIds.collect {
+                    // 찜 목록이 로딩되거나 변경되었을 때, 어댑터에게 전체 데이터를 새로고침하라고 알려줌.
+                    if (adapter.itemCount > 0) {
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
         }
     }
 
