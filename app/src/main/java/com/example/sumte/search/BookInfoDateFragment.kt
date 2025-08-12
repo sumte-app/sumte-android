@@ -1,5 +1,6 @@
 package com.example.sumte.search
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -216,23 +217,20 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.applyBtn.setOnClickListener {
-            val fragment = SearchResultFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireActivity(), SearchActivity::class.java).apply {
+                putExtra(SearchActivity.EXTRA_FRAGMENT_TYPE, SearchActivity.TYPE_SEARCH_RESULT)
+                // 키워드가 없으면 이 줄 생략하거나 빈 문자열 전달 가능
+                // putExtra(SearchActivity.EXTRA_KEYWORD, "")
+            }
+            requireActivity().startActivity(intent)
+            requireActivity().finish()
+
         }
         //새 캔슬버튼
         binding.cancelBtn.setOnClickListener {
-            val fragmentManager = requireActivity().supportFragmentManager
-            if (fragmentManager.backStackEntryCount > 0) {
-                // 같은 액티비티의 이전 프래그먼트로 돌아감
-                fragmentManager.popBackStack()
-            } else {
-                // 다른 액티비티에서 왔다면 현재 액티비티 종료
-                requireActivity().finish()
-            }
+            requireActivity().finish()
         }
+
 //        binding.cancelBtn.setOnClickListener {
 //            val fragment = SearchFragment()
 //            requireActivity().supportFragmentManager.beginTransaction()

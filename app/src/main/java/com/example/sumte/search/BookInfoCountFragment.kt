@@ -125,15 +125,9 @@ class BookInfoCountFragment : Fragment() {
                 .commit()
         }
         binding.cancelBtn.setOnClickListener {
-            val fragmentManager = requireActivity().supportFragmentManager
-            if (fragmentManager.backStackEntryCount > 0) {
-                // 같은 액티비티의 이전 프래그먼트로 돌아감
-                fragmentManager.popBackStack()
-            } else {
-                // 다른 액티비티에서 왔다면 현재 액티비티 종료
-                requireActivity().finish()
-            }
+            requireActivity().finish()
         }
+
 //        binding.cancelBtn.setOnClickListener {
 //            val fragment = SearchFragment()
 //            requireActivity().supportFragmentManager.beginTransaction()

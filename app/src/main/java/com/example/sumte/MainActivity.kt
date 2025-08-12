@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityMainBinding
 import com.example.sumte.housedetail.HouseDetailFragment
-import com.example.sumte.search.BookInfoActivity
+import com.example.sumte.search.SearchActivity
 import com.example.sumte.search.SearchFragment
 
 class MainActivity : AppCompatActivity() {
@@ -37,11 +37,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.fragment_search -> {
-                    val intent = Intent(this, BookInfoActivity::class.java)
-                    intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search") // ✅ 추가
+                    val intent = Intent(this, SearchActivity::class.java)
+                    intent.putExtra(SearchActivity.EXTRA_FRAGMENT_TYPE, SearchActivity.TYPE_SEARCH) // ✅ 변경
                     bookInfoLauncher.launch(intent)
                     false // 선택 상태 유지 X
                 }
+
                 R.id.fragment_favorite -> {
                     previousTabId = R.id.fragment_favorite
                     supportFragmentManager.beginTransaction()

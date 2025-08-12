@@ -58,7 +58,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".search.SearchActivity"/>
         <activity android:name=".ImageUpload.ImageUploadActivity"/>
         <activity android:name=".signup.EmailInputActivity" />
         <activity android:name=".VerificationInputActivity" />

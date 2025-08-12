@@ -69,17 +69,21 @@ class SearchResultFragment : Fragment() {
         }
 
         binding.searchText.setOnClickListener{
-            val fragment = SearchFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.search_container, FilteringFragment())
                 .addToBackStack(null)
                 .commit()
+//            val fragment = SearchFragment()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.search_container, fragment)
+//                .addToBackStack(null)
+//                .commit()
 
         }
 
         binding.searchResultAdjustmentsLl.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, FilteringFragment())
+                .replace(R.id.search_container, FilteringFragment())
                 .addToBackStack(null)
                 .commit()
         }
@@ -88,25 +92,40 @@ class SearchResultFragment : Fragment() {
         filterOptions?.let {
             // 필터 데이터 처리 가능
         }
-
         binding.dateChangeBar.setOnClickListener {
-            val fragment = BookInfoDateFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            }
+            startActivity(intent)
+            //requireActivity().finish()  // SearchActivity 종료 (필요하면)
         }
+
         binding.countChangeBar.setOnClickListener {
-            val fragment = BookInfoCountFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            }
+            startActivity(intent)
+            //requireActivity().finish()  // SearchActivity 종료 (필요하면)
         }
+
+//        binding.dateChangeBar.setOnClickListener {
+//            val fragment = BookInfoDateFragment()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.book_info_container, fragment)
+//                .addToBackStack(null)
+//                .commit()
+//        }
+//        binding.countChangeBar.setOnClickListener {
+//            val fragment = BookInfoCountFragment()
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.book_info_container, fragment)
+//                .addToBackStack(null)
+//                .commit()
+//        }
         binding.searchText.setOnClickListener {
             val fragment = SearchFragment()
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
+                .replace(R.id.search_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -114,7 +133,7 @@ class SearchResultFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             val fragment = SearchFragment()
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
+                .replace(R.id.search_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }

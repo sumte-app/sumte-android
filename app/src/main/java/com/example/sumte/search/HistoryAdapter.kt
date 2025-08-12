@@ -58,7 +58,7 @@ class HistoryAdapter(
                     }
                 }
                 (binding.root.context as? FragmentActivity)?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.book_info_container, fragment)
+                    ?.replace(R.id.search_container, fragment)
                     ?.addToBackStack(null)
                     ?.commit()
             }

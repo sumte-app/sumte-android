@@ -1,6 +1,7 @@
 package com.example.sumte.search
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -119,16 +120,16 @@ class SearchFragment : Fragment() {
                         Log.d("SearchFragment", "$index: $history")
                     }
 
-                    // 화면 전환
                     val fragment = SearchResultFragment().apply {
                         arguments = Bundle().apply {
-                            putString(BookInfoActivity.EXTRA_KEYWORD, keyword)
+                            putString(SearchActivity.EXTRA_KEYWORD, keyword)  // ★ 여기서 SearchActivity 상수 사용
                         }
                     }
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.book_info_container, fragment)
+                        .replace(R.id.search_container, fragment)
                         .addToBackStack(null)
                         .commit()
+
                 }
                 true
             } else {
@@ -137,20 +138,21 @@ class SearchFragment : Fragment() {
         }
 
         binding.dateChangeBar.setOnClickListener {
-            val fragment = BookInfoDateFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            }
+            startActivity(intent)
+            //requireActivity().finish()  // SearchActivity 종료 (필요하면)
         }
 
         binding.countChangeBar.setOnClickListener {
-            val fragment = BookInfoCountFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            }
+            startActivity(intent)
+            //requireActivity().finish()  // SearchActivity 종료 (필요하면)
         }
+
 
         binding.backBtn.setOnClickListener {
             requireActivity().setResult(AppCompatActivity.RESULT_OK)

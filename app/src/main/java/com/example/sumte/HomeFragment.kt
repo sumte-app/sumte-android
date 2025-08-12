@@ -17,7 +17,7 @@ import com.example.sumte.guesthouse.GuestHouseAdapter
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.housedetail.HouseDetailFragment
 import com.example.sumte.review.ReviewWriteActivity
-import com.example.sumte.search.BookInfoActivity
+import com.example.sumte.search.SearchActivity
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -86,10 +86,11 @@ class HomeFragment : Fragment() {
         })
 
         binding.searchBoxLl.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
+            val intent = Intent(requireContext(), SearchActivity::class.java)
+            intent.putExtra(SearchActivity.EXTRA_FRAGMENT_TYPE, SearchActivity.TYPE_SEARCH)
             startActivity(intent)
         }
+
     }
 
     private fun loadMore() {
