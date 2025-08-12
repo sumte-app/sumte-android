@@ -4,36 +4,89 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.sumte.ApiClient
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class GuestHouseViewModel(
     private val api: GuesthouseApi = RetrofitClient.api
 ) : ViewModel() {
+    private val likeService = ApiClient.likeService
 
-    // -----------------------------
-    // 즐겨찾기(좋아요) 관리
-    // -----------------------------
-    private val _likedList = MutableLiveData<MutableList<GuestHouse>>(mutableListOf())
-    val likedList: LiveData<MutableList<GuestHouse>> = _likedList
+    // 찜 상태를 Guesthouse 객체 전체가 아닌, ID Set으로 관리.
+    private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
+    val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
 
-    fun addToLiked(guestHouse: GuestHouse) {
-        val cur = _likedList.value ?: mutableListOf()
-        if (cur.none { it.id == guestHouse.id }) {
-            _likedList.value = (cur + guestHouse).toMutableList()
+    private val _initialLikesLoaded = MutableStateFlow(false)
+    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
+
+    init {
+        // ViewModel이 생성될 때, 서버에서 현재 찜 목록을 가져와 상태를 초기화
+        loadInitialLikes()
+    }
+
+    private fun loadInitialLikes() {
+        viewModelScope.launch {
+            try {
+                // 페이지 크기를 충분히 크게 설정하여 모든 찜 목록을 가져오기.
+                val response = likeService.getLikes(size = 200)
+                if (response.isSuccessful) {
+                    // 성공 시, 응답받은 찜 목록의 ID들만 추출하여 Set으로.
+                    val likedIds: Set<Int> = response.body()?.content
+                        ?.map { it.id.toInt() }
+                        ?.toSet()
+                        ?: emptySet()
+                    _likedGuestHouseIds.value = likedIds
+                    Log.d("ViewModel_Likes", "초기 찜 목록 ID 세트: ${_likedGuestHouseIds.value}")
+                } else {
+                    Log.e("GuestHouseViewModel", "초기 찜 목록 로딩 실패: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("GuestHouseViewModel", "초기 찜 목록 로딩 중 에러", e)
+            }finally {
+                _initialLikesLoaded.value = true
+            }
         }
     }
 
-    fun removeFromLiked(guestHouse: GuestHouse) {
-        val cur = _likedList.value ?: mutableListOf()
-        _likedList.value = cur.filter { it.id != guestHouse.id }.toMutableList()
+    // 3. isLiked 함수를 StateFlow의 값을 직접 확인하도록 변경.
+    fun isLiked(guestHouse: GuestHouse): Boolean {
+        return _likedGuestHouseIds.value.contains(guestHouse.id)
     }
 
-    fun isLiked(guestHouse: GuestHouse): Boolean =
-        _likedList.value?.any { it.id == guestHouse.id } == true
+    // 4. toggleLike 함수가 서버 API를 직접 호출하도록
+    fun toggleLike(guestHouse: GuestHouse, onStateUpdated: () -> Unit) {
+        viewModelScope.launch {
+            val isCurrentlyLiked = isLiked(guestHouse)
+            val id = guestHouse.id
 
-    fun toggleLike(guestHouse: GuestHouse) {
-        if (isLiked(guestHouse)) removeFromLiked(guestHouse) else addToLiked(guestHouse)
+            try {
+                val response = if (isCurrentlyLiked) {
+                    likeService.removeLikes(guestHouse.id)
+                } else {
+                    likeService.addLikes(guestHouse.id)
+                }
+
+                if (response.isSuccessful) {
+                    val currentIds = _likedGuestHouseIds.value.toMutableSet()
+                    if (isCurrentlyLiked) currentIds.remove(guestHouse.id) else currentIds.add(guestHouse.id)
+                    _likedGuestHouseIds.value = currentIds
+                    onStateUpdated()
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e(
+                        "GuestHouseViewModel",
+                        "찜 상태 변경 실패: code=${response.code()}, error=$errorBody"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("GuestHouseViewModel", "에러 발생", e)
+            }
+        }
     }
 
     // -----------------------------
@@ -76,6 +129,7 @@ class GuestHouseViewModel(
         Log.d("GH", "fetchPage() called page=$serverPage size=$pageSize")
         return try {
             val res = api.getGuesthousesHome(serverPage, pageSize)
+            Log.d("GH", "raw body: ${res.errorBody()?.string() ?: res.body()}")
             Log.d("GH", "/guesthouse/home -> ${res.code()}")
             if (res.isSuccessful) {
                 val dtos = res.body()?.data?.content.orEmpty()

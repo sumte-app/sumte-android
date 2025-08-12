@@ -33,4 +33,5 @@ object RetrofitClient {
     val api: GuesthouseApi by lazy {
         instance.create(GuesthouseApi::class.java)
     }
+
 }

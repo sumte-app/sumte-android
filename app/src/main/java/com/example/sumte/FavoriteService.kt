@@ -1,5 +1,6 @@
 package com.example.sumte
 
+import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -23,7 +24,8 @@ data class FavoriteResponse(
 
 // content 리스트의 각 아이템
 data class FavoriteContent(
-    val guesthouseId: Long,
+    @SerializedName(value = "id", alternate = ["guestHouseId"])
+    val guesthouseId: Int,
     val guesthouseName: String,
     val imageUrl: String?,
     val location: String?,
@@ -31,20 +33,16 @@ data class FavoriteContent(
     val checkInTime: String?,
     val rating: String?,
     val reviewCount: String?
-    // 찜한 게스트하우스의 다른 정보 (이미지, 가격, 위치 등) 추가
-    // 서버 응답에 따라 필드 추가: 예를 들어, "imageUrl", "location", "price" 등
-    // 만약 서버에서 이 정보들을 함께 주지 않으면, 별도로 게스트하우스 정보를 조회
-    // guesthouseId와 guesthouseName만 포함한다고 가정
 )
 
 interface FavoriteService {
     // 찜 추가
     @POST("/api/favorites/{guesthouseId}")
-    suspend fun addFavorite(@Path("guesthouseId") guesthouseId: Long): Response<Unit>
+    suspend fun addFavorite(@Path("guesthouseId") guesthouseId: Int): Response<Unit>
 
     // 찜 삭제
     @DELETE("/api/favorites/{guesthouseId}")
-    suspend fun deleteFavorite(@Path("guesthouseId") guesthouseId: Long): Response<Unit>
+    suspend fun deleteFavorite(@Path("guesthouseId") guesthouseId: Int): Response<Unit>
 
     // 찜 목록 조회
     @GET("/api/favorites")
@@ -55,5 +53,5 @@ interface FavoriteService {
     ): Response<FavoriteResponse>
 
     @GET("/api/favorites/status/{guesthouseId}")
-    suspend fun getFavoriteStatus(@Path("guesthouseId") guesthouseId: Long): Response<Boolean>
+    suspend fun getFavoriteStatus(@Path("guesthouseId") guesthouseId: Int): Response<Boolean>
 }
