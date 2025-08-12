@@ -1,7 +1,6 @@
 package com.example.sumte.housedetail
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.databinding.ActivityRoomDetailBinding
 
@@ -16,7 +15,10 @@ class ActivityRoomDetail : AppCompatActivity() {
 
         // intent로 넘어온 데이터 받기
         val roomId = intent.getIntExtra("roomId", -1)
+
+        // 뒤로가기 버튼 클릭 시 이전 화면으로
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
-
-
 }
