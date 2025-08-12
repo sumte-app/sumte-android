@@ -85,7 +85,7 @@ class HouseDetailFragment : Fragment() {
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater, container, false)
 
-        imageAdapter = HouseImageAdapter(emptyList()) // 아래에 submit(List<String>)가 있는 버전
+        imageAdapter = HouseImageAdapter() // 아래에 submit(List<String>)가 있는 버전
         binding.vpHouseImage.adapter = imageAdapter
         binding.vpHouseImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -182,8 +182,14 @@ class HouseDetailFragment : Fragment() {
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
 
-            imageAdapter.submit(h.imageUrls)           // URL 리스트 주입
-            updatePageIndicator(1, h.imageUrls.size)
+            val urls = h.imageUrls
+            imageAdapter.submitList(urls) {
+                // 리스트 반영 후 인디케이터 갱신 (현재 페이지 보존)
+                val total = urls.size
+                val current = if (total == 0) 0
+                else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
+                updatePageIndicator(current, total)
+            }
         }
     }
 
