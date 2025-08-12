@@ -28,6 +28,7 @@ class HistoryAdapter(
                 binding.childCount.visibility = View.VISIBLE
                 binding.childCount.text = "아동 ${history.childCount}"
             } else {
+                binding.childCount.visibility = View.GONE
             }
 
             binding.historyItem.setOnClickListener {

@@ -41,6 +41,7 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         historyList = loadHistoryList()
+        loadHistoryVisibility()
     }
 
     override fun onCreateView(
@@ -159,8 +160,7 @@ class SearchFragment : Fragment() {
 
         binding.allDeleteBtn.setOnClickListener {
             historyAdapter.clearAll()
-            saveHistoryList(emptyList())
-            binding.history.visibility = View.GONE
+            saveHistoryList(emptyList(), false)  // 명시적으로 숨김 상태 저장
         }
     }
 
@@ -176,7 +176,6 @@ class SearchFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
         return prefs.getBoolean("history_visible", true) // 기본값은 보여짐
     }
-
 
     private fun loadHistoryList(): MutableList<History> {
         val prefs = requireContext().getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
