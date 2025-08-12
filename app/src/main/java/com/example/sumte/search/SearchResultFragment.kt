@@ -2,6 +2,7 @@ package com.example.sumte.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.example.sumte.App
 import com.example.sumte.FilterOptions
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentSearchResultBinding
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -38,28 +40,28 @@ class SearchResultFragment : Fragment() {
             // 전달받은 날짜 문자열
             val startDateStr = bundle.getString("startDate")
             val endDateStr = bundle.getString("endDate")
+            Log.d("SearchResultFragment", "받아온 startDateStr: $startDateStr")
+            Log.d("SearchResultFragment", "받아온 endDateStr: $endDateStr")
 
             // 전달받은 인원 정보 (기본값은 기존 뷰모델값)
             val adultCount = bundle.getInt("adultCount", viewModel.adultCount)
             val childCount = bundle.getInt("childCount", viewModel.childCount)
 
-            // 날짜 문자열이 null이 아니면 LocalDate로 변환 후 뷰모델에 저장
-            if (startDateStr != null && endDateStr != null) {
-                // 예: "8.15 토" 이런 포맷이라면 파싱이 필요함
-                val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-                try {
-                    val startDateParsed = java.time.LocalDate.parse(startDateStr, formatter)
-                    val endDateParsed = java.time.LocalDate.parse(endDateStr, formatter)
-
-                    viewModel.startDate = startDateParsed
-                    viewModel.endDate = endDateParsed
-                } catch (e: Exception) {
-                    // 포맷이 다르면 예외 처리 or 로그 출력
-                    e.printStackTrace()
-                }
+            fun parseDate(dateStr: String): LocalDate {
+                val currentYear = LocalDate.now().year
+                val parts = dateStr.split(" ")   // "8.23 토" → ["8.23", "토"]
+                val md = parts[0].split(".")     // "8.23" → ["8", "23"]
+                return LocalDate.of(currentYear, md[0].toInt(), md[1].toInt())
             }
 
-            // 뷰모델 인원 업데이트
+            // 날짜 문자열이 null이 아니면 LocalDate로 변환 후 뷰모델에 저장
+            if (startDateStr != null && endDateStr != null) {
+                val startDateParsed = parseDate(startDateStr)
+                val endDateParsed = parseDate(endDateStr)
+                viewModel.startDate = startDateParsed
+                viewModel.endDate = endDateParsed
+            }
+
             viewModel.adultCount = adultCount
             viewModel.childCount = childCount
         }
