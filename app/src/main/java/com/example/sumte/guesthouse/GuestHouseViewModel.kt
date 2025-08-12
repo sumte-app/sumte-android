@@ -53,7 +53,7 @@ class GuestHouseViewModel(
     }
 
     // 4. toggleLike 함수가 서버 API를 직접 호출하도록
-    fun toggleLike(guestHouse: GuestHouse) {
+    fun toggleLike(guestHouse: GuestHouse, onStateUpdated: () -> Unit) {
         viewModelScope.launch {
             val isCurrentlyLiked = isLiked(guestHouse)
             val id = guestHouse.id
@@ -69,6 +69,7 @@ class GuestHouseViewModel(
                     val currentIds = _likedGuestHouseIds.value.toMutableSet()
                     if (isCurrentlyLiked) currentIds.remove(guestHouse.id) else currentIds.add(guestHouse.id)
                     _likedGuestHouseIds.value = currentIds
+                    onStateUpdated()
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e(

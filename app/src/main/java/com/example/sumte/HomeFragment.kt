@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.ImageUpload.ImageUploadActivity
@@ -51,12 +53,21 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
 
-        adapter = GuestHouseAdapter(viewModel) {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, HouseDetailFragment())
-                .addToBackStack(null)
-                .commit()
-        }
+//        adapter = GuestHouseAdapter(viewModel) {
+//            requireActivity().supportFragmentManager.beginTransaction()
+//                .replace(R.id.main_container, HouseDetailFragment())
+//                .addToBackStack(null)
+//                .commit()
+//        }
+        adapter = GuestHouseAdapter(
+            viewModel = viewModel, // 1. viewModel 객체를 첫 번째 파라미터로 직접 전달합니다.
+            onItemClick = { guestHouse -> // 2. 아이템 클릭 시 실행될 람다 함수를 두 번째 파라미터로 전달합니다.
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_container, HouseDetailFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        )
 
         val lm = LinearLayoutManager(requireContext())
         binding.guesthouseRv.layoutManager = lm
@@ -89,6 +100,16 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
             startActivity(intent)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // viewModel의 찜 ID 목록(StateFlow)에 변경이 생길 때마다 이 블록이 실행됩니다.
+                viewModel.likedGuestHouseIds.collect { updatedLikedIds ->
+                    // 어댑터에 최신 찜 목록을 전달하여 UI를 갱신합니다.
+                    adapter.updateLikes(updatedLikedIds)
+                }
+            }
         }
     }
 

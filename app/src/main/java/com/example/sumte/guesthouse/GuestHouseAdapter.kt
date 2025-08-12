@@ -12,10 +12,8 @@ class GuestHouseAdapter(
     private val onItemClick: (GuestHouse) -> Unit
 ) : RecyclerView.Adapter<GuestHouseAdapter.ViewHolder>() {
 
-    // 불변 리스트 유지
-    var items: List<GuestHouse> = emptyList()
-        private set
-
+    private var items: List<GuestHouse> = emptyList()
+    private var likedIds: Set<Int> = emptySet()
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -34,7 +32,7 @@ class GuestHouseAdapter(
             guesthouseTitleTv.text = guestHouse.title
             guesthouseLocationTv.text = guestHouse.location
             guesthousePriceTv.text = guestHouse.price
-            // URL 있으면 Glide, 없으면 로컬 리소스
+
             val ph = guestHouse.imageResId
             if (!guestHouse.imageUrl.isNullOrBlank()) {
                 Glide.with(root).load(guestHouse.imageUrl)
@@ -51,20 +49,27 @@ class GuestHouseAdapter(
             root.setOnClickListener { onItemClick(guestHouse) }
 
             guesthouseHeartIv.setOnClickListener {
-                viewModel.toggleLike(guestHouse)
                 val pos = holder.bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) notifyItemChanged(pos)
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+                viewModel.toggleLike(guestHouse) {
+                    // ViewModel의 작업이 끝난 후 UI를 갱신합니다.
+                    notifyItemChanged(pos)
+                }
             }
         }
     }
 
+    fun updateLikes(newLikedIds: Set<Int>) {
+        this.likedIds = newLikedIds
+        notifyDataSetChanged() // 찜 목록이 바뀌었으니 화면 전체를 새로고침
+    }
 
     fun replaceAll(newItems: List<GuestHouse>) {
         items = newItems.toList()
         notifyDataSetChanged()
     }
 
-    // 다음 페이지 “붙이기” (copy-on-write)
     fun append(newItems: List<GuestHouse>) {
         if (newItems.isEmpty()) return
         val start = items.size
