@@ -1,5 +1,7 @@
 package com.example.sumte.housedetail
 
+import com.google.gson.annotations.SerializedName
+
 data class RoomDto(
     val id: Int,
     val name: String,
@@ -9,6 +11,6 @@ data class RoomDto(
     val checkout: String,
     val standardCount: Int,
     val totalCount: Int,
-    val imageUrls: List<String>?
-    //val imageUrls: String?
+    @SerializedName("imageUrls")
+    val imageUrls: List<String>? = null,
 )

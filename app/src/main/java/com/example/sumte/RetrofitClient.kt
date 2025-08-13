@@ -7,19 +7,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
 import com.example.sumte.housedetail.RoomService
-import okhttp3.logging.HttpLoggingInterceptor
+import com.example.sumte.payment.PaymentRepository
+import com.example.sumte.payment.PaymentService
 import okhttp3.OkHttpClient
-
-
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitClient {
     //원래 private
     private const val BASE_URL = "https://sumteapi.duckdns.org/"
 
-    //디버깅용
-    private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
 
     private fun createOkHttpClient(jwtToken: String?): OkHttpClient {
         return OkHttpClient.Builder()
@@ -35,10 +31,13 @@ object RetrofitClient {
     }
 
 
+    val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    val ok = OkHttpClient.Builder().addInterceptor(logging).build()
+
     val instance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(OkHttpClient.Builder().addInterceptor(logging).build())
+            .client(ok)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -61,7 +60,6 @@ object RetrofitClient {
     }
 
     //예약 api
-
     fun createReservationService(token: String): ReservationService {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
@@ -80,5 +78,11 @@ object RetrofitClient {
 
         return retrofitWithToken.create(ReservationService::class.java)
     }
+
+}
+
+    // 결제 API
+    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
+    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
 
 }

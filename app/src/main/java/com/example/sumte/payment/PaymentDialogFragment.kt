@@ -13,27 +13,28 @@ import com.example.sumte.databinding.DialogPaymentProcessBinding
 
 class PaymentDialogFragment : DialogFragment() {
 
-    private lateinit var binding: DialogPaymentProcessBinding
+    private var _binding: DialogPaymentProcessBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var dotAnimator: PaymentProcessDotAnimator
+    private var dotAnimator: PaymentProcessDotAnimator? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogPaymentProcessBinding.inflate(inflater, container, false)
+        _binding = DialogPaymentProcessBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        dotAnimator = PaymentProcessDotAnimator(
-            listOf(binding.dot1, binding.dot2, binding.dot3)
-        )
-        dotAnimator.start()
+        dotAnimator = PaymentProcessDotAnimator(listOf(binding.dot1, binding.dot2, binding.dot3)).also {
+            it.start()
+        }
     }
 
     override fun onDestroyView() {
-        dotAnimator.stop()
-
+        dotAnimator?.stop()
+        dotAnimator = null
+        _binding = null
         super.onDestroyView()
     }
 
@@ -44,4 +45,15 @@ class PaymentDialogFragment : DialogFragment() {
             setCanceledOnTouchOutside(false)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            setDimAmount(0.5f)
+        }
+        isCancelable = false
+    }
 }
+
