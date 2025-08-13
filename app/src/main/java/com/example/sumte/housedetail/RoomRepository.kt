@@ -13,8 +13,6 @@ class RoomRepository(
         return response.data.toRoomInfo()
     }
 
-
-
     // 게스트하우스 방 목록 조회 (날짜 범위 필요)
     suspend fun fetchRooms(
         guesthouseId: Int,

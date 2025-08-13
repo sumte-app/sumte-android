@@ -40,9 +40,14 @@ class RoomInfoAdapter(
                 //root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
                 onReserveClick(room)
             }
+            //상세보기
             tvRoomDetail.setOnClickListener {
-                root.context.startActivity(Intent(root.context, ActivityRoomDetail::class.java))
+                Log.d("RoomInfoAdapter", "Clicked room.id = ${room.id}") // 확인용
+                val intent = Intent(root.context, ActivityRoomDetail::class.java)
+                intent.putExtra("roomId", room.id) // ★ 여기서 roomId 전달
+                root.context.startActivity(intent)
             }
+
         }
     }
 

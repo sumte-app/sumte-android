@@ -14,8 +14,10 @@ fun RoomDto.toRoomInfo(): RoomInfo {
         standardCount = standardCount,
         totalCount = totalCount,
         imageUrls = imageUrls.orEmpty()
+
     )
         }
+
 
 
 

@@ -81,4 +81,5 @@ class HouseDetailViewModel(
             _review.value = Review(rating = 4.5, count = 2)
         }
     }
+
 }
