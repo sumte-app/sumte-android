@@ -13,7 +13,7 @@ import retrofit2.http.Query
 
 data class ReviewRequest(
     val roomId: Long,
-    val imageUrl: String?,
+    val imageUrls: List<String>?,
     val contents: String,
     val score: Int
 )

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -58,6 +59,7 @@ class ReviewWriteActivity:AppCompatActivity() {
 
     var originalContent = ""
     var originalRating = 0
+    private lateinit var originalImageUrls: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,13 +169,27 @@ class ReviewWriteActivity:AppCompatActivity() {
 
         // 리뷰 수정 모드
         if (isEditMode) {
+            Log.d("ReviewWriteActivity", "Entering edit mode.")
             selectedRating = intent.getIntExtra("score", 0)
             val content = intent.getStringExtra("contents").orEmpty()
-            val imageUrl = intent.getStringExtra("imageUrl")
+            val imageUrls = intent.getSerializableExtra("imageUrls") as? List<String> ?: emptyList()
 
+            // 디버깅 로그: Intent에서 받아온 이미지 URL 리스트 확인
+            Log.d("ReviewWriteActivity", "Received imageUrls from Intent: $imageUrls")
+            Log.d("ReviewWriteActivity", "ImageUrls is empty: ${imageUrls.isEmpty()}")
+
+            // photoList에 기존 이미지 URL을 Uri로 변환하여 추가
+            if (photoList.isEmpty() && imageUrls.isNotEmpty()) {
+                photoList.addAll(imageUrls.map { Uri.parse(it) })
+            }
+            Log.d("ReviewWriteActivity", "PhotoList size after adding images: ${photoList.size}")
+
+            // 기존 리뷰 내용 및 점수 저장
             originalContent = intent.getStringExtra("contents").orEmpty()
             originalRating = intent.getIntExtra("score", 0)
+            originalImageUrls = imageUrls
 
+            // 별점 UI 업데이트
             updateStars(listOf(
                 binding.starEmpty1Iv, binding.starEmpty2Iv,
                 binding.starEmpty3Iv, binding.starEmpty4Iv, binding.starEmpty5Iv
@@ -188,23 +204,36 @@ class ReviewWriteActivity:AppCompatActivity() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
+            // EditText에 기존 내용 설정
             binding.reviewContentEt.setText(originalContent)
             binding.reviewApplyTv.text = "완료"
 
-            imageUrl?.let {
+            // 이미지 리스트가 비어있지 않으면 RecyclerView에 이미지를 띄워준다.
+            if (imageUrls.isNotEmpty()) {
                 binding.reviewPicShowLl.visibility = View.VISIBLE
-                Glide.with(this).load(it).into(object : CustomTarget<Drawable>() {
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        val bitmap = (resource as BitmapDrawable).bitmap
-                        val uri = saveBitmapToCache(bitmap)
-                        photoList.add(uri)
-                        reviewPhotoAdapter.notifyDataSetChanged()
-                    }
+                Log.d("ReviewWriteActivity", "reviewPicShowLl visibility set to VISIBLE.")
 
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
+                // 어댑터 초기화 (삭제 리스너 포함)
+                reviewPhotoAdapter = ReviewPhotoAdapter(photoList) { position ->
+                    photoList.removeAt(position)
+                    reviewPhotoAdapter.notifyItemRemoved(position)
+                    Log.d("ReviewWriteActivity", "Photo removed at position $position. New photoList size: ${photoList.size}")
+                    // 이미지 삭제 후 버튼 상태 갱신
+                    checkIfChanged()
+                }
+
+                // RecyclerView에 어댑터와 LayoutManager 설정
+                binding.reviewPicShowRv.apply {
+                    layoutManager = LinearLayoutManager(this@ReviewWriteActivity, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = reviewPhotoAdapter
+                }
+                Log.d("ReviewWriteActivity", "Adapter and LayoutManager for reviewPicShowRv are set.")
+            } else {
+                Log.d("ReviewWriteActivity", "ImageUrls is empty, setting reviewPicShowLl visibility to GONE.")
+                binding.reviewPicShowLl.visibility = View.GONE
             }
 
+            // 상단 텍스트 업데이트
             binding.reviewWriteTitleTv.text = "후기 수정하기"
 
             // 리뷰 수정후 등록
@@ -215,25 +244,36 @@ class ReviewWriteActivity:AppCompatActivity() {
                 val request = ReviewRequest(
                     roomId = intent.getLongExtra("roomId", -1),
                     contents = updatedContent,
-                    score = selectedRating
+                    score = selectedRating,
+                    imageUrls = photoList.map { it.toString() }
                 )
 
-                ApiClient.reviewService.patchReview(reviewId, request)
-                    .enqueue(object : Callback<Void> {
-                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                            if (response.isSuccessful) {
-                                Toast.makeText(this@ReviewWriteActivity, "리뷰가 수정되었습니다", Toast.LENGTH_SHORT).show()
-                                finish()
-                            } else {
-                                Toast.makeText(this@ReviewWriteActivity, "수정 실패", Toast.LENGTH_SHORT).show()
-                            }
+                lifecycleScope.launch {
+                    try {
+                        // IO 스레드에서 API 호출
+                        val response = withContext(Dispatchers.IO) {
+                            ApiClient.reviewService.patchReview(reviewId, request)
                         }
-                        override fun onFailure(call: Call<Void>, t: Throwable) {
-                            Toast.makeText(this@ReviewWriteActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+
+                        // UI 스레드에서 결과 처리
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@ReviewWriteActivity, "리뷰가 수정되었습니다", Toast.LENGTH_SHORT).show()
+                            finish()
+                        } else {
+                            Toast.makeText(this@ReviewWriteActivity, "수정 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
-                    })
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ReviewWriteActivity, "네트워크 오류: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
+
+        // 현재 액티비티를 종료하여 이전 화면(ReviewManage)으로 돌아감
+        binding.reviewWriteCancelIv.setOnClickListener {
+            finish()
+        }
+
     }
 
     private fun saveBitmapToCache(bitmap: Bitmap): Uri {
@@ -318,8 +358,10 @@ class ReviewWriteActivity:AppCompatActivity() {
         val currentContent = binding.reviewContentEt.text.toString()
         val isContentChanged = currentContent != originalContent
         val isRatingChanged = selectedRating != originalRating
+        val currentImageUrls = photoList.map { it.toString() }
+        val isImagesChanged = currentImageUrls.sorted() != originalImageUrls.sorted()
 
-        if (isContentChanged || isRatingChanged) {
+        if (isContentChanged || isRatingChanged || isImagesChanged) {
             binding.reviewApplyDefaultTv.visibility = View.GONE
             binding.reviewApplyTv.visibility = View.VISIBLE
         } else {
@@ -334,6 +376,7 @@ class ReviewWriteActivity:AppCompatActivity() {
         val roomId   = intent.getLongExtra("roomId", -1)
         val contents = binding.reviewContentEt.text.toString().trim()
         val score    = selectedRating
+        val imageUrls = intent.getSerializableExtra("imageUrls") as? List<String> ?: emptyList()
 
         if (roomId == -1L || contents.isEmpty() || score == 0) {
             Toast.makeText(this@ReviewWriteActivity,
@@ -342,7 +385,6 @@ class ReviewWriteActivity:AppCompatActivity() {
         }
 
         try {
-            // 사진 1장을 S3 Presigned URL 로 업로드
             val imageUrl: String? = withContext(Dispatchers.IO) {
                 if (photoList.isEmpty()) return@withContext null
                 if (photoList.first().toString().startsWith("http")) return@withContext photoList.first().toString()
@@ -375,7 +417,7 @@ class ReviewWriteActivity:AppCompatActivity() {
             }
 
             // 리뷰 JSON 전송
-            val body = ReviewRequest(roomId = roomId, imageUrl = imageUrl, contents = contents, score = score)
+            val body = ReviewRequest(roomId = roomId, imageUrls = imageUrls, contents = contents, score = score)
 
             val resp = if (isEditMode && reviewId != -1L) {
                 ApiClient.reviewService.patchReview(reviewId, body)
