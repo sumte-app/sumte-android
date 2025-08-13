@@ -96,10 +96,6 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
-            Log.d("HouseDetailFragment", "Clicked Room ID: ${room.id}")
-            val intent = Intent(requireContext(), ActivityRoomDetail::class.java)
-            intent.putExtra("roomId", room.id)
-            startActivity(intent)
         }
 
         binding.rvInfo.adapter = adapter
