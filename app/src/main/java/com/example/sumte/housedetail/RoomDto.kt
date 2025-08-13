@@ -9,5 +9,6 @@ data class RoomDto(
     val checkout: String,
     val standardCount: Int,
     val totalCount: Int,
-    val imageUrls: String?
+    val imageUrls: List<String>?
+    //val imageUrls: String?
 )
