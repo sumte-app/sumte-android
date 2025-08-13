@@ -9,16 +9,6 @@ data class RoomInfo(
     val checkout: String,
     val standardCount: Int,
     val totalCount: Int,
-    val imageUrl: String?
+    val imageUrls: List<String> = emptyList()
 )
 
-//data class RoomInfo(
-//    val name: String,
-//    val content: String,
-//    val price: Int,
-//    val checkin: String,
-//    val checkout: String,
-//    val standardCount: Int,
-//    val totalCount: Int,
-//    val imageUrl: String?
-//)

@@ -6,13 +6,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
 import com.example.sumte.housedetail.RoomService
+import com.example.sumte.payment.PaymentRepository
+import com.example.sumte.payment.PaymentService
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitClient {
     private const val BASE_URL = "https://sumteapi.duckdns.org/"
 
+
+    val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    val ok = OkHttpClient.Builder().addInterceptor(logging).build()
+
     val instance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(ok)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -33,5 +42,9 @@ object RetrofitClient {
     val api: GuesthouseApi by lazy {
         instance.create(GuesthouseApi::class.java)
     }
+
+    // 결제 API
+    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
+    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
 
 }
