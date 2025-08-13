@@ -25,11 +25,23 @@ data class ReviewRequest2(
     val score: Int
 )
 
+data class ImageUploadRequest(
+    val ownerType: String,
+    val ownerId: Long,
+    val url: String
+)
+
+data class PostImagesResponse(
+    val ownerId: Long,
+    val imageUrl: String,
+    val sortOrder: Int,
+    val url: String
+)
+
 data class PresignedUrlResponse(
-    @SerializedName("presignedUrl")
-    val presignedUrl: String,
-    @SerializedName("imageUrl")
-    val imageUrl: String
+    val originalName: String,
+    val imageUrl: String,
+    val presignedUrl: String
 )
 
 interface ReviewService {
@@ -55,9 +67,14 @@ interface ReviewService {
     ): Response<Unit>
 
     @GET("s3/presignedUrls")
-    suspend fun getPresignedUrl(
-        @Query("fileNames") fileName: String,
+    suspend fun getPresignedUrls(
+        @Query("fileNames") fileNames: List<String>,
         @Query("ownerType") ownerType: String,
         @Query("ownerId") ownerId: Long
     ): Response<List<PresignedUrlResponse>>
+
+    @POST("/images")
+    suspend fun postImages(
+        @Body request: List<ImageUploadRequest>
+    ): Response<List<PostImagesResponse>>
 }

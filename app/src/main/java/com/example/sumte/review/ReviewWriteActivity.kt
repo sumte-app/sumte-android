@@ -409,71 +409,90 @@ class ReviewWriteActivity:AppCompatActivity() {
         }
 
         try {
-            // 이미지 업로드 로직 시작
-            // photoList의 모든 Uri를 서버에 등록된 URL로 변환합니다.
             val uploadedImageUrls: List<String> = withContext(Dispatchers.IO) {
-                val urls = mutableListOf<String>()
+                val finalImageUrls = mutableListOf<String>()
+                val newPhotosToUpload = photoList.filter { !it.toString().startsWith("http") }
 
-                // 각 사진에 대해 S3 업로드 및 서버 등록
-                for (uri in photoList) {
-                    // 이미 서버에 등록된 URL이면 업로드 과정을 스킵
-                    if (uri.toString().startsWith("http")) {
-                        urls.add(uri.toString())
-                        continue
-                    }
+                if (newPhotosToUpload.isNotEmpty()) {
+                    val fileNames = newPhotosToUpload.map { "REVIEW_${UUID.randomUUID()}.jpg" }
+                    val presignedUrlResponse = ApiClient.reviewService.getPresignedUrls(
+                        fileNames = fileNames,
+                        ownerType = "REVIEW",
+                        ownerId = reviewId
+                    )
 
-                    // Presigned URL 발급
-                    val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
-                    val fileName = "REVIEW_${UUID.randomUUID()}.jpg"
-
-                    val presignedUrlResponse = ApiClient.reviewService
-                        .getPresignedUrl(fileName, "REVIEW", reviewId) // reviewId를 ownerId로 전달
                     if (!presignedUrlResponse.isSuccessful) {
                         throw Exception("Presigned URL 발급 실패: ${presignedUrlResponse.code()}")
                     }
 
-                    val presignedUrl = presignedUrlResponse.body()
-                        ?.firstOrNull()?.presignedUrl
-                        ?: throw Exception("Presigned URL이 비어있습니다.")
+                    val presignedUrls = presignedUrlResponse.body()
+                        ?: throw Exception("Presigned URL 응답이 비어있습니다.")
 
-                    // 파일 바이트 읽기
-                    val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                        ?: throw Exception("이미지 읽기 실패")
+                    // S3에 이미지 업로드
+                    presignedUrls.forEachIndexed { index, presignedData ->
+                        val uri = newPhotosToUpload[index]
+                        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                            ?: throw Exception("이미지 읽기 실패")
+                        val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
 
-                    // PUT 업로드
-                    val uploadResponse = OkHttpClient().newCall(
-                        Request.Builder()
-                            .url(presignedUrl)
-                            .put(bytes.toRequestBody(mimeType.toMediaType()))
-                            .build()
-                    ).execute()
+                        val uploadResponse = OkHttpClient().newCall(
+                            Request.Builder()
+                                .url(presignedData.presignedUrl)
+                                .put(bytes.toRequestBody(mimeType.toMediaType()))
+                                .build()
+                        ).execute()
 
-                    if (!uploadResponse.isSuccessful) {
-                        throw IOException("S3 업로드 실패: ${uploadResponse.code}")
+                        if (!uploadResponse.isSuccessful) {
+                            throw IOException("S3 업로드 실패: ${uploadResponse.code}")
+                        }
                     }
 
-                    // 업로드 성공 후 public URL 리스트에 추가
-                    val publicUrl = presignedUrl.substringBefore("?")
-                    urls.add(publicUrl)
+                    // 이미지 일괄 등록 POST API 호출
+                    val imageUploadRequest = presignedUrls.map {
+                        ImageUploadRequest(
+                            ownerType = "REVIEW",
+                            ownerId = reviewId,
+                            url = it.imageUrl
+                        )
+                    }
+
+                    val postImagesResponse = ApiClient.reviewService.postImages(imageUploadRequest)
+                    if (!postImagesResponse.isSuccessful) {
+                        throw Exception("이미지 일괄 등록 실패: ${postImagesResponse.code()}")
+                    }
+
+                    // 최종 이미지 URL 리스트 생성
+                    finalImageUrls.addAll(postImagesResponse.body()?.map { it.url } ?: emptyList())
                 }
-                urls
+
+                // 기존 이미지 URL 추가 (수정 모드일 경우)
+                val existingImageUrls = photoList.filter { it.toString().startsWith("http") }.map { it.toString() }
+                finalImageUrls.addAll(0, existingImageUrls)
+
+                finalImageUrls
             }
 
             // 리뷰 JSON 전송
-            val body = ReviewRequest(roomId = roomId, imageUrls = uploadedImageUrls, contents = contents, score = score)
-            val body2 = ReviewRequest2(roomId = roomId, contents = contents, score = score)
-
-            // API 호출 전 디버깅 로그
-            Log.d("ReviewAPI", "patchReview API 호출 준비.")
-            Log.d("ReviewAPI", "reviewId: $reviewId")
-            Log.d("ReviewAPI", "Request Body: $body")
+            val body = ReviewRequest(
+                roomId = roomId,
+                imageUrls = uploadedImageUrls,
+                contents = contents,
+                score = score
+            )
+            val body2 = ReviewRequest2(
+                roomId = roomId,
+                contents = contents,
+                score = score
+            )
 
             val resp = if (isEditMode && reviewId != -1L) {
+                // 이미지 수정 로직이 없으므로 body2 사용
                 ApiClient.reviewService.patchReview(reviewId, body2)
             } else {
                 ApiClient.reviewService.postReview(body)
             }
 
+            // ... (이후 결과 처리 로직은 동일)
             if (resp.isSuccessful) {
                 Toast.makeText(this@ReviewWriteActivity, "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
                 finish()
