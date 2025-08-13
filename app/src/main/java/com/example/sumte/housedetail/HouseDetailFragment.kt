@@ -27,6 +27,7 @@ import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.FragmentHouseDetailBinding
+import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
 import com.example.sumte.search.BookInfoActivity
@@ -41,7 +42,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
 
-    private val viewModel by lazy {
+    private val BookInfoVM by lazy {
         ViewModelProvider(
             App.instance,
             ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
@@ -60,7 +61,7 @@ class HouseDetailFragment : Fragment() {
     private var guesthouseId: Int = -1
 
     // ViewModel
-    private val vm: HouseDetailViewModel by lazy {
+    private val HouseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -144,15 +145,15 @@ class HouseDetailFragment : Fragment() {
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"
             Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
-            vm.loadGuesthouse(guesthouseId)
+            HouseDetailVM.loadGuesthouse(guesthouseId)
             Log.d("HD/F", "call loadRooms($guesthouseId)")
-            vm.loadRooms(guesthouseId, startDate, endDate)}
+            HouseDetailVM.loadRooms(guesthouseId, startDate, endDate)}
 
         return binding.root
     }
 
     private fun observeState() {
-        vm.state.observe(viewLifecycleOwner) { st ->
+        HouseDetailVM.state.observe(viewLifecycleOwner) { st ->
             // st가 어떤 상태인지 로그로 확인
             Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
 
@@ -179,7 +180,7 @@ class HouseDetailFragment : Fragment() {
     }
 
     private fun observeHeader() {
-        vm.header.observe(viewLifecycleOwner) { h ->
+        HouseDetailVM.header.observe(viewLifecycleOwner) { h ->
             Log.d("HD/F", "header updated: name=${h.name}, addr=${h.address}, imgs=${h.imageUrls.size}")
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
@@ -218,19 +219,19 @@ class HouseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val startDate = viewModel.startDate
-        val endDate = viewModel.endDate
+        val startDate = BookInfoVM.startDate
+        val endDate = BookInfoVM.endDate
         val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
 
         binding.startDate.text = startDate.format(formatter)
         binding.endDate.text = endDate.format(formatter)
         binding.dateCount.text = "${nights}박"
 
-        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.adultCount.text = "성인 ${BookInfoVM.adultCount}"
         binding.childCount.text =
-            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+            if (BookInfoVM.childCount > 0) "아동 ${BookInfoVM.childCount}" else ""
 
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        binding.countComma.visibility = if (BookInfoVM.childCount > 0) View.VISIBLE else View.GONE
 
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
@@ -253,8 +254,8 @@ class HouseDetailFragment : Fragment() {
     private fun updateUIFromViewModel() {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val sDate = viewModel.startDate
-        val eDate = viewModel.endDate
+        val sDate = BookInfoVM.startDate
+        val eDate = BookInfoVM.endDate
 
         if (sDate != null && eDate != null) {
             binding.startDate.text = sDate.format(formatter)
@@ -263,9 +264,9 @@ class HouseDetailFragment : Fragment() {
             binding.dateCount.text = "${nights}박"
         }
 
-        binding.adultCount.text = "성인 ${viewModel.adultCount}"
-        binding.childCount.text = if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        binding.adultCount.text = "성인 ${BookInfoVM.adultCount}"
+        binding.childCount.text = if (BookInfoVM.childCount > 0) "아동 ${BookInfoVM.childCount}" else ""
+        binding.countComma.visibility = if (BookInfoVM.childCount > 0) View.VISIBLE else View.GONE
     }
 
 }
