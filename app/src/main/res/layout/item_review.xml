@@ -9,6 +9,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
+        android:paddingTop="20dp"
         app:layout_constraintWidth_percent="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +28,7 @@
             android:id="@+id/item_review_titlearrow_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="4dp"
             android:src="@drawable/arrow_right"
             android:layout_gravity="center_vertical"
             app:layout_constraintStart_toEndOf="@+id/item_review_title_tv"
@@ -58,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            android:layout_marginStart="-2dp"
             app:layout_constraintStart_toEndOf="@+id/item_review_star1"
             app:layout_constraintTop_toTopOf="@+id/item_review_star1"/>
         <ImageView
@@ -66,7 +66,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            android:layout_marginStart="-2dp"
             app:layout_constraintStart_toEndOf="@+id/item_review_star2"
             app:layout_constraintTop_toTopOf="@+id/item_review_star2"/>
         <ImageView
@@ -74,7 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            android:layout_marginStart="-2dp"
             app:layout_constraintStart_toEndOf="@+id/item_review_star3"
             app:layout_constraintTop_toTopOf="@+id/item_review_star3"/>
         <ImageView
@@ -82,7 +80,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            android:layout_marginStart="-2dp"
             app:layout_constraintStart_toEndOf="@+id/item_review_star4"
             app:layout_constraintTop_toTopOf="@+id/item_review_star4"/>
 

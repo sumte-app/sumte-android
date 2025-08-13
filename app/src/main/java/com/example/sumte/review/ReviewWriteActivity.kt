@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -33,7 +35,10 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.File
 import java.io.IOException
 
@@ -50,6 +55,9 @@ class ReviewWriteActivity:AppCompatActivity() {
     private var selectedRating = 0
 
     private var uploadedImageUrl: String? = null
+
+    var originalContent = ""
+    var originalRating = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,12 +171,24 @@ class ReviewWriteActivity:AppCompatActivity() {
             val content = intent.getStringExtra("contents").orEmpty()
             val imageUrl = intent.getStringExtra("imageUrl")
 
+            originalContent = intent.getStringExtra("contents").orEmpty()
+            originalRating = intent.getIntExtra("score", 0)
+
             updateStars(listOf(
                 binding.starEmpty1Iv, binding.starEmpty2Iv,
                 binding.starEmpty3Iv, binding.starEmpty4Iv, binding.starEmpty5Iv
             ), selectedRating)
 
-            binding.reviewContentEt.setText(content)
+            // 내용 변경 시 버튼 상태 갱신
+            binding.reviewContentEt.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    checkIfChanged()
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
+
+            binding.reviewContentEt.setText(originalContent)
             binding.reviewApplyTv.text = "완료"
 
             imageUrl?.let {
@@ -186,6 +206,33 @@ class ReviewWriteActivity:AppCompatActivity() {
             }
 
             binding.reviewWriteTitleTv.text = "후기 수정하기"
+
+            // 리뷰 수정후 등록
+            binding.reviewApplyTv.setOnClickListener {
+                val reviewId = intent.getLongExtra("reviewId", -1)
+                val updatedContent = binding.reviewContentEt.text.toString()
+
+                val request = ReviewRequest(
+                    roomId = intent.getLongExtra("roomId", -1),
+                    contents = updatedContent,
+                    score = selectedRating
+                )
+
+                ApiClient.reviewService.patchReview(reviewId, request)
+                    .enqueue(object : Callback<Void> {
+                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                            if (response.isSuccessful) {
+                                Toast.makeText(this@ReviewWriteActivity, "리뷰가 수정되었습니다", Toast.LENGTH_SHORT).show()
+                                finish()
+                            } else {
+                                Toast.makeText(this@ReviewWriteActivity, "수정 실패", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                            Toast.makeText(this@ReviewWriteActivity, "네트워크 오류", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            }
         }
     }
 
@@ -259,6 +306,20 @@ class ReviewWriteActivity:AppCompatActivity() {
     }
     private fun updateApplyButton() {
         if (selectedRating > 0) {
+            binding.reviewApplyDefaultTv.visibility = View.GONE
+            binding.reviewApplyTv.visibility = View.VISIBLE
+        } else {
+            binding.reviewApplyDefaultTv.visibility = View.VISIBLE
+            binding.reviewApplyTv.visibility = View.GONE
+        }
+    }
+
+    private fun checkIfChanged() {
+        val currentContent = binding.reviewContentEt.text.toString()
+        val isContentChanged = currentContent != originalContent
+        val isRatingChanged = selectedRating != originalRating
+
+        if (isContentChanged || isRatingChanged) {
             binding.reviewApplyDefaultTv.visibility = View.GONE
             binding.reviewApplyTv.visibility = View.VISIBLE
         } else {

@@ -62,7 +62,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
 //            Glide.with(root).load(item.imageUrl)
 //                .into(reviewImageIv)
 
-            itemReviewEditIv.setOnClickListener {
+            itemReviewEditTv.setOnClickListener {
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
                     putExtra("reviewId", item.id)
