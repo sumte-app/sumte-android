@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
+    <FrameLayout
+        android:id="@+id/paymentRootContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHeaderBar"
         android:layout_width="match_parent"
