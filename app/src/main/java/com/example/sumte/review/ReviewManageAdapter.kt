@@ -1,10 +1,13 @@
 package com.example.sumte.review
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sumte.MyReview
@@ -35,7 +38,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
         val old = items[position]
         items[position] = old.copy(
             roomId = newReview.roomId,
-            imageUrl = newReview.imageUrl,
+            imageUrls = newReview.imageUrls,
             contents = newReview.contents,
             score = newReview.score
         )
@@ -58,18 +61,31 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
 
             itemReviewContentTv.text=item.contents
 
-            // 사진 부분
-//            Glide.with(root).load(item.imageUrl)
-//                .into(reviewImageIv)
+            // 중첩된 리사이클러뷰 설정
+            if (!item.imageUrls.isNullOrEmpty()) {
+                Log.d("ReviewAdapter", "Image list is not empty. Creating adapter.")
+                reviewImageContainer.visibility = View.VISIBLE
+                val imageAdapter = ReviewImageAdapter(item.imageUrls)
 
-            itemReviewEditIv.setOnClickListener {
+                reviewImageRv.apply {
+                    layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = imageAdapter
+                    visibility = View.VISIBLE
+                    Log.d("ReviewAdapter", "ReviewImageAdapter and LayoutManager set successfully.")
+                }
+            } else {
+                Log.d("ReviewAdapter", "Image list is empty or null. Hiding RecyclerView.")
+                reviewImageRv.visibility = View.GONE
+            }
+
+            itemReviewEditTv.setOnClickListener {
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
                     putExtra("reviewId", item.id)
                     putExtra("roomId", item.roomId)
                     putExtra("contents", item.contents)
                     putExtra("score", item.score)
-                    putExtra("imageUrl", item.imageUrl)
+                    putExtra("imageUrls", ArrayList(item.imageUrls ?: emptyList()))
                 }
                 binding.root.context.startActivity(intent)
             }
