@@ -17,6 +17,11 @@ class PaymentFailedFragment: DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPaymentFailedBinding.inflate(inflater, container, false)
+
+        binding.ivBack.setOnClickListener {
+            requireActivity().finish()
+        }
+
         return binding.root
     }
 

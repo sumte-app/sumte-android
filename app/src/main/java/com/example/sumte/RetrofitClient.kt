@@ -6,6 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
 import com.example.sumte.housedetail.RoomService
+import com.example.sumte.payment.PaymentRepository
+import com.example.sumte.payment.PaymentService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -40,5 +42,9 @@ object RetrofitClient {
     val api: GuesthouseApi by lazy {
         instance.create(GuesthouseApi::class.java)
     }
+
+    // 결제 API
+    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
+    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
 
 }

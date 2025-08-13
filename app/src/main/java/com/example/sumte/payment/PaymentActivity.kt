@@ -1,18 +1,26 @@
 package com.example.sumte.payment
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityPaymentBinding
 import com.example.sumte.search.BookInfoViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -21,12 +29,22 @@ class PaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPaymentBinding
     private var selectedPaymentMethod: String = "kakao"
     private var isAllChecked = false
+
     private val viewModel by lazy {
         ViewModelProvider(
             App.instance,
             ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
         )[BookInfoViewModel::class.java]
     }
+
+
+    private val payVm by lazy {
+        ViewModelProvider(
+            this,
+            PaymentVMFactory(RetrofitClient.paymentRepository)
+        )[PaymentViewModel::class.java]
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +76,31 @@ class PaymentActivity : AppCompatActivity() {
 
         binding.ivBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        payVm.state.onEach { st ->
+            when (st) {
+                is PayUiState.Loading -> showProcessingDialog()
+                is PayUiState.Success -> {
+                    hideProcessingDialog()
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(st.data.paymentUrl)))
+                }
+                is PayUiState.Error -> {
+                    hideProcessingDialog()
+                    showPaymentFailedFragment(st.msg)
+                }
+                else -> Unit
+            }
+        }.launchIn(lifecycleScope)
+
+
+        binding.btnPay.setOnClickListener {
+            if (!binding.btnPay.isEnabled) return@setOnClickListener
+            val reservationId = intent.getIntExtra("reservationId", -1)
+            val amount = intent.getIntExtra("amount", 0)
+
+            Log.d("Payment", "start pay: reservationId=$reservationId, amount=$amount")
+            payVm.startKakao(reservationId, amount)
         }
         setupPaymentButtons()
         setupAgreementLogic()
@@ -142,6 +185,44 @@ class PaymentActivity : AppCompatActivity() {
         val isEnabled = selectedPaymentMethod.isNotEmpty() && allTermsChecked
         binding.btnPay.isEnabled = isEnabled
         binding.btnPay.alpha = if (isEnabled) 1f else 0.5f
+    }
+
+
+    private val TAG_PROCESSING = "payment_processing"
+
+    private fun showProcessingDialog() {
+        if (supportFragmentManager.findFragmentByTag(TAG_PROCESSING) == null) {
+            PaymentDialogFragment().show(supportFragmentManager, TAG_PROCESSING)
+        }
+    }
+
+    private fun hideProcessingDialog() {
+        (supportFragmentManager.findFragmentByTag(TAG_PROCESSING) as? DialogFragment)
+            ?.dismissAllowingStateLoss()
+    }
+
+    private val TAG_ERROR = "payment_error"
+
+    private fun showPaymentFailedFragment(message: String) {
+        hideProcessingDialog() // 결제중 다이얼로그 내리기
+
+        val frag = PaymentFailedFragment().apply {
+            arguments = Bundle().apply { putString("message", message) }
+        }
+        supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .setCustomAnimations(
+                android.R.anim.fade_in, android.R.anim.fade_out,
+                android.R.anim.fade_in, android.R.anim.fade_out
+            )
+            .replace(R.id.paymentRootContainer, frag, "payment_error")
+            .commitAllowingStateLoss()
+    }
+
+    private fun hidePaymentErrorFragment() {
+        supportFragmentManager.popBackStack(
+            TAG_ERROR, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 
 
