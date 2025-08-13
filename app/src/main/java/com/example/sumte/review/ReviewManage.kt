@@ -141,7 +141,7 @@ class ReviewManage: Fragment() {
         }
     }
 
-    fun updateReview(reviewId: Long, updatedRequest: ReviewRequest, position: Int) {
+    fun updateReview(reviewId: Long, updatedRequest: ReviewRequest2, position: Int) {
         lifecycleScope.launch {
             try {
                 val response = ApiClient.reviewService.patchReview(reviewId, updatedRequest)
