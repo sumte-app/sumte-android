@@ -1,6 +1,9 @@
 package com.example.sumte.housedetail
 
+import android.util.Log
+
 fun RoomDto.toRoomInfo(): RoomInfo {
+    Log.d("RoomMapper", "dto.imageUrls=${this.imageUrls}")
     return RoomInfo(
         name = name,
         content = content.orEmpty(),
@@ -9,9 +12,11 @@ fun RoomDto.toRoomInfo(): RoomInfo {
         checkout = trimSec(checkout),
         standardCount = standardCount,
         totalCount = totalCount,
-        imageUrl = imageUrls
+        imageUrls = imageUrls.orEmpty()
     )
-}
+        }
+
+
 
 fun GuesthouseDto.toGuesthouseInfo(): GuesthouseInfo =
     GuesthouseInfo(

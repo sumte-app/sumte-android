@@ -6,13 +6,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.getValue
 import com.example.sumte.housedetail.RoomService
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitClient {
     private const val BASE_URL = "https://sumteapi.duckdns.org/"
 
+
+    val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    val ok = OkHttpClient.Builder().addInterceptor(logging).build()
+
     val instance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(ok)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

@@ -141,9 +141,7 @@ class HouseDetailFragment : Fragment() {
         if (guesthouseId > 0){
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"
-            Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
             vm.loadGuesthouse(guesthouseId)
-            Log.d("HD/F", "call loadRooms($guesthouseId)")
             vm.loadRooms(guesthouseId, startDate, endDate)}
 
         return binding.root
