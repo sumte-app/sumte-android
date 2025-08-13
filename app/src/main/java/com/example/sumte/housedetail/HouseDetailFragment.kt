@@ -96,6 +96,8 @@ class HouseDetailFragment : Fragment() {
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             // 예약 버튼 클릭 시 처리 (필요시 구현)
+            //Log.d("HouseDetailFragment", "Clicked Room ID: ${room.id}")
+
         }
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
