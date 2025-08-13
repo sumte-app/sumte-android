@@ -118,7 +118,7 @@ class HouseDetailFragment : Fragment() {
                     Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
                 }
             }
-            val start = booknfoVM.startDate
+            val start = bookInfoVM.startDate
             val end   = bookInfoVM.endDate
             val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
             val amount = room.price * nights
