@@ -2,6 +2,7 @@ package com.example.sumte.housedetail
 
 fun RoomDto.toRoomInfo(): RoomInfo {
     return RoomInfo(
+        id = id,                       // 서버에서 받은 roomId
         name = name,
         content = content.orEmpty(),
         price = price,
@@ -12,6 +13,7 @@ fun RoomDto.toRoomInfo(): RoomInfo {
         imageUrl = imageUrls
     )
 }
+
 
 fun GuesthouseDto.toGuesthouseInfo(): GuesthouseInfo =
     GuesthouseInfo(
