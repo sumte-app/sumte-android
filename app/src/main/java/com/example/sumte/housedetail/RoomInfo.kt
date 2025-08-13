@@ -1,6 +1,7 @@
 package com.example.sumte.housedetail
 
 data class RoomInfo(
+    val id: Int,
     val name: String,
     val content: String,
     val price: Int,

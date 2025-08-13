@@ -37,7 +37,7 @@ class RoomInfoAdapter(
                 .into(ivRoomImage)
 
             ivReserve.setOnClickListener {
-                root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
+                //root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
                 onReserveClick(room)
             }
             tvRoomDetail.setOnClickListener {

@@ -5,6 +5,7 @@ import android.util.Log
 fun RoomDto.toRoomInfo(): RoomInfo {
     Log.d("RoomMapper", "dto.imageUrls=${this.imageUrls}")
     return RoomInfo(
+        id = id,
         name = name,
         content = content.orEmpty(),
         price = price,

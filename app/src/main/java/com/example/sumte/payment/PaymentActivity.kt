@@ -18,10 +18,18 @@ import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityPaymentBinding
+import com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT
+import com.example.sumte.payment.PaymentExtras.EXTRA_END
+import com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME
+import com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME
+import com.example.sumte.payment.PaymentExtras.EXTRA_START
 import com.example.sumte.search.BookInfoViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.text.NumberFormat
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class PaymentActivity : AppCompatActivity() {
@@ -43,6 +51,42 @@ class PaymentActivity : AppCompatActivity() {
             this,
             PaymentVMFactory(RetrofitClient.paymentRepository)
         )[PaymentViewModel::class.java]
+    }
+
+    private var openedOnce = false
+
+    private fun bindExtrasToUi(){
+        // title
+        val guesthouseName = intent.getStringExtra(EXTRA_GUESTHOUSE_NAME)
+        val roomName       = intent.getStringExtra(EXTRA_ROOM_NAME)
+        val amount = intent.getIntExtra(EXTRA_AMOUNT, 0)
+        val start = intent.getStringExtra(EXTRA_START)?.let(LocalDate::parse)
+        val end   = intent.getStringExtra(EXTRA_END)?.let(LocalDate::parse)
+        val fmt   = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+        val pretty = NumberFormat.getInstance(Locale.KOREA).format(amount)
+        val ciRaw    = intent.getStringExtra(PaymentExtras.EXTRA_CHECKIN_TIME)
+        val coRaw    = intent.getStringExtra(PaymentExtras.EXTRA_CHECKOUT_TIME)
+        val ci    = trimSec(ciRaw)
+        val co    = trimSec(coRaw)
+
+        binding.tvTitle.text = guesthouseName
+        binding.tvRoomTitle.text = roomName
+        binding.tvPrice.text = "${pretty}원"
+
+
+        binding.startDate.text = start?.format(fmt) ?: "-"
+        binding.endDate.text   = end?.format(fmt) ?: "-"
+        val nights = if (start != null && end != null)
+            maxOf(1, ChronoUnit.DAYS.between(start, end).toInt())
+        else 1
+        if (start != null && end != null){
+            binding.tvCheckInDate.text = "${formatDetailLine(start)}\n${ci}"
+            binding.tvCheckOutDate.text = "${formatDetailLine(end)}\n${co}"
+        }
+
+        binding.dateCount.text = "${nights}박"
+        binding.tvStay.text = "숙박 / ${nights}박"
+
     }
 
 
@@ -83,7 +127,7 @@ class PaymentActivity : AppCompatActivity() {
                 is PayUiState.Loading -> showProcessingDialog()
                 is PayUiState.Success -> {
                     hideProcessingDialog()
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(st.data.paymentUrl)))
+                    openPaymentUrl(st.data.paymentUrl)
                 }
                 is PayUiState.Error -> {
                     hideProcessingDialog()
@@ -94,6 +138,7 @@ class PaymentActivity : AppCompatActivity() {
         }.launchIn(lifecycleScope)
 
 
+        // 결제 버튼
         binding.btnPay.setOnClickListener {
             if (!binding.btnPay.isEnabled) return@setOnClickListener
             val reservationId = intent.getIntExtra("reservationId", -1)
@@ -102,6 +147,8 @@ class PaymentActivity : AppCompatActivity() {
             Log.d("Payment", "start pay: reservationId=$reservationId, amount=$amount")
             payVm.startKakao(reservationId, amount)
         }
+
+        bindExtrasToUi()
         setupPaymentButtons()
         setupAgreementLogic()
         updatePayButtonState()
@@ -219,10 +266,26 @@ class PaymentActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
     }
 
-    private fun hidePaymentErrorFragment() {
-        supportFragmentManager.popBackStack(
-            TAG_ERROR, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+
+    private fun openPaymentUrl(url: String) {
+        if (openedOnce) return
+        openedOnce = true
+
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+
+    }
+
+    private fun trimSec(time: String?): String? {
+        // "HH:mm:ss" -> "HH:mm", 이미 "HH:mm"이면 그대로
+        if (time.isNullOrBlank()) return null
+        return if (time.count { it == ':' } == 2 && time.endsWith(":00")) time.dropLast(3) else time
+    }
+
+
+
+    private fun formatDetailLine(date: LocalDate): String {
+        val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd (E)", Locale.KOREAN) // → 2025.06.18 (수)
+        return "${date.format(dateFmt)}".trim()
     }
 
 

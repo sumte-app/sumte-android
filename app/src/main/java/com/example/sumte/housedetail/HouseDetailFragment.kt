@@ -95,7 +95,26 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
-            // 예약 버튼 클릭 시 처리 (필요시 구현)
+            val start = viewModel.startDate
+            val end   = viewModel.endDate
+            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+            val amount = room.price * nights
+
+            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, viewModel.adultCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, viewModel.childCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+
+                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
+            }
+            startActivity(intent)
         }
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
@@ -105,6 +124,7 @@ class HouseDetailFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { setDrawable(it) }
         }
         binding.rvInfo.addItemDecoration(divider)
+
         // 간격
         binding.rvInfo.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -114,7 +134,7 @@ class HouseDetailFragment : Fragment() {
             }
         })
 
-        // --- 리뷰 가로 리스트 (네 샘플 유지) ---
+        // 리뷰 샘플
         val sampleReviews = listOf(
             Review("1", "가성비 최고의 숙소", "깨끗하고 위치도 좋았어요. 다음에도 또 오고 싶어요!", "2025-07-13", null, 4.5f),
             Review("2", "아쉬움이 좀 있었어요", "전체적으로는 괜찮았지만 화장실이 조금 불편했어요.", "2025-07-14", null, 3.0f)
