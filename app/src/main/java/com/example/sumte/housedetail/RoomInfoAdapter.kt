@@ -26,12 +26,11 @@ class RoomInfoAdapter(
             tvRoomCapacity.text = "기준인원 ${room.standardCount}인 (정원 ${room.totalCount}인)"
             tvCheckInOut.text = "체크인 ${room.checkin} · 체크아웃 ${room.checkout}"
 
-
-            val firstImage = room.imageUrls.firstOrNull()
-            Log.d("RoomInfoAdapter", "load url = $firstImage")
+            //val firstImage = room.imageUrl.firstOrNull()
+            //Log.d("RoomInfoAdapter", "load url = $firstImage")
 
             Glide.with(ivRoomImage.context)
-                .load(firstImage)
+                .load(room.imageUrl)
                 .placeholder(android.R.color.darker_gray)
                 .error(android.R.color.darker_gray)
                 .into(ivRoomImage)
