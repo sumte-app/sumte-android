@@ -32,6 +32,7 @@ import com.example.sumte.common.bindBookInfoUI
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.guesthouse.GuestHouseViewModel
+import com.example.sumte.payment.PaymentActivity
 import com.example.sumte.reservation.ReservationRepository
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
@@ -96,6 +97,7 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
+
             val request = ReservationRequest(
                 roomId = room.id,
                 adultCount = bookInfoVM.adultCount,
@@ -103,33 +105,57 @@ class HouseDetailFragment : Fragment() {
                 startDate = "${bookInfoVM.startDate}",
                 endDate = "${bookInfoVM.endDate}"
             )
-            Log.d("Reservation_Request", request.toString())
+
+            val repository = ReservationRepository(requireContext())
+
 
             lifecycleScope.launch {
-                val repository = ReservationRepository(requireContext())
-                val response = repository.createReservation(request)
-
-                // null이면(로그인 등) 바로 종료
-                if (response == null) {
-                    Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                    return@launch
+                try {
+                    val response = repository.createReservation(request)
+                    if (response?.isSuccessful == true && response.body()?.success == true) {
+                        Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
+                        Log.d("ReservationResponse","${response.body()}" )
+                        startActivity(Intent(requireContext(), PaymentActivity::class.java))
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "예약 실패: ${response?.body()?.message ?: response?.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        requireContext(),
+                        "네트워크 오류: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-
-                // HTTP 레벨 체크
-                if (!response.isSuccessful) {
-                    Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "${response.message()}", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-
-                // 바디 파싱 + 서버 success 체크
-                val body = response.body()
-                val resId = body?.data?.reservationId
-                if (body?.success != true || resId == null) {
-                    Log.e("Reservation_Fail", "서버 실패 or reservationId 누락: body=$body")
-                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
+//                val response = repository.createReservation(request)
+//                Log.e("ReservationResponse", "${response}")
+//
+//
+//
+//                // null이면(로그인 등) 바로 종료
+//                if (response == null) {
+//                    Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+//                    return@launch
+//                }
+//
+//                // HTTP 레벨 체크
+//                if (!response.isSuccessful) {
+//                    Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
+//                    Toast.makeText(requireContext(), "${response.message()}", Toast.LENGTH_SHORT).show()
+//                    return@launch
+//                }
+//
+//                // 바디 파싱 + 서버 success 체크
+//                val body = response.body()
+//                val resId = body?.data?.reservationId
+//                if (body?.success != true || resId == null) {
+//                    Log.e("Reservation_Fail", "서버 실패 or reservationId 누락: body=$body")
+//                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
+//                    return@launch
+//                }
 
                 val start = bookInfoVM.startDate
                 val end   = bookInfoVM.endDate
@@ -147,7 +173,7 @@ class HouseDetailFragment : Fragment() {
                     putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
                     putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
                     putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
+                    //putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
                 }
                 startActivity(intent)
 
@@ -275,6 +301,10 @@ class HouseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //뷰모델로 초기화
         bindBookInfoUI(binding, bookInfoVM)
+
+        binding.homeIcon.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         binding.countChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
