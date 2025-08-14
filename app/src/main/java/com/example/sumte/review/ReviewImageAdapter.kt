@@ -10,7 +10,6 @@ import com.example.sumte.databinding.ItemReviewManageBinding
 class ReviewImageAdapter(private val imageUrls: List<String>) :
     RecyclerView.Adapter<ReviewImageAdapter.ImageViewHolder>() {
 
-    // 아이템 뷰홀더
     inner class ImageViewHolder(private val binding: ItemReviewManageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageUrl: String) {

@@ -12,7 +12,6 @@ class ReviewAdapter(private val reviewList:List<Review>) :RecyclerView.Adapter<R
             binding.itemReviewTitleTv.text=review.title
             binding.itemReviewContentTv.text=review.content
             binding.itemReviewDateTv.text=review.date
-            //별점 수는 나중에..?
         }
     }
 

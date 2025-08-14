@@ -52,6 +52,7 @@ class ReviewWriteActivity:AppCompatActivity() {
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var galleryLauncher: ActivityResultLauncher<String>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
     // Photo Picker를 위한 새로운 런처 추가
     private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
 
@@ -291,15 +292,6 @@ class ReviewWriteActivity:AppCompatActivity() {
         binding.reviewWriteCancelIv.setOnClickListener {
             finish()
         }
-
-    }
-
-    private fun saveBitmapToCache(bitmap: Bitmap): Uri {
-        val file = File(cacheDir, "edit_review_image_${System.currentTimeMillis()}.jpg")
-        file.outputStream().use {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
-        }
-        return FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
     }
 
     //키보드 숨기기
@@ -355,10 +347,6 @@ class ReviewWriteActivity:AppCompatActivity() {
     private fun launchGallery() {
         pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
-
-//    private fun launchGallery() {
-//        galleryLauncher.launch("image/*")
-//    }
 
     private fun updateStars(stars: List<ImageView>, rating: Int) {
         stars.forEachIndexed { idx, iv ->
@@ -492,7 +480,6 @@ class ReviewWriteActivity:AppCompatActivity() {
                 ApiClient.reviewService.postReview(body)
             }
 
-            // ... (이후 결과 처리 로직은 동일)
             if (resp.isSuccessful) {
                 Toast.makeText(this@ReviewWriteActivity, "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
                 finish()
