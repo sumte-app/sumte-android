@@ -16,10 +16,17 @@ interface GuesthouseApi {
     suspend fun getGuesthousesHome(
         @Query("page") page: Int,
         @Query("size") size: Int
-    ): Response<BaseResponse<PageDto<GuesthouseDto>>>
+    ): Response<BaseResponse<PageDto<GuesthouseHomeItemDto>>>
+
 
     @GET("guesthouse/{id}")
     suspend fun getGuesthouse(@Path("id") id: Long): Response<BaseResponse<GuesthouseDto>>
+
+    @GET("/images")
+    suspend fun getImages(
+        @Query("ownerType") ownerType: String,
+        @Query("ownerId") ownerId: Long
+    ): Response<List<ImageDto>>
 }
 
 

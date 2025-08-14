@@ -22,7 +22,6 @@ data class RoomDto(
 )
 
 data class GuesthouseDto(
-    @SerializedName(value = "id", alternate = ["guestHouseId"])
     val id: Int,
     val name: String?,               // ← nullable
     val addressRegion: String?,      // ← nullable
@@ -44,4 +43,24 @@ data class PageDto<T>(
     val size: Int = 0,
     val first: Boolean = false,
     val last: Boolean = false
+)
+
+data class ImageDto(
+    val id: Long,
+    val url: String,
+    val sortOrder: Int,
+    val ownerType: String,
+    val ownerId: Long
+)
+
+data class GuesthouseHomeItemDto(
+    val guestHouseId: Int,
+    val name: String,
+    val addressRegion: String?,
+    val averageScore: Double?,
+    val reviewCount: Int?,
+    val checkInTime: String?,
+    val minPrice: Int?,
+    val ad: Boolean?,
+    val imageUrl: String?
 )

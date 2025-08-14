@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +26,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.FragmentHouseDetailBinding
+import com.example.sumte.guesthouse.GuestHouseViewModel
+import com.example.sumte.reservation.ReservationRepository
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.BookInfoViewModel
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
@@ -41,7 +46,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
 
-    private val viewModel by lazy {
+    private val bookInfoVM by lazy {
         ViewModelProvider(
             App.instance,
             ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
@@ -51,7 +56,6 @@ class HouseDetailFragment : Fragment() {
     //게하 id값 받아오기
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
-
         fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
             arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
         }
@@ -60,7 +64,7 @@ class HouseDetailFragment : Fragment() {
     private var guesthouseId: Int = -1
 
     // ViewModel
-    private val vm: HouseDetailViewModel by lazy {
+    private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -95,8 +99,48 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
-            // 예약 버튼 클릭 시 처리 (필요시 구현)
+            val request = ReservationRequest(
+                roomId = room.id,
+                adultCount = bookInfoVM.adultCount,
+                childCount = bookInfoVM.childCount,
+                startDate = "${bookInfoVM.startDate}",
+                endDate = "${bookInfoVM.endDate}"
+            )
+            Log.d("Reservation_Request", request.toString())
+
+            lifecycleScope.launch {
+                val repository = ReservationRepository(requireContext())
+                val response = repository.createReservation(request)
+                if (response?.isSuccessful == true) {
+                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("Reservation_Fail", "code=${response?.code()}, msg=${response?.message()}, body=${response?.errorBody()?.string()}")
+                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+            val start = bookInfoVM.startDate
+            val end   = bookInfoVM.endDate
+            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+            val amount = room.price * nights
+
+            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+
+                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
+            }
+            startActivity(intent)
+
         }
+
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
 
@@ -105,6 +149,7 @@ class HouseDetailFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { setDrawable(it) }
         }
         binding.rvInfo.addItemDecoration(divider)
+
         // 간격
         binding.rvInfo.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -114,7 +159,7 @@ class HouseDetailFragment : Fragment() {
             }
         })
 
-        // --- 리뷰 가로 리스트 (네 샘플 유지) ---
+        // 리뷰 샘플
         val sampleReviews = listOf(
             Review("1", "가성비 최고의 숙소", "깨끗하고 위치도 좋았어요. 다음에도 또 오고 싶어요!", "2025-07-13", null, 4.5f),
             Review("2", "아쉬움이 좀 있었어요", "전체적으로는 괜찮았지만 화장실이 조금 불편했어요.", "2025-07-14", null, 3.0f)
@@ -141,16 +186,18 @@ class HouseDetailFragment : Fragment() {
         if (guesthouseId > 0){
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"
+
             Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
-            vm.loadGuesthouse(guesthouseId)
+            houseDetailVM.loadGuesthouse(guesthouseId)
             Log.d("HD/F", "call loadRooms($guesthouseId)")
-            vm.loadRooms(guesthouseId, startDate, endDate)}
+            houseDetailVM.loadRooms(guesthouseId, startDate, endDate)}
+
 
         return binding.root
     }
 
     private fun observeState() {
-        vm.state.observe(viewLifecycleOwner) { st ->
+        houseDetailVM.state.observe(viewLifecycleOwner) { st ->
             // st가 어떤 상태인지 로그로 확인
             Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
 
@@ -177,7 +224,7 @@ class HouseDetailFragment : Fragment() {
     }
 
     private fun observeHeader() {
-        vm.header.observe(viewLifecycleOwner) { h ->
+        houseDetailVM.header.observe(viewLifecycleOwner) { h ->
             Log.d("HD/F", "header updated: name=${h.name}, addr=${h.address}, imgs=${h.imageUrls.size}")
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
@@ -216,19 +263,19 @@ class HouseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val startDate = viewModel.startDate
-        val endDate = viewModel.endDate
+        val startDate = bookInfoVM.startDate
+        val endDate = bookInfoVM.endDate
         val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
 
         binding.startDate.text = startDate.format(formatter)
         binding.endDate.text = endDate.format(formatter)
         binding.dateCount.text = "${nights}박"
 
-        binding.adultCount.text = "성인 ${viewModel.adultCount}"
+        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
         binding.childCount.text =
-            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
+            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
 
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
 
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
@@ -251,8 +298,8 @@ class HouseDetailFragment : Fragment() {
     private fun updateUIFromViewModel() {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val sDate = viewModel.startDate
-        val eDate = viewModel.endDate
+        val sDate = bookInfoVM.startDate
+        val eDate = bookInfoVM.endDate
 
         if (sDate != null && eDate != null) {
             binding.startDate.text = sDate.format(formatter)
@@ -261,9 +308,9 @@ class HouseDetailFragment : Fragment() {
             binding.dateCount.text = "${nights}박"
         }
 
-        binding.adultCount.text = "성인 ${viewModel.adultCount}"
-        binding.childCount.text = if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
+        binding.childCount.text = if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
+        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
     }
 
 }

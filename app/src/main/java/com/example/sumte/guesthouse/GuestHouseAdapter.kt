@@ -35,16 +35,28 @@ class GuestHouseAdapter(
             guesthouseLocationTv.text = guestHouse.location
             guesthousePriceTv.text = guestHouse.price
 
+            val url = guestHouse.imageUrl?.trim()
             val ph = guestHouse.imageResId
-            if (!guestHouse.imageUrl.isNullOrBlank()) {
-                Glide.with(root).load(guestHouse.imageUrl)
-                    .placeholder(ph).error(ph).into(guesthouseIv)
-            } else {
-                guesthouseIv.setImageResource(ph)
+            Log.d("IMG", "bind ghId=${guestHouse.id} url=$url")
+
+            // 재활용 대비: 이전 이미지 요청/표시 초기화
+            Glide.with(root).clear(guesthouseIv)
+            guesthouseIv.setImageResource(ph)
+
+            if (!url.isNullOrEmpty()) {
+                Glide.with(root)
+                    .load(url)
+                    .placeholder(ph)
+                    .error(ph)
+                    .centerCrop()        // ✅ 카드 꽉 채우기 (비율은 XML에서 고정)
+                    .into(guesthouseIv)
             }
 
             val isLiked = viewModel.isLiked(guestHouse)
-            Log.d("Adapter_Check", "게스트하우스 ID: ${guestHouse.id} (타입: ${guestHouse.id::class.simpleName}) | isLiked 결과: $isLiked")
+            Log.d(
+                "Adapter_Check",
+                "게스트하우스 ID: ${guestHouse.id} (타입: ${guestHouse.id::class.simpleName}) | isLiked 결과: $isLiked"
+            )
 
             guesthouseHeartIv.setImageResource(
                 if (isLiked) R.drawable.heart_home_filled else R.drawable.heart_home_empty
@@ -55,14 +67,11 @@ class GuestHouseAdapter(
             guesthouseHeartIv.setOnClickListener {
                 val pos = holder.bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-
-                viewModel.toggleLike(guestHouse) {
-                    // ViewModel의 작업이 끝난 후 UI를 갱신.
-                    notifyItemChanged(pos)
-                }
+                viewModel.toggleLike(guestHouse) { notifyItemChanged(pos) }
             }
         }
     }
+
 
     fun updateLikes(newLikedIds: Set<Int>) {
         this.likedIds = newLikedIds

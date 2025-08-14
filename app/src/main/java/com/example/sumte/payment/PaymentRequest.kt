@@ -1,9 +1,12 @@
 package com.example.sumte.payment
 
+
+enum class PaymentMethod { CARD, KAKAOPAY }
+
 data class PaymentRequest(
     val reservationId: Int,
     val amount: Int,
-    val paymentMethod: String
+    val paymentMethod: PaymentMethod
 )
 
 data class PaymentResponse(
@@ -14,8 +17,7 @@ data class PaymentResponse(
 )
 
 data class PaymentData(
-    val reservationId: Int,
-    val amount: Int,
-    val paymentMethod: String
+    val paymentId: Int,
+    val paymentUrl: String
 )
 
