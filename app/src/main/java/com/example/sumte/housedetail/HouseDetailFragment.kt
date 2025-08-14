@@ -33,6 +33,7 @@ import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.reservation.ReservationRepository
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
+import com.example.sumte.review.ReviewListFragment
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.BookInfoViewModel
 import kotlinx.coroutines.launch
@@ -102,6 +103,16 @@ class HouseDetailFragment : Fragment() {
             }
         })
         updatePageIndicator(1, 0)
+
+
+        // 전체 후기로 이동하는 코드
+        binding.ivHouseAllReview.setOnClickListener {
+            // 전체 후기로 이동하는 코드 이동
+//            val context = itemView.context
+//            val intent = Intent(context, ReviewListFragment::class.java)
+//            intent.putExtra("guesthouseId", guesthouseId)
+//            context.startActivity(intent)
+        }
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             val request = ReservationRequest(
