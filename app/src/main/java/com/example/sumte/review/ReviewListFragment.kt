@@ -28,8 +28,8 @@ class ReviewListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         reviewAdapter = ReviewAdapter(emptyList())
-        binding.reviewRecyclerView.adapter = reviewAdapter
-        binding.reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.reviewListRv.adapter = reviewAdapter
+        binding.reviewListRv.layoutManager = LinearLayoutManager(requireContext())
 
         getReviewsFromServer()
     }
@@ -41,7 +41,7 @@ class ReviewListFragment : Fragment() {
                 if (response.isSuccessful) {
                     val reviewList = response.body()?.content ?: emptyList()
                     reviewAdapter = ReviewAdapter(reviewList)
-                    binding.reviewRecyclerView.adapter = reviewAdapter
+                    binding.reviewListRv.adapter = reviewAdapter
                 } else {
                     Log.e("ReviewList", "응답 실패: ${response.code()}")
                 }
