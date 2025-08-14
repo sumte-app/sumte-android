@@ -69,6 +69,7 @@ class PaymentActivity : AppCompatActivity() {
         val ci    = trimSec(ciRaw)
         val co    = trimSec(coRaw)
 
+
         binding.tvTitle.text = guesthouseName
         binding.tvRoomTitle.text = roomName
         binding.tvPrice.text = "${pretty}원"
@@ -138,20 +139,22 @@ class PaymentActivity : AppCompatActivity() {
         }.launchIn(lifecycleScope)
 
 
-        // 결제 버튼
-        binding.btnPay.setOnClickListener {
-            if (!binding.btnPay.isEnabled) return@setOnClickListener
-            val reservationId = intent.getIntExtra("reservationId", -1)
-            val amount = intent.getIntExtra("amount", 0)
-
-            Log.d("Payment", "start pay: reservationId=$reservationId, amount=$amount")
-            payVm.startKakao(reservationId, amount)
-        }
-
         bindExtrasToUi()
         setupPaymentButtons()
         setupAgreementLogic()
         updatePayButtonState()
+
+        // 결제 버튼
+        binding.btnPay.setOnClickListener {
+            if (!binding.btnPay.isEnabled) return@setOnClickListener
+            val resId = intent.getIntExtra(PaymentExtras.EXTRA_RES_ID,-1)
+            val amount = intent.getIntExtra(EXTRA_AMOUNT, 0)
+
+            Log.d("Payment", "start pay: reservationId=$resId, amount=$amount")
+            payVm.startKakao(resId, amount)
+        }
+
+
     }
 
     private fun setupPaymentButtons() {

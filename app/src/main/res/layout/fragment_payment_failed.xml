@@ -92,7 +92,7 @@
         android:id="@+id/tvWait"
         android:layout_width="283dp"
         android:layout_height="wrap_content"
-        android:text="결제가 실패했거나 취소되었습니다.\n문제가 계쏙 발생할 경우, 숨터에 문의해주세요."
+        android:text="결제가 실패했거나 취소되었습니다.\n문제가 계속 발생할 경우, 숨터에 문의해주세요."
         android:fontFamily="@font/pretendard_regular"
         android:textColor="@color/gray400"
         android:textSize="16sp"

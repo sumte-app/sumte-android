@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:text="필터"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintEnd_toStartOf="@+id/empty_view"
             app:layout_constraintStart_toEndOf="@+id/filtering_close_iv"
             app:layout_constraintTop_toTopOf="@+id/filtering_close_iv" />
@@ -96,7 +96,7 @@
             app:layout_constraintTop_toTopOf="@+id/filtering_checkbox"
             app:layout_constraintStart_toEndOf="@+id/filtering_checkbox"
             app:layout_constraintBottom_toBottomOf="@id/filtering_checkbox"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"/>
         <View
             android:id="@+id/filtering_border1"
@@ -115,7 +115,7 @@
             app:layout_constraintTop_toBottomOf="@id/filtering_border1"
             android:layout_marginTop="24dp"
             android:text="가격대"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"/>
 
         <TextView
@@ -125,7 +125,7 @@
             android:text="1000원"
             android:textColor="@color/gray400"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_pricerange_tv"
             app:layout_constraintStart_toEndOf="@id/filtering_pricerange_tv"
@@ -139,7 +139,7 @@
             android:text="~"
             android:textColor="@color/gray400"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_minprice_tv"
             app:layout_constraintStart_toEndOf="@id/filtering_minprice_tv"
             app:layout_constraintTop_toTopOf="@+id/filtering_minprice_tv" />
@@ -152,7 +152,7 @@
             android:text="100,000원+"
             android:textColor="@color/gray400"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_pricemid_tv"
             app:layout_constraintStart_toEndOf="@+id/filtering_pricemid_tv"
             app:layout_constraintTop_toTopOf="@+id/filtering_pricemid_tv" />
@@ -165,6 +165,7 @@
             android:text="1000원"
             android:textSize="12sp"
             android:textColor="@color/gray800"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintStart_toStartOf="@+id/filtering_pricerange_tv"
             app:layout_constraintTop_toBottomOf="@+id/filtering_pricerange_tv"/>
         <TextView
@@ -175,6 +176,7 @@
             android:text="100,000원+"
             android:textSize="12sp"
             android:textColor="@color/gray800"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintTop_toTopOf="@+id/filtering_price_start_tv"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_price_start_tv"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -215,7 +217,7 @@
             android:layout_height="wrap_content"
             android:text="객실 정원"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="@+id/filtering_border2"
             app:layout_constraintTop_toBottomOf="@+id/filtering_border2"/>
@@ -240,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="1명"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:textSize="14sp"
                 android:textColor="@color/gray600"/>
             <View
@@ -260,7 +262,7 @@
             android:layout_height="wrap_content"
             android:text="~"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="@+id/filtering_people_base"
             app:layout_constraintEnd_toStartOf="@+id/filtering_people_choice"
             app:layout_constraintStart_toEndOf="@+id/filtering_people_base"
@@ -292,7 +294,7 @@
                 android:hint="인원 선택"
                 android:textColor="@color/gray600"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/pretendard_semibold" />
 
             <View
                 android:layout_width="0dp"
@@ -322,7 +324,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="부가 서비스"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/filtering_border3"
             app:layout_constraintTop_toBottomOf="@+id/filtering_border3"/>
@@ -344,7 +346,7 @@
                 android:text="이벤트"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
             <TextView
@@ -356,7 +358,7 @@
                 android:text="파티"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
             <TextView
@@ -368,7 +370,7 @@
                 android:text="개인커튼"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
             <TextView
@@ -380,7 +382,7 @@
                 android:text="조식포함"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
         </LinearLayout>
@@ -401,7 +403,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="이용 대상"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/filtering_border4"
             app:layout_constraintTop_toBottomOf="@+id/filtering_border4"/>
@@ -423,7 +425,7 @@
                 android:text="여성전용"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
             <TextView
@@ -435,7 +437,7 @@
                 android:text="남성전용"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
             <TextView
@@ -447,7 +449,7 @@
                 android:text="애견 동반"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/filtering_unselected"/>
         </LinearLayout>
@@ -466,7 +468,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="지역 설정"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/filtering_border5"
             app:layout_constraintTop_toBottomOf="@+id/filtering_border5"/>
@@ -488,7 +490,7 @@
                 android:text="제주도 전체"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -500,7 +502,7 @@
                 android:text="제주시"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -512,7 +514,7 @@
                 android:text="서귀포시"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
         </LinearLayout>
@@ -534,7 +536,7 @@
                 android:text="애월"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -546,7 +548,7 @@
                 android:text="성산"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -558,7 +560,7 @@
                 android:text="조천"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -570,7 +572,7 @@
                 android:text="구좌"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -582,7 +584,7 @@
                 android:text="한림"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
         </LinearLayout>
@@ -604,7 +606,7 @@
                 android:text="한경"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -616,7 +618,7 @@
                 android:text="대정"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -628,7 +630,7 @@
                 android:text="안덕"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -640,7 +642,7 @@
                 android:text="남원"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
             <TextView
@@ -652,7 +654,7 @@
                 android:text="표선"
                 android:textSize="14sp"
                 android:textColor="@color/gray800"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
                 android:background="@drawable/round_style_search_result_empty"/>
         </LinearLayout>
@@ -684,7 +686,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="재설정"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:textSize="16sp"/>
         </LinearLayout>
         <TextView
@@ -693,7 +695,7 @@
             android:layout_height="44dp"
             android:layout_weight="6"
             android:text="적용하기"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/white"
             android:background="@drawable/round_style_apply"
             android:gravity="center"/>

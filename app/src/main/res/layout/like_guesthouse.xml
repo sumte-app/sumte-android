@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="서귀포 섬게스트하우스"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -79,7 +79,7 @@
                 android:layout_height="21dp"
                 android:layout_marginStart="2dp"
                 android:text="4.5"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 android:textColor="@color/gray700"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -87,6 +87,7 @@
                 android:layout_marginStart="2dp"
                 android:text="("
                 android:textSize="14sp"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray700"/>
             <TextView
                 android:id="@+id/guesthouse_review_count_tv"
@@ -94,12 +95,14 @@
                 android:layout_height="21dp"
                 android:text="65"
                 android:textSize="14sp"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray700"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="21dp"
                 android:text=")"
                 android:textSize="14sp"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray700"/>
         </LinearLayout>
 
@@ -125,6 +128,7 @@
                 android:layout_marginStart="2dp"
                 android:text="서귀포항 근처"
                 android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray700" />
         </LinearLayout>
 
@@ -135,6 +139,7 @@
             android:text="숙박 "
             android:textColor="@color/gray700"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="@+id/guesthouse_time_tv"
             app:layout_constraintEnd_toStartOf="@+id/guesthouse_time_tv"
             app:layout_constraintTop_toTopOf="@+id/guesthouse_time_tv" />
@@ -146,6 +151,7 @@
             android:text="16:00"
             android:textColor="@color/gray700"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginEnd="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/guesthouse_timeend_tv"
             app:layout_constraintEnd_toStartOf="@+id/guesthouse_timeend_tv"
@@ -156,6 +162,7 @@
             android:layout_height="wrap_content"
             android:text="~"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintTop_toTopOf="@+id/guesthouse_ratingbox_ll"
             app:layout_constraintEnd_toEndOf="parent"/>
         <TextView
@@ -164,7 +171,7 @@
             android:layout_height="wrap_content"
             android:text="19,000"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:layout_marginEnd="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/guesthouse_priceend_tv"
             app:layout_constraintEnd_toStartOf="@+id/guesthouse_priceend_tv"/>
@@ -174,7 +181,7 @@
             android:layout_height="wrap_content"
             android:text="원~"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="@+id/guesthouse_locationbox_ll"
             app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
