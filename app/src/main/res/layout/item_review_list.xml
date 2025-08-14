@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_only_bottom"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_review_list_cl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/item_review_list_nickname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제주 숨숨이"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray900"
+            app:layout_constraintStart_toStartOf="@+id/item_review_list_cl"
+            app:layout_constraintTop_toTopOf="@+id/item_review_list_cl"/>
+        <TextView
+            android:id="@+id/item_review_subtitle_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="여자도미토리 4인"
+            android:textSize="12sp"
+            android:textColor="@color/gray400"
+            app:layout_constraintStart_toStartOf="@+id/item_review_list_nickname_tv"
+            app:layout_constraintTop_toBottomOf="@+id/item_review_list_nickname_tv"/>
+
+        <ImageView
+            android:id="@+id/item_review_star1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/star_fill"
+            app:layout_constraintBottom_toBottomOf="@+id/item_review_subtitle_tv"
+            app:layout_constraintStart_toEndOf="@+id/item_review_subtitle_tv"
+            app:layout_constraintTop_toTopOf="@+id/item_review_subtitle_tv" />
+        <ImageView
+            android:id="@+id/item_review_star2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@+id/item_review_star1"
+            app:layout_constraintTop_toTopOf="@+id/item_review_star1"/>
+        <ImageView
+            android:id="@+id/item_review_star3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@+id/item_review_star2"
+            app:layout_constraintTop_toTopOf="@+id/item_review_star2"/>
+        <ImageView
+            android:id="@+id/item_review_star4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@+id/item_review_star3"
+            app:layout_constraintTop_toTopOf="@+id/item_review_star3"/>
+        <ImageView
+            android:id="@+id/item_review_star5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@+id/item_review_star4"
+            app:layout_constraintTop_toTopOf="@+id/item_review_star4"/>
+
+        <TextView
+            android:id="@+id/item_review_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024.11.03"
+            android:textSize="12sp"
+            android:textColor="@color/gray300"
+            app:layout_constraintEnd_toEndOf="@+id/item_review_list_cl"
+            app:layout_constraintBottom_toBottomOf="@+id/item_review_star5"/>
+        <LinearLayout
+            android:id="@+id/review_list_image_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/item_review_subtitle_tv"
+            app:layout_constraintStart_toStartOf="@+id/item_review_subtitle_tv">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/review_list_image_rv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/item_review_content_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="즐겁게 놀다 갑니다~~"
+            android:textSize="14sp"
+            android:textColor="@color/gray800"
+            app:layout_constraintTop_toBottomOf="@+id/review_list_image_container"
+            app:layout_constraintStart_toStartOf="@+id/review_list_image_container"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

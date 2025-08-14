@@ -1,88 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
-
-    <!-- 뒤로가기 버튼 -->
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/arrow_left"
-        app:layout_constraintTop_toTopOf="parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/review_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/border_only_bottom"
+        app:layout_constraintHeight_percent="0.06"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp" />
-
-    <!-- 상단 타이틀 -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="전체 후기"
-        android:textSize="16sp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="44dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/btnBack"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
-
-    <!-- 별점 + 후기 개수 -->
-    <LinearLayout
-        android:id="@+id/layoutRating"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.9"
-        android:layout_marginTop="32dp">
-
+        android:gravity="center">
         <ImageView
-            android:id="@+id/ivStar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/star_fill"
-            android:layout_marginEnd="4dp" />
-
-        <TextView
-            android:id="@+id/tvRating"
+            android:id="@+id/review_list_arrow_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="22sp"
-            android:fontFamily="@font/pretendard_semibold"
-            android:textColor="@android:color/black" />
+            android:src="@drawable/arrow_left"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@+id/review_list_header"
+            app:layout_constraintBottom_toBottomOf="@+id/review_list_header"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/tvReviewCount"
+            android:id="@+id/review_manage_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(0)"
-            android:fontFamily="@font/pretendard_regular"
+            android:text="전체 후기"
+            android:textColor="@color/gray900"
+            android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginStart="4dp"
-            android:textColor="@android:color/black" />
+            app:layout_constraintStart_toEndOf="@+id/review_list_arrow_iv"
+            app:layout_constraintTop_toTopOf="@+id/review_list_arrow_iv"
+            app:layout_constraintBottom_toBottomOf="@+id/review_list_arrow_iv"
+            app:layout_constraintEnd_toStartOf="@+id/review_empty_view"/>
+        <View
+            android:id="@+id/review_empty_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintTop_toTopOf="@+id/review_list_header"
+            app:layout_constraintEnd_toEndOf="@+id/review_list_header"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/review_score_ll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/border_only_bottom"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/review_list_header">
+        <ImageView
+            android:id="@+id/review_star_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/star_fill"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHeight_percent="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/review_myreview_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="0"
+            android:textColor="@color/gray900"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/review_star_icon"
+            app:layout_constraintTop_toTopOf="@+id/review_star_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/review_star_icon"/>
+
+        <TextView
+            android:id="@+id/opening_bracket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="("
+            android:textColor="@color/gray900"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toEndOf="@+id/review_myreview_count_tv"
+            app:layout_constraintTop_toTopOf="@+id/review_myreview_count_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/review_myreview_count_tv"/>
+
+        <TextView
+            android:id="@+id/review_list_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="215"
+            android:textColor="@color/gray900"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="@+id/opening_bracket"
+            app:layout_constraintStart_toEndOf="@+id/opening_bracket"
+            app:layout_constraintTop_toTopOf="@+id/opening_bracket" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=")"
+            android:textColor="@color/gray900"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            app:layout_constraintTop_toTopOf="@+id/opening_bracket"
+            app:layout_constraintBottom_toBottomOf="@+id/opening_bracket"
+            app:layout_constraintStart_toEndOf="@+id/review_list_count_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/no_review_ll"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline">
+        <TextView
+            android:id="@+id/no_review_header_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_review_list_header"
+            android:textColor="@color/gray600"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/no_review_list_content"
+            android:textStyle="bold"
+            android:textColor="@color/gray400"/>
     </LinearLayout>
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/reviewRecyclerView"
-        android:layout_width="0dp"
+        android:id="@+id/review_list_rv"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/layoutRating"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="16dp"
-        app:layout_constraintWidth_percent="0.9"
-        />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/review_score_ll"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/review_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/review_score_ll"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/empty_text_guideline"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.3" />
+        <TextView
+            android:id="@+id/review_empty_main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아직 후기가 등록되지 않았어요."
+            android:textSize="18sp"
+            android:textColor="@color/gray600"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@+id/empty_text_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/review_empty_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="첫 후기를 남겨보세요!"
+            android:textSize="14sp"
+            android:textColor="@color/gray400"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/review_empty_main_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="250dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@android:color/white">-->
+<!--    &lt;!&ndash; 뒤로가기 버튼 &ndash;&gt;-->
+<!--    <ImageButton-->
+<!--        android:id="@+id/btnBack"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--        android:src="@drawable/arrow_left"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="44dp" />-->
+
+<!--    &lt;!&ndash; 상단 타이틀 &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:id="@+id/tvTitle"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="전체 후기"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:layout_marginTop="44dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/btnBack"-->
+<!--        app:layout_constraintStart_toEndOf="@id/btnBack"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5" />-->
+
+<!--    &lt;!&ndash; 별점 + 후기 개수 &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/layoutRating"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/btnBack"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintWidth_percent="0.9"-->
+<!--        android:layout_marginTop="32dp">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivStar"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:src="@drawable/star_fill"-->
+<!--            android:layout_marginEnd="4dp" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvRating"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="0"-->
+<!--            android:textSize="22sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/black" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvReviewCount"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="(0)"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginStart="4dp"-->
+<!--            android:textColor="@android:color/black" />-->
+<!--    </LinearLayout>-->
+
+<!--    &lt;!&ndash; RecyclerView &ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/reviewRecyclerView"-->
+<!--        android:visibility="visible"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/layoutRating"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:padding="16dp"-->
+<!--        app:layout_constraintWidth_percent="0.9"-->
+<!--        />-->
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

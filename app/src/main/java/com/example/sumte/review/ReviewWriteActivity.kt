@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -26,8 +27,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.sumte.ApiClient
+import com.example.sumte.ApiClient.reviewService
 import com.example.sumte.PhotoOptionsBottomSheet
 import com.example.sumte.R
+import com.example.sumte.SharedPreferencesManager
 import com.example.sumte.databinding.ActivityReviewWriteBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,12 +45,15 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
+import java.util.UUID
 
 class ReviewWriteActivity:AppCompatActivity() {
     lateinit var binding: ActivityReviewWriteBinding
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var galleryLauncher: ActivityResultLauncher<String>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    // Photo Picker를 위한 새로운 런처 추가
+    private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
 
     private val photoList = mutableListOf<Uri>()
     private lateinit var reviewPhotoAdapter: ReviewPhotoAdapter
@@ -70,7 +76,8 @@ class ReviewWriteActivity:AppCompatActivity() {
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 val granted = permissions.all { it.value }
-                if (!granted) {
+                if (granted) {
+                } else {
                     Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -100,6 +107,12 @@ class ReviewWriteActivity:AppCompatActivity() {
                 }
             }
 
+        // Photo Picker 런처
+        pickMediaLauncher =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+                uri?.let { addPhoto(it) }
+            }
+
         // 갤러리 런처
         galleryLauncher =
             registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -115,7 +128,8 @@ class ReviewWriteActivity:AppCompatActivity() {
                     requestPermissionsIfNeeded { launchCamera() }
                 }
                 override fun onSelectFromAlbumSelected() {
-                    requestPermissionsIfNeeded { launchGallery() }
+//                    requestPermissionsIfNeeded { launchGallery() }
+                    launchGallery()
                 }
             })
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
@@ -241,12 +255,15 @@ class ReviewWriteActivity:AppCompatActivity() {
                 val reviewId = intent.getLongExtra("reviewId", -1)
                 val updatedContent = binding.reviewContentEt.text.toString()
 
-                val request = ReviewRequest(
+                val request = ReviewRequest2(
                     roomId = intent.getLongExtra("roomId", -1),
                     contents = updatedContent,
                     score = selectedRating,
-                    imageUrls = photoList.map { it.toString() }
+//                    imageUrls = photoList.map { it.toString() }
                 )
+
+                val rooomId = intent.getLongExtra("roomId", -1)
+                Log.d("ROOOOOOOOOOOOOOOOOOOMIDDDDDDDDDDDDDDD", "reviewId: $rooomId")
 
                 lifecycleScope.launch {
                     try {
@@ -263,6 +280,7 @@ class ReviewWriteActivity:AppCompatActivity() {
                             Toast.makeText(this@ReviewWriteActivity, "수정 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
                     } catch (e: Exception) {
+                        Log.d("ReviewPatch", "네트워크 오류: ${e.message}")
                         Toast.makeText(this@ReviewWriteActivity, "네트워크 오류: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -292,13 +310,15 @@ class ReviewWriteActivity:AppCompatActivity() {
 
     private fun requestPermissionsIfNeeded(onGranted: () -> Unit) {
         val permissions = mutableListOf<String>()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(android.Manifest.permission.READ_MEDIA_IMAGES)
-        } else {
-            permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
+        //카메라 권한
         permissions.add(android.Manifest.permission.CAMERA)
+
+        // 안드로이드 버전에 따라 갤러리 접근 권한 분기
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            permissions.add(android.Manifest.permission.READ_MEDIA_IMAGES)
+//        } else {
+//            permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+//        }
 
         val notGranted = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
@@ -331,10 +351,14 @@ class ReviewWriteActivity:AppCompatActivity() {
         )
         cameraLauncher.launch(cameraImageUri)
     }
-
+    // Photo Picker 실행 함수
     private fun launchGallery() {
-        galleryLauncher.launch("image/*")
+        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
+
+//    private fun launchGallery() {
+//        galleryLauncher.launch("image/*")
+//    }
 
     private fun updateStars(stars: List<ImageView>, rating: Int) {
         stars.forEachIndexed { idx, iv ->
@@ -385,54 +409,100 @@ class ReviewWriteActivity:AppCompatActivity() {
         }
 
         try {
-            val imageUrl: String? = withContext(Dispatchers.IO) {
-                if (photoList.isEmpty()) return@withContext null
-                if (photoList.first().toString().startsWith("http")) return@withContext photoList.first().toString()
+            val uploadedImageUrls: List<String> = withContext(Dispatchers.IO) {
+                val finalImageUrls = mutableListOf<String>()
+                val newPhotosToUpload = photoList.filter { !it.toString().startsWith("http") }
 
-                // Presigned URL 발급
-                val mimeType = contentResolver.getType(photoList.first()) ?: "image/jpeg"
-                val fileName = "review_${System.currentTimeMillis()}.jpg"
+                if (newPhotosToUpload.isNotEmpty()) {
+                    val fileNames = newPhotosToUpload.map { "REVIEW_${UUID.randomUUID()}.jpg" }
+                    val presignedUrlResponse = ApiClient.reviewService.getPresignedUrls(
+                        fileNames = fileNames,
+                        ownerType = "REVIEW",
+                        ownerId = reviewId
+                    )
 
-                val preResp = ApiClient.reviewService
-                    .getPresignedUrl(fileName, mimeType)
-                if (!preResp.isSuccessful) throw HttpException(preResp)
-                val presignedUrl = preResp.body() ?: throw IllegalStateException("빈 PresignedURL")
+                    if (!presignedUrlResponse.isSuccessful) {
+                        throw Exception("Presigned URL 발급 실패: ${presignedUrlResponse.code()}")
+                    }
 
-                // 파일 바이트 읽기
-                val bytes = contentResolver.openInputStream(photoList.first())
-                    ?.use { it.readBytes() }
-                    ?: throw IllegalStateException("이미지 읽기 실패")
+                    val presignedUrls = presignedUrlResponse.body()
+                        ?: throw Exception("Presigned URL 응답이 비어있습니다.")
 
-                // PUT 업로드
-                val req = Request.Builder()
-                    .url(presignedUrl)
-                    .put(bytes.toRequestBody(mimeType.toMediaType()))
-                    .build()
-                OkHttpClient().newCall(req).execute().use { ok ->
-                    if (!ok.isSuccessful) throw IOException("업로드 실패: ${ok.code}")
+                    // S3에 이미지 업로드
+                    presignedUrls.forEachIndexed { index, presignedData ->
+                        val uri = newPhotosToUpload[index]
+                        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                            ?: throw Exception("이미지 읽기 실패")
+                        val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
+
+                        val uploadResponse = OkHttpClient().newCall(
+                            Request.Builder()
+                                .url(presignedData.presignedUrl)
+                                .put(bytes.toRequestBody(mimeType.toMediaType()))
+                                .build()
+                        ).execute()
+
+                        if (!uploadResponse.isSuccessful) {
+                            throw IOException("S3 업로드 실패: ${uploadResponse.code}")
+                        }
+                    }
+
+                    // 이미지 일괄 등록 POST API 호출
+                    val imageUploadRequest = presignedUrls.map {
+                        ImageUploadRequest(
+                            ownerType = "REVIEW",
+                            ownerId = reviewId,
+                            url = it.imageUrl
+                        )
+                    }
+
+                    val postImagesResponse = ApiClient.reviewService.postImages(imageUploadRequest)
+                    if (!postImagesResponse.isSuccessful) {
+                        throw Exception("이미지 일괄 등록 실패: ${postImagesResponse.code()}")
+                    }
+
+                    // 최종 이미지 URL 리스트 생성
+                    finalImageUrls.addAll(postImagesResponse.body()?.map { it.url } ?: emptyList())
                 }
 
-                // public URL 반환 (쿼리스트링 앞부분)
-                presignedUrl.substringBefore("?")
+                // 기존 이미지 URL 추가 (수정 모드일 경우)
+                val existingImageUrls = photoList.filter { it.toString().startsWith("http") }.map { it.toString() }
+                finalImageUrls.addAll(0, existingImageUrls)
+
+                finalImageUrls
             }
 
             // 리뷰 JSON 전송
-            val body = ReviewRequest(roomId = roomId, imageUrls = imageUrls, contents = contents, score = score)
+            val body = ReviewRequest(
+                roomId = roomId,
+                imageUrls = uploadedImageUrls,
+                contents = contents,
+                score = score
+            )
+            val body2 = ReviewRequest2(
+                roomId = roomId,
+                contents = contents,
+                score = score
+            )
 
             val resp = if (isEditMode && reviewId != -1L) {
-                ApiClient.reviewService.patchReview(reviewId, body)
+                // 이미지 수정 로직이 없으므로 body2 사용
+                ApiClient.reviewService.patchReview(reviewId, body2)
             } else {
                 ApiClient.reviewService.postReview(body)
             }
 
+            // ... (이후 결과 처리 로직은 동일)
             if (resp.isSuccessful) {
                 Toast.makeText(this@ReviewWriteActivity, "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
+                Log.e("ReviewAPI", "API 호출 실패: ${resp.code()} - ${resp.errorBody()?.string()}")
                 Toast.makeText(this@ReviewWriteActivity, "등록 실패: ${resp.code()}", Toast.LENGTH_SHORT).show()
             }
 
         } catch (e: Exception) {
+            Log.e("ReviewAPI", "네트워크 오류: ${e.message}", e)
             Toast.makeText(this@ReviewWriteActivity, "오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }

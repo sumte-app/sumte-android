@@ -48,7 +48,7 @@ class GuestHouseAdapter(
                     .load(url)
                     .placeholder(ph)
                     .error(ph)
-                    .centerCrop()        // ✅ 카드 꽉 채우기 (비율은 XML에서 고정)
+                    .centerCrop()
                     .into(guesthouseIv)
             }
 

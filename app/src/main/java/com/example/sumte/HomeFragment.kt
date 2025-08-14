@@ -88,12 +88,20 @@ class HomeFragment : Fragment() {
             page = viewModel.nextPage
             isLastPage = viewModel.isLastPageCached
             showLoading(false) // 캐시가 있으니 오버레이 꺼둠
+
+            // ✅ (권장) 화면에 다시 돌아왔을 때를 대비해 찜 상태만 새로고침
+            viewLifecycleOwner.lifecycleScope.launch {
+                // ViewModel에 이미 로드된 아이템들의 찜 정보만 다시 확인
+                viewModel.updateLikedStatusForVisibleItems()
+                // 찜 상태가 변경되었을 수 있으므로 어댑터에 알려줌
+                adapter.notifyDataSetChanged()
+            }
         } else {
             // 초기 진입: 홈 UI 나오기 전에 로딩 오버레이 켠다
             showLoading(true)
             viewLifecycleOwner.lifecycleScope.launch {
                 // initialLikesLoaded가 true가 될 때까지 기다렸다가 한 번만 실행
-                viewModel.initialLikesLoaded.filter { it }.first()
+//                viewModel.initialLikesLoaded.filter { it }.first()
                 // 찜 목록 로딩이 완료되었으므로, 이제 게스트하우스 목록을 불러옴
                 loadMore(showOverlay = true) // ← 첫 로딩에는 오버레이 유지
             }

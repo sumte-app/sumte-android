@@ -58,7 +58,7 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         }
     }
 
-    override fun onLikeRemoved(guestHouse: GuestHouseResponse) {
+    override fun onLikeRemoved(guestHouse: LikedGuesthouse) {
         lifecycleScope.launch {
             try {
                 val response = likeService.removeLikes(guestHouse.id)
@@ -74,7 +74,7 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         }
     }
 
-    private fun undoRemove(guestHouse: GuestHouseResponse) {
+    private fun undoRemove(guestHouse: LikedGuesthouse) {
         lifecycleScope.launch {
             try {
                 val response = likeService.addLikes(guestHouse.id)
