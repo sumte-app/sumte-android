@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sumte.ApiClient
+import com.example.sumte.GuesthouseSummaryDto
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import kotlinx.coroutines.async
@@ -23,8 +24,114 @@ class GuestHouseViewModel(
     // =============================
     // 찜 상태 (홈의 guestHouseId = Int 기준)
     // =============================
+    // 찜한 게스트하우스의 ID 만을 SET 형태로 저장
     private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
     val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
+
+    // LikeFragment에 보여줄 실제 데이터 목록.
+    private val _likedGuesthouses = MutableStateFlow<List<GuesthouseSummaryDto>>(emptyList())
+    val likedGuesthouses: StateFlow<List<GuesthouseSummaryDto>> = _likedGuesthouses
+
+    // 찜 목록을 서버에서 불러오는 함수
+//    fun loadLikedGuesthouses() {
+//        viewModelScope.launch {
+//            try {
+//                // LikeService의 getLikes 함수를 호출
+//                val response = likeService.getLikes()
+//                if (response.isSuccessful) {
+//                    _likedGuesthouses.value = response.body()?.content ?: emptyList()
+//                }
+//            } catch (e: Exception) {
+//                // 에러 처리
+//                Log.e("GuestHouseViewModel", "Failed to load liked guesthouses", e)
+//            }
+//        }
+//    }
+    fun loadLikedGuesthouses() {
+        viewModelScope.launch {
+            try {
+                // 1단계: 찜한 게스트하우스의 ID 목록을 가져옵니다.
+                val likesResponse = likeService.getLikes()
+                if (!likesResponse.isSuccessful) {
+                    _likedGuesthouses.value = emptyList()
+                    Log.e("GuestHouseViewModel", "찜 목록 ID 로딩 실패: ${likesResponse.code()}")
+                    return@launch
+                }
+
+                val guesthouseIds = likesResponse.body()?.content?.map { it.id } ?: emptyList()
+
+                if (guesthouseIds.isEmpty()) {
+                    _likedGuesthouses.value = emptyList()
+                    return@launch
+                }
+
+                // 2단계: 각 ID에 해당하는 게스트하우스 요약 정보를 병렬로 가져옵니다.
+                val summaryList = guesthouseIds.map { id ->
+                    async {
+                        try {
+                            val summaryResponse = likeService.getGuesthouseSummary(id)
+                            if (summaryResponse.isSuccessful) {
+                                summaryResponse.body()?.data
+                            } else {
+                                Log.e("GuestHouseViewModel", "개별 요약 정보 로딩 실패 (ID: $id): ${summaryResponse.code()}")
+                                null
+                            }
+                        } catch (e: Exception) {
+                            Log.e("GuestHouseViewModel", "개별 요약 정보 로딩 중 예외 발생 (ID: $id)", e)
+                            null
+                        }
+                    }
+                }.awaitAll().filterNotNull() // 모든 작업이 끝날 때까지 기다린 후, 성공한(null이 아닌) 결과만 모읍니다.
+
+                // 3단계: 최종적으로 만들어진 DTO 리스트를 StateFlow에 바로 할당합니다.
+                _likedGuesthouses.value = summaryList
+
+            } catch (e: Exception) {
+                Log.e("GuestHouseViewModel", "찜 목록 로딩 과정에서 전체 오류 발생", e)
+                _likedGuesthouses.value = emptyList()
+            }
+        }
+    }
+
+    // 찜 취소 함수 (ID를 받아서 처리)
+    fun removeLike(guesthouseId: Int) {
+        Log.d("DEBUG_LIKE", "===[ 찜 취소 시도 ]=== ID: $guesthouseId")
+        viewModelScope.launch {
+            try {
+                val response = likeService.removeLikes(guesthouseId)
+                if (response.isSuccessful) {
+                    // 1. HomeFragment를 위한 ID 목록 업데이트
+                    Log.d("DEBUG_LIKE", "[성공] API 응답 코드: ${response.code()}")
+                    _likedGuestHouseIds.value = _likedGuestHouseIds.value - guesthouseId
+
+                    // 2. LikeFragment를 위한 찜 목록 리스트 업데이트
+                    _likedGuesthouses.value = _likedGuesthouses.value.filterNot { it.id == guesthouseId }
+                }else{
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("DEBUG_LIKE", "[실패] API 응답 코드: ${response.code()}, 에러 메시지: $errorBody")
+                }
+            } catch (e: Exception) {
+                // 에러 처리
+                Log.e("DEBUG_LIKE", "[예외 발생] 찜 취소 중 에러", e)
+            }
+        }
+    }
+
+    fun addLike(guesthouseId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = likeService.addLikes(guesthouseId)
+                if (response.isSuccessful) {
+                    // 찜이 추가되었으므로, 전체 찜 목록을 다시 불러와서
+                    // 두 StateFlow를 모두 최신 상태로 유지.
+                    loadLikedGuesthouses() // 찜 목록 리스트 갱신
+                    updateLikedStatusForVisibleItems() // 홈 화면 찜 상태 갱신
+                }
+            } catch (e: Exception) {
+                Log.e("GuestHouseViewModel", "Failed to add like", e)
+            }
+        }
+    }
 
 //    private val _initialLikesLoaded = MutableStateFlow(false)
 //    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
@@ -97,6 +204,7 @@ class GuestHouseViewModel(
                     val cur = _likedGuestHouseIds.value.toMutableSet()
                     if (isCurrentlyLiked) cur.remove(idInt) else cur.add(idInt)
                     _likedGuestHouseIds.value = cur
+                    loadLikedGuesthouses()
                     onStateUpdated()
                 } else {
                     Log.e("GuestHouseViewModel", "찜 변경 실패 code=${res.code()} body=${res.errorBody()?.string()}")
