@@ -26,33 +26,58 @@ class GuestHouseViewModel(
     private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
     val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
 
-    private val _initialLikesLoaded = MutableStateFlow(false)
-    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
+//    private val _initialLikesLoaded = MutableStateFlow(false)
+//    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
+//
+//    init { loadInitialLikes() }
 
-    init { loadInitialLikes() }
+    suspend fun updateLikedStatusForVisibleItems() {
+        // ViewModel이 가진 전체 아이템 목록이 비어있으면 찜 목록도 비웁니다.
+        if (items.isEmpty()) {
+            _likedGuestHouseIds.value = emptySet()
+            return
+        }
 
-    private fun loadInitialLikes() {
-        viewModelScope.launch {
-            try {
-                val response = likeService.getLikes(size = 200)
-                if (response.isSuccessful) {
-                    // 서버 스키마에 맞춰 Int로 추출
-                    val likedIds: Set<Int> = response.body()?.content
-                        ?.mapNotNull { it.id }   // 필요 시 .toInt() 로 변환
-                        ?.toSet()
-                        ?: emptySet()
-                    _likedGuestHouseIds.value = likedIds
-                    Log.d("ViewModel_Likes", "초기 찜 목록: ${_likedGuestHouseIds.value}")
-                } else {
-                    Log.e("GuestHouseViewModel", "초기 찜 로딩 실패 code=${response.code()}")
-                }
-            } catch (e: Exception) {
-                Log.e("GuestHouseViewModel", "초기 찜 로딩 에러", e)
-            } finally {
-                _initialLikesLoaded.value = true
+        // 현재 `items` 리스트에 있는 모든 게스트하우스의 ID를 Int 리스트로 변환
+        val currentVisibleIds = items.map { it.id.toInt() }
+
+        try {
+            // 새로운 API를 호출하여 현재 보이는 ID들 중 찜한 ID 목록을 가져옵니다.
+            val response = likeService.checkFavorites(guesthouseIds = currentVisibleIds)
+
+            if (response.isSuccessful) {
+                // API가 성공적으로 찜된 ID 목록(List<Int>)을 반환하면 Set으로 변환하여 덮어씁니다.
+                _likedGuestHouseIds.value = response.body()?.toSet() ?: emptySet()
+                Log.d("ViewModel_Likes", "찜 상태 업데이트 완료: ${_likedGuestHouseIds.value}")
+            } else {
+                Log.e("ViewModel_Likes", "찜 상태 업데이트 실패: ${response.code()}")
             }
+        } catch (e: Exception) {
+            Log.e("ViewModel_Likes", "찜 상태 업데이트 중 에러", e)
         }
     }
+//    private fun loadInitialLikes() {
+//        viewModelScope.launch {
+//            try {
+//                val response = likeService.getLikes(size = 200)
+//                if (response.isSuccessful) {
+//                    // 서버 스키마에 맞춰 Int로 추출
+//                    val likedIds: Set<Int> = response.body()?.content
+//                        ?.mapNotNull { it.id }   // 필요 시 .toInt() 로 변환
+//                        ?.toSet()
+//                        ?: emptySet()
+//                    _likedGuestHouseIds.value = likedIds
+//                    Log.d("ViewModel_Likes", "초기 찜 목록: ${_likedGuestHouseIds.value}")
+//                } else {
+//                    Log.e("GuestHouseViewModel", "초기 찜 로딩 실패 code=${response.code()}")
+//                }
+//            } catch (e: Exception) {
+//                Log.e("GuestHouseViewModel", "초기 찜 로딩 에러", e)
+//            } finally {
+//                _initialLikesLoaded.value = true
+//            }
+//        }
+//    }
 
     fun isLiked(guestHouse: GuestHouse): Boolean {
         return _likedGuestHouseIds.value.contains(guestHouse.id.toInt())
@@ -89,6 +114,10 @@ class GuestHouseViewModel(
     var nextPage: Int = 1                     // UI 1-based
     var isLastPageCached: Boolean = false
 
+    // 로드된 모든 게스트하우스의 ID 목록을 저장할 StateFlow
+    private val _guesthouseIds = MutableStateFlow<List<Int>>(emptyList())
+    val guesthouseIds: StateFlow<List<Int>> = _guesthouseIds
+
     // =============================
     // 홈 DTO -> UI 매핑
     // (홈 응답의 imageUrl은 사용하지 않음. 이미지는 /images로 따로)
@@ -106,10 +135,6 @@ class GuestHouseViewModel(
                 time = d.checkInTime.orEmpty()
             )
         }
-
-
-
-
 
     private suspend fun fetchGuesthouseThumbUrl(guestHouseId: Int): String? =
         withContext(kotlinx.coroutines.Dispatchers.IO) {
@@ -165,10 +190,6 @@ class GuestHouseViewModel(
         }
     }
 
-
-
-
-
     // =============================
     // UI 1-based → 서버 0-based 보정 + 캐시 갱신
     // =============================
@@ -178,6 +199,9 @@ class GuestHouseViewModel(
 
         if (pageUi == 1) items.clear()
         items.addAll(list)
+        updateLikedStatusForVisibleItems()
+        // 캐시된 items 리스트를 기반으로 ID 목록을 갱신
+//        _guesthouseIds.value = items.map { it.id.toInt() }
 
         if (list.isEmpty()) {
             isLastPageCached = true
@@ -186,6 +210,5 @@ class GuestHouseViewModel(
         }
         return list
     }
-
 
 }
