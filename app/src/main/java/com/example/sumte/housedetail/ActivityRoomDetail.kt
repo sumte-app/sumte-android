@@ -16,6 +16,8 @@ import com.example.sumte.ReservationRequest
 import com.example.sumte.ReservationResponse
 
 import com.example.sumte.RetrofitClient
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.ActivityRoomDetailBinding
 import com.example.sumte.payment.PaymentActivity
 import com.example.sumte.reservation.ReservationRepository
@@ -26,12 +28,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class ActivityRoomDetail : AppCompatActivity() {
-    private val bookInfoVM by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    private val bookInfoVM by lazy { getBookInfoViewModel() }
 
     private lateinit var binding: ActivityRoomDetailBinding
 
@@ -80,22 +77,7 @@ class ActivityRoomDetail : AppCompatActivity() {
 
 
         // 날짜·인원 정보 초기화
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val startDate = bookInfoVM.startDate
-        val endDate = bookInfoVM.endDate
-        val nights = ChronoUnit.DAYS.between(startDate, endDate)
-
-        binding.startDate.text = startDate.format(formatter)
-        binding.endDate.text = endDate.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text =
-            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
-
+        bindBookInfoUI(binding, bookInfoVM)
 
         //예약버튼
         binding.btnReserve.setOnClickListener {
@@ -117,6 +99,7 @@ class ActivityRoomDetail : AppCompatActivity() {
                     val response = repository.createReservation(request)
                     if (response?.isSuccessful == true && response.body()?.success == true) {
                         Toast.makeText(this@ActivityRoomDetail, "예약 성공", Toast.LENGTH_SHORT).show()
+                        Log.d("ReservationResponse","${response.body()}" )
                         startActivity(Intent(this@ActivityRoomDetail, PaymentActivity::class.java))
                     } else {
                         Toast.makeText(

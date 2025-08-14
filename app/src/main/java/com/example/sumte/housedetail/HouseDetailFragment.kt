@@ -28,6 +28,8 @@ import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.reservation.ReservationRepository
@@ -46,12 +48,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
 
-    private val bookInfoVM by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    private val bookInfoVM by lazy { getBookInfoViewModel() }
 
     //게하 id값 받아오기
     companion object {
@@ -216,9 +213,6 @@ class HouseDetailFragment : Fragment() {
 
     private fun observeState() {
         houseDetailVM.state.observe(viewLifecycleOwner) { st ->
-            // st가 어떤 상태인지 로그로 확인
-            Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
-
             when (st) {
                 is RoomUiState.Success -> {
                     // Success 상태일 때, 리스트가 비어있는지, 데이터가 있는지 확인
@@ -279,56 +273,29 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val startDate = bookInfoVM.startDate
-        val endDate = bookInfoVM.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-
-        binding.startDate.text = startDate.format(formatter)
-        binding.endDate.text = endDate.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text =
-            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
-
-        binding.dateChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
-            startActivity(intent)
-        }
+        //뷰모델로 초기화
+        bindBookInfoUI(binding, bookInfoVM)
 
         binding.countChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // 어디서 왔는지 표시
             startActivity(intent)
         }
+
+        binding.dateChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
+            startActivity(intent)
+        }
+
+
     }
     //재시작할 때
     override fun onResume() {
         super.onResume()
-        updateUIFromViewModel()
-    }
-
-    private fun updateUIFromViewModel() {
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val sDate = bookInfoVM.startDate
-        val eDate = bookInfoVM.endDate
-
-        if (sDate != null && eDate != null) {
-            binding.startDate.text = sDate.format(formatter)
-            binding.endDate.text = eDate.format(formatter)
-            val nights = ChronoUnit.DAYS.between(sDate, eDate)
-            binding.dateCount.text = "${nights}박"
-        }
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text = if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+        bindBookInfoUI(binding, bookInfoVM)
     }
 
 }
