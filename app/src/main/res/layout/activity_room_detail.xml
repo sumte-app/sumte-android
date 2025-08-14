@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="객실 상세"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:gravity="center"
         android:textColor="#282828"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:text="남자도미토리 4인"
         android:textSize="18sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@id/imgRoom"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +86,7 @@
             android:layout_marginStart="3dp"
             android:text="기준인원 4인"
             android:textColor="#282828"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="14sp"
             android:layout_marginTop="8dp"/>
         <TextView
@@ -94,6 +95,7 @@
             android:layout_height="wrap_content"
             android:text="(정원 8인)"
             android:layout_marginStart="4dp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="#A8A8A8"
             android:textSize="14sp"
             android:layout_marginTop="8dp"/>
@@ -126,6 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="체크인 17:00 - 체크아웃 11:00"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="#282828"
             android:textSize="12sp"
             android:layout_marginStart="3dp"
@@ -144,7 +147,7 @@
         android:layout_height="wrap_content"
         android:text="28,000원"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:gravity="end"
         app:layout_constraintTop_toTopOf="@id/tvCheckInOut"
         app:layout_constraintEnd_toEndOf="parent"
@@ -183,7 +186,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.18 수"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/to"
@@ -191,7 +196,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="-"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/end_date"
@@ -199,7 +206,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.19 목"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/date_comma"
@@ -208,7 +217,9 @@
                 android:layout_marginStart="4dp"
                 android:text=","
                 android:textSize="12sp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/date_count"
@@ -216,7 +227,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="1박"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
         </LinearLayout>
 
@@ -241,7 +254,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="성인 1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/count_comma"
@@ -250,7 +265,9 @@
                 android:layout_marginStart="4dp"
                 android:text=","
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/child_count"
@@ -258,7 +275,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="아동 1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -274,6 +293,7 @@
         android:text="기본 정보"
         android:textStyle="bold"
         android:textSize="16sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintTop_toBottomOf="@id/ReservationInfo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -288,6 +308,7 @@
         android:text="최대 1인 예약 가능한 객실로 인원 추가 시, 인원 추가 비용 결제가 아닌 신규 예약 생성 필요합니다."
         android:textSize="14sp"
         android:textColor="#444444"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintTop_toBottomOf="@id/tvBasicInfo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -302,6 +323,7 @@
         android:background="@drawable/input_field_true"
         android:text="예약하기"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

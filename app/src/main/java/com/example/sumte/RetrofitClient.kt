@@ -6,6 +6,7 @@ import com.example.sumte.roomregister.RoomRegisterService
 import com.example.sumte.housedetail.RoomService
 import com.example.sumte.payment.PaymentRepository
 import com.example.sumte.payment.PaymentService
+import com.example.sumte.signup.EmailDuplicationApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,4 +65,7 @@ object RetrofitClient {
 
         return retrofitWithToken.create(ReservationService::class.java)
     }
+
+    val emailDuplicationApi: EmailDuplicationApi =
+        instance.create(EmailDuplicationApi::class.java)
 }

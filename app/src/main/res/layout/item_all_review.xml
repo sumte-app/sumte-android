@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="제주숨숨이"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="14sp"
                     android:textColor="#000000"/>
 
@@ -58,6 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="여자도미토리 4인"
+                        android:fontFamily="@font/pretendard_regular"
                         android:textSize="12sp"
                         android:textColor="#A8A8A8" />
 
@@ -77,6 +78,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="50dp"
                 android:text="2025.07.26"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp"
                 android:textColor="#C1C1C1"
                 android:layout_marginEnd="4dp"/>
@@ -139,6 +141,7 @@
             android:text="일단 게스트하우스라는 인식 때문인지 기대를 안하고 갔는데 방을 들어가자마자 깨끗하고 오션뷰라서 너무 놀랐습니다. 이 가격에 이런곳이??라는 생각부터 들었고요.
 바로 앞에 같이 운영하는 카페도 있는데 너무 예쁘게 잘 나오고 신경도 잘 써주시더라고요. 너무 잘 즐기다가 돌아왔습니다."
             android:textSize="14sp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="#424242"
             android:lineSpacingExtra="4dp" />
 

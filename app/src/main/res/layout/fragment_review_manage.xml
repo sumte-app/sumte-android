@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="후기 관리"
             android:textColor="@color/gray900"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/review_manage_arrow_iv"
             app:layout_constraintTop_toTopOf="@+id/review_manage_arrow_iv"
@@ -61,7 +61,7 @@
             android:layout_marginStart="16dp"
             android:text="내가 남긴 후기 "
             android:textColor="@color/gray900"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="18sp"/>
         <TextView
             android:id="@+id/review_myreview_count_tv"
@@ -69,14 +69,14 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/gray900"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="18sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="개"
             android:textColor="@color/gray900"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="18sp"/>
     </LinearLayout>
 
@@ -96,14 +96,14 @@
             android:layout_height="wrap_content"
             android:text="@string/no_review_header"
             android:textColor="@color/gray600"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="18sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="@string/no_review_content"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray400"/>
     </LinearLayout>
 
@@ -136,7 +136,7 @@
             android:text="아직 작성한 후기가 없습니다."
             android:textSize="18sp"
             android:textColor="@color/gray600"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintTop_toTopOf="@+id/empty_text_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -145,6 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="첫 후기를 남겨보세요!"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="14sp"
             android:textColor="@color/gray400"
             android:layout_marginTop="4dp"
