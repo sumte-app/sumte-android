@@ -195,9 +195,6 @@ class HouseDetailFragment : Fragment() {
 
     private fun observeState() {
         houseDetailVM.state.observe(viewLifecycleOwner) { st ->
-            // st가 어떤 상태인지 로그로 확인
-            Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
-
             when (st) {
                 is RoomUiState.Success -> {
                     // Success 상태일 때, 리스트가 비어있는지, 데이터가 있는지 확인
@@ -261,17 +258,21 @@ class HouseDetailFragment : Fragment() {
         //뷰모델로 초기화
         bindBookInfoUI(binding, bookInfoVM)
 
-        binding.dateChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
-            startActivity(intent)
-        }
-
         binding.countChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // 어디서 왔는지 표시
             startActivity(intent)
         }
+
+        binding.dateChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
+            startActivity(intent)
+        }
+
+
     }
     //재시작할 때
     override fun onResume() {

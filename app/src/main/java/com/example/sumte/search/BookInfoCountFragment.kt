@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.common.bindBookInfoUI
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentBookInfoCountBinding
 import java.time.format.DateTimeFormatter
@@ -28,28 +29,14 @@ class BookInfoCountFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val start = viewModel.startDate
-        val end = viewModel.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
-
-        binding.startDate.text = start.format(formatter)
-        binding.endDate.text = end.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
+        bindBookInfoUI(binding, viewModel)
 
         var adultCount = viewModel.adultCount
         var childCount = viewModel.childCount
-
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
-
-
         binding.adultCountNum.text = adultCount.toString()
         binding.childCountNum.text = childCount.toString()
-        binding.adultCount.text = "성인 $adultCount"
-        binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
 
+        //버튼이미지세팅
         binding.adultMinusBtn.setImageResource(
             if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
 
@@ -57,11 +44,10 @@ class BookInfoCountFragment : Fragment() {
         binding.childMinusBtn.setImageResource(
             if (childCount > 0) R.drawable.minus_green else R.drawable.minus_gray
         )
-
-
+        //숫자변화
         binding.adultPlusBtn.setOnClickListener {
             adultCount++
-            viewModel.adultCount = adultCount
+            //viewModel.adultCount = adultCount
             if (adultCount > 1 ){
                 binding.adultMinusBtn.setImageResource(R.drawable.minus_green)
             }
@@ -76,12 +62,12 @@ class BookInfoCountFragment : Fragment() {
             if (adultCount == 1) {
                 binding.adultMinusBtn.setImageResource(R.drawable.minus_gray)
             }
-            viewModel.adultCount = adultCount
+            //viewModel.adultCount = adultCount
             binding.adultCount.text = String.format("성인 %d", adultCount)
         }
         binding.childPlusBtn.setOnClickListener {
             childCount++
-            viewModel.childCount = childCount
+            //viewModel.childCount = childCount
             if (childCount > 0) {
                 binding.childMinusBtn.setImageResource(R.drawable.minus_green)
                 binding.countComma.visibility = View.VISIBLE
@@ -100,10 +86,12 @@ class BookInfoCountFragment : Fragment() {
                 binding.childCount.text = null
                 binding.countComma.visibility = View.GONE
             }
-            viewModel.childCount = childCount
+            //viewModel.childCount = childCount
         }
 
         binding.calendar.setOnClickListener {
+            viewModel.adultCount = adultCount
+            viewModel.childCount = childCount
             val fragment = BookInfoDateFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
@@ -111,11 +99,10 @@ class BookInfoCountFragment : Fragment() {
                 .commit()
         }
         binding.applyBtn.setOnClickListener {
-            val fragment = SearchResultFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            viewModel.adultCount = adultCount
+            viewModel.childCount = childCount
+            (binding.root.context as? BookInfoActivity)?.onApplyClicked()
+
         }
         binding.cancelBtn.setOnClickListener {
             val fragmentManager = requireActivity().supportFragmentManager

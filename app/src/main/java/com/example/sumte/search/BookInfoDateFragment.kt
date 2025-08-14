@@ -210,11 +210,7 @@ class BookInfoDateFragment : Fragment() {
                 viewModel.startDate = startDate!!
                 viewModel.endDate = endDate!!
             }
-            val fragment = SearchResultFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            (binding.root.context as? BookInfoActivity)?.onApplyClicked()
         }
         //새 캔슬버튼
         binding.cancelBtn.setOnClickListener {
