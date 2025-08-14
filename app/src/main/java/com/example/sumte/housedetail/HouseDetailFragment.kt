@@ -121,7 +121,7 @@ class HouseDetailFragment : Fragment() {
                 // HTTP 레벨 체크
                 if (!response.isSuccessful) {
                     Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "예약 실패(네트워크)", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "${response.message()}", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
 

@@ -143,7 +143,7 @@ class ActivityRoomDetail : AppCompatActivity() {
             tvPeopleInfo1.text = "기준인원 ${room.standardCount}인"
             tvPeopleInfo2.text = "(정원 ${room.totalCount}인)"
             tvCheckInOutText.text = "체크인 ${room.checkin} - 체크아웃 ${room.checkout}"
-            tvBasicDesc.text = room.content
+            //tvBasicDesc.text = room.content
 
 //            room.imageUrl?.let {
 //                Glide.with(this@ActivityRoomDetail)
