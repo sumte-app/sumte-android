@@ -31,7 +31,21 @@
             android:exported="false" />
         <activity
             android:name=".payment.PaymentActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="sumte"
+                    android:host="payments"
+                    android:pathPrefix="/kakaopay/callback" />
+            </intent-filter>
+
+        </activity>
 
         <activity android:name=".review.ReviewWriteActivity"/>
         <activity android:name=".review.ReviewManageActivity"/>

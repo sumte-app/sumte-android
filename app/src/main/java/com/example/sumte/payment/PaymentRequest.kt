@@ -9,15 +9,10 @@ data class PaymentRequest(
     val paymentMethod: PaymentMethod
 )
 
-data class PaymentResponse(
-    val success: Boolean,
-    val code: String,
-    val message: String,
-    val data: PaymentData
+data class PaymentApproveRequest(
+    val reservationId: Int,
+    val pg_token: String
 )
 
-data class PaymentData(
-    val paymentId: Int,
-    val paymentUrl: String
-)
+
 
