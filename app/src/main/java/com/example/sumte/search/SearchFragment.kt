@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentSearchBinding
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,12 +30,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var historyList: MutableList<History>
-    private val viewModel by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    private val viewModel by lazy { getBookInfoViewModel() }
     private val seoulZone = ZoneId.of("Asia/Seoul")
     private var startDate: LocalDate? = LocalDate.now(seoulZone)
     private var endDate: LocalDate? = LocalDate.now(seoulZone).plusDays(1)
@@ -73,23 +70,8 @@ class SearchFragment : Fragment() {
         binding.historyRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecyclerview.adapter = historyAdapter
 
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-        startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
-        endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
-        val nights = ChronoUnit.DAYS.between(startDate, endDate)
-        binding.startDate.text = startDate!!.format(formatter)
-        binding.endDate.text = endDate!!.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        val adultCount = viewModel.adultCount
-        val childCount = viewModel.childCount
-        binding.adultCount.text = "성인 $adultCount"
-        if (childCount > 0) {
-            binding.childCount.visibility = View.VISIBLE
-            binding.childCount.text = "아동 $childCount"
-        } else {
-            binding.childCount.visibility = View.GONE
-        }
+        //뷰모델 초기화(BookInfoUtils)
+        bindBookInfoUI(binding, viewModel)
 
         // 검색창에서 엔터 시 히스토리 추가 및 저장, SearchResultFragment 이동
         binding.searchText.setOnEditorActionListener { _, actionId, event ->

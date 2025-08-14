@@ -3,33 +3,22 @@ package com.example.sumte.search
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.sumte.App
 import com.example.sumte.FilterOptions
 import com.example.sumte.R
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentSearchResultBinding
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class SearchResultFragment : Fragment() {
 
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
-    //private val viewModel: BookInfoViewModel by activityViewModels()
-    private val viewModel by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    private val viewModel by lazy { getBookInfoViewModel() }
     private var keyword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,21 +68,7 @@ class SearchResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val startDate = viewModel.startDate
-        val endDate = viewModel.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-
-        binding.startDate.text = startDate.format(formatter)
-        binding.endDate.text = endDate.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        binding.adultCount.text = "성인 ${viewModel.adultCount}"
-        binding.childCount.text =
-            if (viewModel.childCount > 0) "아동 ${viewModel.childCount}" else ""
-
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        bindBookInfoUI(binding, viewModel)
 
         if (!keyword.isNullOrBlank()) {
             // 키워드가 있을 때 처리

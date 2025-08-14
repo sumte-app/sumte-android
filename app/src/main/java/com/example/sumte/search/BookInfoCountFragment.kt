@@ -9,20 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentBookInfoCountBinding
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class BookInfoCountFragment : Fragment() {
     lateinit var binding: FragmentBookInfoCountBinding
-    //private val viewModel: BookInfoViewModel by activityViewModels()
-    private val viewModel by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
-
+    private val viewModel by lazy { getBookInfoViewModel() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,24 +32,19 @@ class BookInfoCountFragment : Fragment() {
 
         val start = viewModel.startDate
         val end = viewModel.endDate
+        var adultCount = viewModel.adultCount
+        var childCount = viewModel.childCount
         val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
 
         binding.startDate.text = start.format(formatter)
         binding.endDate.text = end.format(formatter)
         binding.dateCount.text = "${nights}박"
-
-
-
-        var adultCount = viewModel.adultCount
-        var childCount = viewModel.childCount
-
-        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
-
-
         binding.adultCount.text = adultCount.toString()
         binding.childCount.text = childCount.toString()
         binding.adultCountText.text = "성인 $adultCount"
         binding.childCountText.text = if (childCount > 0) "아동 $childCount" else ""
+        binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+
 
         binding.adultMinusBtn.setImageResource(
             if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
