@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text="검색"
             android:textSize="16dp"
-            android:fontFamily="@font/pretendard_semibold" />
+            android:textStyle="bold" />
         <View
             android:layout_width="12dp"
             android:layout_height="12dp" />
@@ -67,7 +67,6 @@
                 android:background="@null"
                 android:textColor="@color/primary"
                 android:textSize="14sp"
-                android:fontFamily="@font/pretendard_regular"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
 
@@ -104,7 +103,7 @@
                 android:layout_marginStart="8dp"
                 android:text="6.18 수"
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/to"
@@ -113,7 +112,7 @@
                 android:layout_marginStart="8dp"
                 android:text="-"
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/end_date"
@@ -122,7 +121,7 @@
                 android:layout_marginStart="8dp"
                 android:text="6.19 목"
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -130,7 +129,7 @@
                 android:layout_marginStart="4dp"
                 android:text=","
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/date_count"
@@ -139,7 +138,7 @@
                 android:layout_marginStart="4dp"
                 android:text="1박"
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -163,14 +162,14 @@
                 android:layout_marginStart="8dp"
                 android:text="성인 1"
                 android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
+                android:textStyle="bold" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text=","
                 android:visibility="gone"
-                android:fontFamily="@font/pretendard_semibold"
+                android:textStyle="bold"
                 android:textSize="16sp"/>
             <TextView
                 android:id="@+id/child_count"
@@ -179,7 +178,7 @@
                 android:layout_marginStart="4dp"
                 android:text="아동 1"
                 android:visibility="gone"
-                android:fontFamily="@font/pretendard_semibold"
+                android:textStyle="bold"
                 android:textSize="16sp"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -199,7 +198,7 @@
             android:layout_height="wrap_content"
             android:text="최근 검색 기록"
             android:textSize="16sp"
-            android:fontFamily="@font/pretendard_semibold"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/history"/>
 
@@ -208,7 +207,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="전체 삭제"
-            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintTop_toTopOf="@id/history"
             app:layout_constraintEnd_toEndOf="parent" />
 

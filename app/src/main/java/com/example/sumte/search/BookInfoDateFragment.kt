@@ -2,6 +2,7 @@ package com.example.sumte.search
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.CalendarDayLayoutBinding
 import com.example.sumte.databinding.FragmentBookInfoDateBinding
 import com.kizitonwose.calendar.core.CalendarDay
@@ -28,18 +31,13 @@ import java.util.Locale
 
 class BookInfoDateFragment : Fragment() {
     lateinit var binding: FragmentBookInfoDateBinding
-    //private val viewModel: BookInfoViewModel by activityViewModels()
-    private val viewModel by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    private val viewModel by lazy { getBookInfoViewModel() }
 
+    private val seoulZone = ZoneId.of("Asia/Seoul")
+    private var startDate: LocalDate? = viewModel.startDate
+    private var endDate: LocalDate? = viewModel.endDate
+    private var currentYearMonth: YearMonth = YearMonth.now()
 
-    val seoulZone = ZoneId.of("Asia/Seoul")
-    private var startDate: LocalDate? = null
-    private var endDate: LocalDate? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,23 +48,10 @@ class BookInfoDateFragment : Fragment() {
         return binding.root
     }
 
-    private var currentYearMonth: YearMonth = YearMonth.now()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-            startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
-            endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
-            val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-            binding.startDate.text = startDate!!.format(formatter)
-            binding.endDate.text = endDate!!.format(formatter)
-            binding.dateCount.text = "${nights}박"
-
-            val adultCount = viewModel.adultCount
-            val childCount = viewModel.childCount
-            binding.adultCount.text = "성인 $adultCount"
-            binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
-            //comma 컨트롤
-            binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+        bindBookInfoUI(binding, viewModel)
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -74,17 +59,18 @@ class BookInfoDateFragment : Fragment() {
         binding.customCalendar.dayBinder = object : MonthDayBinder<DayViewContainer>{
             override fun create(view: View) = DayViewContainer(view)
 
+
             override fun bind(container: DayViewContainer, data: CalendarDay) {
                 val date = data.date
                 container.textView.text = date.dayOfMonth.toString()
                 container.textView.setTypeface(null, Typeface.BOLD)
-
                 container.textView.setBackgroundResource(0)
                 container.textView.setTextColor(ContextCompat.getColor(requireContext(),
                     R.color.black
                 ))
                 container.textView.alpha = 1f
                 container.textView.isClickable = true
+
                 //선택 가능한 때 정의
                 val selected = when {
                     startDate != null && endDate != null ->
@@ -171,11 +157,11 @@ class BookInfoDateFragment : Fragment() {
 
                     binding.dateComma.visibility = if (endDate != null) View.VISIBLE else View.GONE
 
-
-                    if (startDate != null && endDate != null) {
-                        viewModel.startDate = startDate!!
-                        viewModel.endDate = endDate!!
-                    }
+                    //뷰모델 업데잍 부분
+//                    if (startDate != null && endDate != null) {
+//                        viewModel.startDate = startDate!!
+//                        viewModel.endDate = endDate!!
+//                    }
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
@@ -208,6 +194,10 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.countChangeBar.setOnClickListener {
+            if (startDate != null && endDate != null) {
+                viewModel.startDate = startDate!!
+                viewModel.endDate = endDate!!
+            }
             val fragment = BookInfoCountFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
@@ -216,11 +206,11 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.applyBtn.setOnClickListener {
-            val fragment = SearchResultFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.book_info_container, fragment)
-                .addToBackStack(null)
-                .commit()
+            if (startDate != null && endDate != null) {
+                viewModel.startDate = startDate!!
+                viewModel.endDate = endDate!!
+            }
+            (binding.root.context as? BookInfoActivity)?.onApplyClicked()
         }
         //새 캔슬버튼
         binding.cancelBtn.setOnClickListener {

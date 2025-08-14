@@ -23,8 +23,8 @@ class RoomRepository(
         val response = service.getRooms(guesthouseId, startDate, endDate)
 
         response.data.orEmpty().forEachIndexed { i, dto ->
-            android.util.Log.d("RoomRepo", "[$i] imageUrls=${dto.imageUrls} size=${dto.imageUrls?.size}")
-            android.util.Log.d("RoomRepo", "[$i] first=${dto.imageUrls?.firstOrNull()}")
+//            android.util.Log.d("RoomRepo", "[$i] imageUrls=${dto.imageUrl} size=${dto.imageUrl?.size}")
+//            android.util.Log.d("RoomRepo", "[$i] first=${dto.imageUrl?.firstOrNull()}")
         }
         // 2. RoomResponse 객체 안의 'data' 리스트를 꺼내서 매핑합니다.
         return response.data.map { roomDto -> roomDto.toRoomInfo() }

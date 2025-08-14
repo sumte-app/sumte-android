@@ -170,7 +170,7 @@
                     android:src="@drawable/bottom_nav_my"/>
 
                 <TextView
-                    android:id="@+id/adult_count_text"
+                    android:id="@+id/adult_count"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="4dp"
@@ -187,7 +187,7 @@
                     android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp" />
                 <TextView
-                    android:id="@+id/child_count_text"
+                    android:id="@+id/child_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -229,7 +229,7 @@
                     android:layout_height="24dp"
                     android:src="@drawable/minus_gray"/>
                 <TextView
-                    android:id="@+id/adult_count"
+                    android:id="@+id/adult_count_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
@@ -269,7 +269,7 @@
                     android:layout_height="24dp"
                     android:src="@drawable/minus_gray"/>
                 <TextView
-                    android:id="@+id/child_count"
+                    android:id="@+id/child_count_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
