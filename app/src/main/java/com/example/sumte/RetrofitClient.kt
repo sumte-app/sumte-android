@@ -45,7 +45,7 @@ object RetrofitClient {
     val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
     val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
 
-    // 예약 API
+    // 예약 API 헤더 설정
     fun createReservationService(token: String): ReservationService {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
