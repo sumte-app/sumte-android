@@ -14,11 +14,15 @@ data class ReservationRequest(
 )
 
 // 응답 Body
-data class ReservationResponse(
+data class ReservationResponse<T>(
     val success: Boolean,
     val code: String,
     val message: String? = null,
-    val data: Map<String, Any>? = null
+    val data: T?
+)
+
+data class ReservationData(
+    val reservationId: Int
 )
 
 // 예약 API
@@ -26,5 +30,7 @@ interface ReservationService {
     @POST("reservations")
     suspend fun createReservation(
         @Body request: ReservationRequest
-    ): Response<ReservationResponse>
+    ): Response<ReservationResponse<ReservationData>>
 }
+
+

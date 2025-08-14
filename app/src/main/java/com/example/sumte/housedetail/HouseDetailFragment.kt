@@ -111,33 +111,51 @@ class HouseDetailFragment : Fragment() {
             lifecycleScope.launch {
                 val repository = ReservationRepository(requireContext())
                 val response = repository.createReservation(request)
-                if (response?.isSuccessful == true) {
-                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.e("Reservation_Fail", "code=${response?.code()}, msg=${response?.message()}, body=${response?.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
+
+                // null이면(로그인 등) 바로 종료
+                if (response == null) {
+                    Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
-            }
-            val start = bookInfoVM.startDate
-            val end   = bookInfoVM.endDate
-            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
-            val amount = room.price * nights
 
-            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+                // HTTP 레벨 체크
+                if (!response.isSuccessful) {
+                    Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
+                    Toast.makeText(requireContext(), "예약 실패(네트워크)", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
 
-                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
+                // 바디 파싱 + 서버 success 체크
+                val body = response.body()
+                val resId = body?.data?.reservationId
+                if (body?.success != true || resId == null) {
+                    Log.e("Reservation_Fail", "서버 실패 or reservationId 누락: body=$body")
+                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
+                val start = bookInfoVM.startDate
+                val end   = bookInfoVM.endDate
+                val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+                val amount = room.price * nights
+
+                val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
+                }
+                startActivity(intent)
+
             }
-            startActivity(intent)
+
 
         }
 
