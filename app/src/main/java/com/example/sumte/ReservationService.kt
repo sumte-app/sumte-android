@@ -18,7 +18,7 @@ interface ReservationService {
     suspend fun getMyReservation(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 10
-    ): Response<ReservationResponse<MyReservationResponse>>
+    ): Response<MyReservationResponse>
 }
 
 // 예약생성 요청
@@ -42,15 +42,34 @@ data class ReservationData(
 )
 
 
-// 내 예약 목록 응답 아이템
+// 내 예약 응답
 data class MyReservationResponse(
-    val reservationId: Int,
+    val success: Boolean,
+    val code: String?,
+    val message: String?,
+    val data: MyReservationData?
+)
+
+
+data class MyReservationData(
+    val content: List<MyReservationItem>
+)
+
+data class MyReservationItem(
+    val id: Int,
+    val guestHouseName: String,
     val roomName: String,
+    val imageUrl: String?,
     val startDate: String,
     val endDate: String,
     val adultCount: Int,
-    val childCount: Int
+    val childCount: Int,
+    val nightCount: Int,
+    val status: String,
+    val canWriteReview: Boolean,
+    val reviewWritten: Boolean
 )
+
 
 
 
