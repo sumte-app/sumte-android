@@ -28,11 +28,8 @@ import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
-import com.example.sumte.common.bindBookInfoUI
-import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.guesthouse.GuestHouseViewModel
-import com.example.sumte.payment.PaymentActivity
 import com.example.sumte.reservation.ReservationRepository
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
@@ -49,7 +46,17 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
 
-    private val bookInfoVM by lazy { getBookInfoViewModel() }
+    // 찜 상태 관리를 위한 ViewModel
+    private val guestHouseVM: GuestHouseViewModel by lazy {
+        ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
+    }
+
+    private val bookInfoVM by lazy {
+        ViewModelProvider(
+            App.instance,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
+        )[BookInfoViewModel::class.java]
+    }
 
     //게하 id값 받아오기
     companion object {
@@ -97,7 +104,6 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
-
             val request = ReservationRequest(
                 roomId = room.id,
                 adultCount = bookInfoVM.adultCount,
@@ -105,80 +111,38 @@ class HouseDetailFragment : Fragment() {
                 startDate = "${bookInfoVM.startDate}",
                 endDate = "${bookInfoVM.endDate}"
             )
-
-            val repository = ReservationRepository(requireContext())
-
+            Log.d("Reservation_Request", request.toString())
 
             lifecycleScope.launch {
-                try {
-                    val response = repository.createReservation(request)
-                    if (response?.isSuccessful == true && response.body()?.success == true) {
-                        Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
-                        Log.d("ReservationResponse","${response.body()}" )
-                        startActivity(Intent(requireContext(), PaymentActivity::class.java))
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "예약 실패: ${response?.body()?.message ?: response?.code()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        "네트워크 오류: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                val repository = ReservationRepository(requireContext())
+                val response = repository.createReservation(request)
+                if (response?.isSuccessful == true) {
+                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("Reservation_Fail", "code=${response?.code()}, msg=${response?.message()}, body=${response?.errorBody()?.string()}")
+                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
                 }
-//                val response = repository.createReservation(request)
-//                Log.e("ReservationResponse", "${response}")
-//
-//
-//
-//                // null이면(로그인 등) 바로 종료
-//                if (response == null) {
-//                    Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-//                    return@launch
-//                }
-//
-//                // HTTP 레벨 체크
-//                if (!response.isSuccessful) {
-//                    Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
-//                    Toast.makeText(requireContext(), "${response.message()}", Toast.LENGTH_SHORT).show()
-//                    return@launch
-//                }
-//
-//                // 바디 파싱 + 서버 success 체크
-//                val body = response.body()
-//                val resId = body?.data?.reservationId
-//                if (body?.success != true || resId == null) {
-//                    Log.e("Reservation_Fail", "서버 실패 or reservationId 누락: body=$body")
-//                    Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
-//                    return@launch
-//                }
-
-                val start = bookInfoVM.startDate
-                val end   = bookInfoVM.endDate
-                val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
-                val amount = room.price * nights
-
-                val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
-                    //putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
-                }
-                startActivity(intent)
-
             }
+            val start = bookInfoVM.startDate
+            val end   = bookInfoVM.endDate
+            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+            val amount = room.price * nights
 
+            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+
+                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
+            }
+            startActivity(intent)
 
         }
 
@@ -223,7 +187,7 @@ class HouseDetailFragment : Fragment() {
         // ViewModel 상태 관찰
         observeState()
         observeHeader()
-        
+
         if (guesthouseId > 0){
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"
@@ -239,6 +203,9 @@ class HouseDetailFragment : Fragment() {
 
     private fun observeState() {
         houseDetailVM.state.observe(viewLifecycleOwner) { st ->
+            // st가 어떤 상태인지 로그로 확인
+            Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
+
             when (st) {
                 is RoomUiState.Success -> {
                     // Success 상태일 때, 리스트가 비어있는지, 데이터가 있는지 확인
@@ -299,33 +266,89 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //뷰모델로 초기화
-        bindBookInfoUI(binding, bookInfoVM)
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        binding.homeIcon.setOnClickListener {
-            parentFragmentManager.popBackStack()
+        val startDate = bookInfoVM.startDate
+        val endDate = bookInfoVM.endDate
+        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
+
+        binding.startDate.text = startDate.format(formatter)
+        binding.endDate.text = endDate.format(formatter)
+        binding.dateCount.text = "${nights}박"
+
+        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
+        binding.childCount.text =
+            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
+
+        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+
+        binding.dateChangeBar.setOnClickListener {
+            val intent = Intent(requireContext(), BookInfoActivity::class.java)
+            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            startActivity(intent)
         }
 
         binding.countChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
-            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // 어디서 왔는지 표시
             startActivity(intent)
         }
 
-        binding.dateChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
-            intent.putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
-            startActivity(intent)
-        }
-
-
+        // 찜 상태 확인 및 클릭 리스너
+        setupLikeButton()
     }
     //재시작할 때
     override fun onResume() {
         super.onResume()
-        bindBookInfoUI(binding, bookInfoVM)
+        updateUIFromViewModel()
+    }
+
+    private fun updateUIFromViewModel() {
+        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
+
+        val sDate = bookInfoVM.startDate
+        val eDate = bookInfoVM.endDate
+
+        if (sDate != null && eDate != null) {
+            binding.startDate.text = sDate.format(formatter)
+            binding.endDate.text = eDate.format(formatter)
+            val nights = ChronoUnit.DAYS.between(sDate, eDate)
+            binding.dateCount.text = "${nights}박"
+        }
+
+        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
+        binding.childCount.text = if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
+        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+    }
+
+    // 찜 버튼 초기 설정 함수
+    private fun setupLikeButton() {
+        // 찜 상태가 변경될 때마다 UI를 자동으로 업데이트
+        viewLifecycleOwner.lifecycleScope.launch {
+            guestHouseVM.likedGuestHouseIds.collect { likedIds ->
+                val isLiked = likedIds.contains(guesthouseId)
+                updateLikeButtonUI(isLiked)
+            }
+        }
+
+        // 찜 버튼 클릭 시 찜 추가/삭제 로직 실행
+        binding.ivLike.setOnClickListener {
+            val isCurrentlyLiked = guestHouseVM.likedGuestHouseIds.value.contains(guesthouseId)
+            if (isCurrentlyLiked) {
+                guestHouseVM.removeLike(guesthouseId)
+            } else {
+                guestHouseVM.addLike(guesthouseId)
+            }
+        }
+    }
+
+    // 찜 상태에 따라 하트 아이콘을 변경하는 함수
+    private fun updateLikeButtonUI(isLiked: Boolean) {
+        if (isLiked) {
+            binding.ivLike.setImageResource(R.drawable.heart_black)
+        } else {
+            binding.ivLike.setImageResource(R.drawable.heart)
+        }
     }
 
 }
