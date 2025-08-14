@@ -52,7 +52,6 @@ class BookInfoDateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
         bindBookInfoUI(binding, viewModel)
-        Log.d("CalendarDebug", "Initial startDate: $startDate, endDate: $endDate")
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -158,11 +157,11 @@ class BookInfoDateFragment : Fragment() {
 
                     binding.dateComma.visibility = if (endDate != null) View.VISIBLE else View.GONE
 
-
-                    if (startDate != null && endDate != null) {
-                        viewModel.startDate = startDate!!
-                        viewModel.endDate = endDate!!
-                    }
+                    //뷰모델 업데잍 부분
+//                    if (startDate != null && endDate != null) {
+//                        viewModel.startDate = startDate!!
+//                        viewModel.endDate = endDate!!
+//                    }
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
@@ -195,6 +194,10 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.countChangeBar.setOnClickListener {
+            if (startDate != null && endDate != null) {
+                viewModel.startDate = startDate!!
+                viewModel.endDate = endDate!!
+            }
             val fragment = BookInfoCountFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)
@@ -203,6 +206,10 @@ class BookInfoDateFragment : Fragment() {
         }
 
         binding.applyBtn.setOnClickListener {
+            if (startDate != null && endDate != null) {
+                viewModel.startDate = startDate!!
+                viewModel.endDate = endDate!!
+            }
             val fragment = SearchResultFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, fragment)

@@ -51,6 +51,10 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //뷰모델 초기화(BookInfoUtils)
+        bindBookInfoUI(binding, viewModel)
+
+
         binding.history.visibility = if (loadHistoryVisibility()) View.VISIBLE else View.GONE
 
         historyAdapter = HistoryAdapter(
@@ -69,9 +73,6 @@ class SearchFragment : Fragment() {
         )
         binding.historyRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecyclerview.adapter = historyAdapter
-
-        //뷰모델 초기화(BookInfoUtils)
-        bindBookInfoUI(binding, viewModel)
 
         // 검색창에서 엔터 시 히스토리 추가 및 저장, SearchResultFragment 이동
         binding.searchText.setOnEditorActionListener { _, actionId, event ->

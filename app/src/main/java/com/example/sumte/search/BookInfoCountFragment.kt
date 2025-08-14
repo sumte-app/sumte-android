@@ -32,19 +32,23 @@ class BookInfoCountFragment : Fragment() {
 
         val start = viewModel.startDate
         val end = viewModel.endDate
-        var adultCount = viewModel.adultCount
-        var childCount = viewModel.childCount
         val nights = java.time.temporal.ChronoUnit.DAYS.between(start, end)
 
         binding.startDate.text = start.format(formatter)
         binding.endDate.text = end.format(formatter)
         binding.dateCount.text = "${nights}박"
-        binding.adultCount.text = adultCount.toString()
-        binding.childCount.text = childCount.toString()
-        binding.adultCountText.text = "성인 $adultCount"
-        binding.childCountText.text = if (childCount > 0) "아동 $childCount" else ""
+
+
+        var adultCount = viewModel.adultCount
+        var childCount = viewModel.childCount
+
         binding.countComma.visibility = if (viewModel.childCount > 0) View.VISIBLE else View.GONE
 
+
+        binding.adultCountNum.text = adultCount.toString()
+        binding.childCountNum.text = childCount.toString()
+        binding.adultCount.text = "성인 $adultCount"
+        binding.childCount.text = if (childCount > 0) "아동 $childCount" else ""
 
         binding.adultMinusBtn.setImageResource(
             if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
@@ -61,19 +65,19 @@ class BookInfoCountFragment : Fragment() {
             if (adultCount > 1 ){
                 binding.adultMinusBtn.setImageResource(R.drawable.minus_green)
             }
-            binding.adultCount.text = adultCount.toString()
-            binding.adultCountText.text = String.format("성인 %d", adultCount)
+            binding.adultCountNum.text = adultCount.toString()
+            binding.adultCount.text = String.format("성인 %d", adultCount)
         }
         binding.adultMinusBtn.setOnClickListener {
             if (adultCount > 1) {
                 adultCount--
-                binding.adultCount.text = adultCount.toString()
+                binding.adultCountNum.text = adultCount.toString()
             }
             if (adultCount == 1) {
                 binding.adultMinusBtn.setImageResource(R.drawable.minus_gray)
             }
             viewModel.adultCount = adultCount
-            binding.adultCountText.text = String.format("성인 %d", adultCount)
+            binding.adultCount.text = String.format("성인 %d", adultCount)
         }
         binding.childPlusBtn.setOnClickListener {
             childCount++
@@ -82,18 +86,18 @@ class BookInfoCountFragment : Fragment() {
                 binding.childMinusBtn.setImageResource(R.drawable.minus_green)
                 binding.countComma.visibility = View.VISIBLE
             }
-            binding.childCount.text = childCount.toString()
-            binding.childCountText.text = String.format("아동 %d", childCount)
+            binding.childCountNum.text = childCount.toString()
+            binding.childCount.text = String.format("아동 %d", childCount)
         }
         binding.childMinusBtn.setOnClickListener {
             if (childCount > 0) {
                 childCount--
-                binding.childCount.text = childCount.toString()
-                binding.childCountText.text = String.format("아동 %d", childCount)
+                binding.childCountNum.text = childCount.toString()
+                binding.childCount.text = String.format("아동 %d", childCount)
             }
             if (childCount == 0){
                 binding.childMinusBtn.setImageResource(R.drawable.minus_gray)
-                binding.childCountText.text = null
+                binding.childCount.text = null
                 binding.countComma.visibility = View.GONE
             }
             viewModel.childCount = childCount
@@ -123,12 +127,6 @@ class BookInfoCountFragment : Fragment() {
                 requireActivity().finish()
             }
         }
-//        binding.cancelBtn.setOnClickListener {
-//            val fragment = SearchFragment()
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.book_info_container, fragment)
-//                .commit()
-//        }
 
     }
 
