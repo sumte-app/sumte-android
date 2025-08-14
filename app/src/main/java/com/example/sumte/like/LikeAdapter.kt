@@ -1,20 +1,22 @@
 package com.example.sumte.like
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.sumte.GuesthouseSummaryDto
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class LikeAdapter(
-    private val items: MutableList<LikedGuesthouse>,
+    private val items: MutableList<GuesthouseSummaryDto>,
     private val onLikeRemovedListener: OnLikeRemovedListener
 ) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
 
     interface OnLikeRemovedListener {
-        fun onLikeRemoved(guestHouse: LikedGuesthouse)
+        fun onLikeRemoved(guestHouse: GuesthouseSummaryDto)
     }
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
@@ -32,6 +34,7 @@ class LikeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val guestHouse = items[position]
         with(holder.binding) {
+            val ghId= guestHouse.id
             guesthouseTitleTv.text = guestHouse.name ?: "이름 정보 없음"
             guesthouseLocationTv.text = guestHouse.addressRegion ?: "위치 정보 없음"
             guesthousePriceTv.text = if (guestHouse.minPrice != null && guestHouse.minPrice > 0) {
@@ -55,9 +58,9 @@ class LikeAdapter(
                 guesthouseRatingTv.text = "평점 정보 없음"
             }
 
-            if (!guestHouse.thumbnailUrl.isNullOrBlank()) {
+            if (!guestHouse.imageUrl.isNullOrBlank()) {
                 Glide.with(root.context)
-                    .load(guestHouse.thumbnailUrl)
+                    .load(guestHouse.imageUrl)
                     .placeholder(R.drawable.sample_house3)
                     .error(R.drawable.sample_house3)
                     .into(guesthouseIv)
@@ -68,27 +71,23 @@ class LikeAdapter(
             guesthouseHeartIv.setImageResource(R.drawable.heart_home_filled)
 
             guesthouseHeartIv.setOnClickListener {
+                Log.d("LikeAdapter_Check", "게스트하우스 ID: $ghId")
                 onLikeRemovedListener.onLikeRemoved(guestHouse)
             }
         }
     }
 
-    fun setItems(newItems: List<LikedGuesthouse>) {
+    fun setItems(newItems: List<GuesthouseSummaryDto>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
     }
 
-    fun removeItem(guestHouse: LikedGuesthouse) {
+    fun removeItem(guestHouse: GuesthouseSummaryDto) {
         val index = items.indexOfFirst { it.id == guestHouse.id }
         if (index != -1) {
             items.removeAt(index)
             notifyItemRemoved(index)
         }
-    }
-
-    fun addItem(guestHouse: LikedGuesthouse) {
-        items.add(0, guestHouse)
-        notifyItemInserted(0)
     }
 }
