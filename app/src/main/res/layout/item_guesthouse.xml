@@ -75,8 +75,8 @@
                 app:tint="@color/gray700" />
             <TextView
                 android:id="@+id/guesthouse_rating_tv"
-                android:layout_width="21dp"
-                android:layout_height="21dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:text="4.5"
                 android:fontFamily="@font/pretendard_semibold"
