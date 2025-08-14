@@ -40,9 +40,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="sumte"
-                    android:host="payments"
-                    android:pathPrefix="/kakaopay/callback" />
+                    android:scheme="myapp"
+                    android:host="pay"
+                    android:pathPrefix="/kakaopay" />
             </intent-filter>
 
         </activity>

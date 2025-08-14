@@ -364,27 +364,71 @@ class PaymentActivity : AppCompatActivity() {
             return
         }
 
-        Log.d("Payment", "handleDeepLink uri=$uri  scheme=${uri.scheme} host=${uri.host} path=${uri.path}")
+        Log.d("Payment", "handleDeepLink uri=$uri scheme=${uri.scheme} host=${uri.host} path=${uri.path} q=${uri.query}")
 
-        val isOurCallback =
+        // 1) 현재 사용: myapp://pay/kakaopay/...
+        val isCustomNow =
+            (uri.scheme == "myapp" &&
+                    uri.host == "pay" &&
+                    (uri.path?.startsWith("/kakaopay") == true))
+
+        // 2) 과거 사용(겸허용): sumte://payments/kakaopay/...
+        val isCustomOld =
             (uri.scheme == "sumte" &&
                     uri.host == "payments" &&
-                    (uri.path?.startsWith("/kakaopay/callback") == true))
+                    (uri.path?.startsWith("/kakaopay") == true))
 
-        if (!isOurCallback) {
+        // 3) (선택) https App Links 허용: https://<YOUR HOST>/payments/kakaopay/...
+        val isAppLinks =
+            (uri.scheme == "https" &&
+                    (uri.host == "sumteapi.duckdns.org" /* 필요 시 도메인 추가 */) &&
+                    // /payments/kakaopay/... 또는 /kakaopay/... 둘 다 허용
+                    (uri.path?.contains("/kakaopay") == true))
+
+        if (!(isCustomNow || isCustomOld || isAppLinks)) {
             Log.d("Payment", "handleDeepLink: not our callback")
             return
         }
 
-        val pgToken = uri.getQueryParameter("pg_token")
-        val payId = currentPaymentId ?: retrievePaymentIdPersisted()
-        Log.d("Payment", "deeplink pg_token=$pgToken, paymentId=$payId")
+        val path = uri.path.orEmpty()
 
-        if (!pgToken.isNullOrBlank() && payId != null) {
-            handledDeepLink = true
-            payVm.approve(payId, pgToken)
+        val isCancel = path.contains("/cancel")
+        val isFail   = path.contains("/fail")
+        val isOk     = !isCancel && !isFail // cancel/fail이 아니면 승인 콜백으로 간주
+
+        when {
+            isCancel -> {
+                handledDeepLink = true
+                showPaymentFailedFragment("결제가 취소되었습니다.")
+            }
+            isFail -> {
+                handledDeepLink = true
+                showPaymentFailedFragment("결제에 실패했습니다.")
+            }
+            else -> {
+                // callback
+                val pgToken = uri.getQueryParameter("pg_token")
+                    ?: uri.getQueryParameter("pgToken")
+                    ?: uri.getQueryParameter("token")
+
+                // payment_id가 쿼리로 올 수도 있으니 우선 사용, 없으면 로컬/메모리
+                val payId = uri.getQueryParameter("payment_id")?.toIntOrNull()
+                    ?: currentPaymentId
+                    ?: retrievePaymentIdPersisted()
+
+                Log.d("Payment", "deeplink pg_token=${pgToken?.take(6)}****, paymentId=$payId")
+
+                if (!pgToken.isNullOrBlank() && payId != null) {
+                    handledDeepLink = true
+                    payVm.approve(payId, pgToken)
+                } else {
+                    Log.w("Payment", "deeplink missing params. pgToken=$pgToken, payId=$payId")
+                }
+            }
         }
     }
+
+
 
 
     private fun persistPaymentId(id: Int) {
