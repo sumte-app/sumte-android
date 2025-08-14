@@ -223,12 +223,6 @@ class BookInfoDateFragment : Fragment() {
                 requireActivity().finish()
             }
         }
-//        binding.cancelBtn.setOnClickListener {
-//            val fragment = SearchFragment()
-//            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.book_info_container, fragment)
-//                .commit()
-//        }
 
     }
 
