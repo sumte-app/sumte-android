@@ -2,18 +2,19 @@ package com.example.sumte.like
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemGuesthouseBinding
 
 class LikeAdapter(
-    private val items: MutableList<GuestHouseResponse>,
+    private val items: MutableList<LikedGuesthouse>,
     private val onLikeRemovedListener: OnLikeRemovedListener
 ) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
 
     interface OnLikeRemovedListener {
-        fun onLikeRemoved(guestHouse: GuestHouseResponse)
+        fun onLikeRemoved(guestHouse: LikedGuesthouse)
     }
 
     inner class ViewHolder(val binding: ItemGuesthouseBinding) :
@@ -33,22 +34,34 @@ class LikeAdapter(
         with(holder.binding) {
             guesthouseTitleTv.text = guestHouse.name ?: "이름 정보 없음"
             guesthouseLocationTv.text = guestHouse.addressRegion ?: "위치 정보 없음"
-//            guesthousePriceTv.text = guestHouse.minPrice.toString()
             guesthousePriceTv.text = if (guestHouse.minPrice != null && guestHouse.minPrice > 0) {
                 String.format("%,d원", guestHouse.minPrice)
             } else {
                 "가격 정보 없음"
             }
 
-            val thumbnailUrl = guestHouse.imageUrls?.firstOrNull()
-            if (!thumbnailUrl.isNullOrBlank()) {
+            guesthouseTimeTv.text = if (!guestHouse.checkInTime.isNullOrBlank()) {
+                "입실 ${guestHouse.checkInTime}"
+            } else {
+                "시간 정보 없음"
+            }
+
+            // 평점과 리뷰 개수를 함께 표시 (예: ⭐ 4.5 (65))
+            val score = guestHouse.averageScore
+            val reviews = guestHouse.reviewCount
+            if (score != null && score > 0 && reviews != null) {
+                guesthouseRatingTv.text = "⭐ %.1f (%d)".format(score, reviews)
+            } else {
+                guesthouseRatingTv.text = "평점 정보 없음"
+            }
+
+            if (!guestHouse.thumbnailUrl.isNullOrBlank()) {
                 Glide.with(root.context)
-                    .load(thumbnailUrl)
-                    .placeholder(R.drawable.sample_house3) // 로딩 중 표시할 이미지
-                    .error(R.drawable.sample_house3)       // 에러 시 표시할 이미지
+                    .load(guestHouse.thumbnailUrl)
+                    .placeholder(R.drawable.sample_house3)
+                    .error(R.drawable.sample_house3)
                     .into(guesthouseIv)
             } else {
-                // 이미지 URL이 없는 경우 기본 이미지 표시
                 guesthouseIv.setImageResource(R.drawable.sample_house2)
             }
 
@@ -60,13 +73,13 @@ class LikeAdapter(
         }
     }
 
-    fun setItems(newItems: List<GuestHouseResponse>) {
+    fun setItems(newItems: List<LikedGuesthouse>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
     }
 
-    fun removeItem(guestHouse: GuestHouseResponse) {
+    fun removeItem(guestHouse: LikedGuesthouse) {
         val index = items.indexOfFirst { it.id == guestHouse.id }
         if (index != -1) {
             items.removeAt(index)
@@ -74,7 +87,7 @@ class LikeAdapter(
         }
     }
 
-    fun addItem(guestHouse: GuestHouseResponse) {
+    fun addItem(guestHouse: LikedGuesthouse) {
         items.add(0, guestHouse)
         notifyItemInserted(0)
     }

@@ -1,6 +1,7 @@
 package com.example.sumte.review
 
 import com.example.sumte.MyReviewPage
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,13 +19,32 @@ data class ReviewRequest(
     val score: Int
 )
 
-interface ReviewService {
-    @GET("/s3/presigned-url")
-    suspend fun getPresignedUrl(
-        @Query("fileName")   fileName: String,
-        @Query("contentType") contentType: String
-    ): Response<String>           // presigned URL 문자열 그대로 반환한다고 가정
+data class ReviewRequest2(
+    val roomId: Long,
+    val contents: String,
+    val score: Int
+)
 
+data class ImageUploadRequest(
+    val ownerType: String,
+    val ownerId: Long,
+    val url: String
+)
+
+data class PostImagesResponse(
+    val ownerId: Long,
+    val imageUrl: String,
+    val sortOrder: Int,
+    val url: String
+)
+
+data class PresignedUrlResponse(
+    val originalName: String,
+    val imageUrl: String,
+    val presignedUrl: String
+)
+
+interface ReviewService {
     @POST("reviews")
     suspend fun postReview(
         @Body body: ReviewRequest
@@ -40,15 +60,21 @@ interface ReviewService {
     @DELETE("reviews/{id}")
     suspend fun deleteReview(@Path("id") reviewId: Long): Response<Unit>
 
-    @GET("/api/reviews")
-    suspend fun getAllReviews(
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 10
-    ): Response<ReviewResponse>
-
-    @PATCH("reviews/{id}")
+    @PATCH("reviews/{reviewId}")
     suspend fun patchReview(
         @Path("reviewId") reviewId: Long,
-        @Body body: ReviewRequest
+        @Body body: ReviewRequest2
     ): Response<Unit>
+
+    @GET("s3/presignedUrls")
+    suspend fun getPresignedUrls(
+        @Query("fileNames") fileNames: List<String>,
+        @Query("ownerType") ownerType: String,
+        @Query("ownerId") ownerId: Long
+    ): Response<List<PresignedUrlResponse>>
+
+    @POST("/images")
+    suspend fun postImages(
+        @Body request: List<ImageUploadRequest>
+    ): Response<List<PostImagesResponse>>
 }
