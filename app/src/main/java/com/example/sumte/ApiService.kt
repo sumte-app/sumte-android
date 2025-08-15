@@ -25,8 +25,8 @@ interface ApiService {
 
     @GET("/api/reviews")
     suspend fun getAllReviews(
-        @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 10,
     ): Response<ReviewResponse>
 
     @POST("/email/send")

@@ -1,5 +1,6 @@
 package com.example.sumte.mybook
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemBooklistBinding
 import com.example.sumte.databinding.ItemHistoryBinding
+import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 
@@ -31,6 +33,10 @@ class BookedAdapter(
 
                 binding.reviewBtn.setOnClickListener {
                     //리뷰작성페이지로 이동
+//                    val context = itemView.context
+//                    val intent = Intent(context, ReviewWriteActivity::class.java)
+//                    intent.putExtra("roomId", bookedData.roomId)
+//                    context.startActivity(intent)
                 }
                 binding.detailBox.setOnClickListener {
                     val detailFragment = BookedDetailFragment()
