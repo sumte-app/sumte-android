@@ -49,7 +49,6 @@ class SearchResultFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let { bundle ->
-            // ✅ keyword 키 호환 처리
             keyword = bundle.getString("keyword")
                 ?: bundle.getString(BookInfoActivity.EXTRA_KEYWORD)
 
@@ -90,7 +89,6 @@ class SearchResultFragment : Fragment() {
         // 어댑터
         adapter = GuestHouseAdapter(ghViewModel) { item ->
             Log.d("SearchResult", "click item id=${item.id}")
-            // TODO: 상세 화면 이동
         }
         binding.searchResultRv.layoutManager = LinearLayoutManager(requireContext())
         binding.searchResultRv.adapter = adapter

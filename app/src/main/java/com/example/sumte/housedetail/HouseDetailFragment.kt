@@ -187,7 +187,6 @@ class HouseDetailFragment : Fragment() {
         // 뒤로가기 & 등록 이동
         binding.ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.shareIcon.setOnClickListener {
-            Log.d("HouseDetailFragment", "Share icon clicked")
             val intent = Intent(requireContext(), com.example.sumte.roomregister.RoomRegisterActivity::class.java)
             intent.putExtra("guesthouseId", 1)
             startActivity(intent)

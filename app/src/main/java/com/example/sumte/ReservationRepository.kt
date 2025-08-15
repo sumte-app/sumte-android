@@ -61,7 +61,7 @@ class ReservationRepository(private val context: Context) {
             emptyList()
         }
     }
-
+    //예약 조회
     suspend fun getReservationDetail(reservationId: Int): ReservationDetailData? {
         return withContext(Dispatchers.IO) {
             try {
@@ -79,6 +79,15 @@ class ReservationRepository(private val context: Context) {
             }
         }
     }
-
+    //예약취소
+    suspend fun cancelReservation(reservationId: Int): ReservationResponse<Nothing?>? {
+        return try {
+            val response = reservationService.cancelReservation(reservationId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
 }

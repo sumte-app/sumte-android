@@ -3,6 +3,7 @@ package com.example.sumte
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -21,10 +22,18 @@ interface ReservationService {
         @Query("size") size: Int = 10
     ): Response<MyReservationResponse>
 
+    //예약상세
     @GET("reservations/{id}")
     suspend fun getReservationDetail(
         @Path("id") reservationId: Int
     ): Response<ReservationDetailResponse>
+
+    //예약취소
+    @PATCH("reservations/{id}")
+    suspend fun cancelReservation(
+        @Path("id") reservationId: Int
+    ): Response<ReservationResponse<Nothing?>>
+
 
 }
 

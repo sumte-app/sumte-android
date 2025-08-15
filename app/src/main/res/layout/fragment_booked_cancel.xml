@@ -97,10 +97,6 @@
             app:layout_constraintStart_toEndOf="@id/cancel_time_text"
             app:layout_constraintTop_toBottomOf="@+id/canceled_text" />
 
-
-
-
-
     </LinearLayout>
 
 
@@ -136,131 +132,131 @@
         app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/booked_info" />
 
+    <TextView
+        android:id="@+id/booked_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="제주 끌림 365 게스트하우스"
+        android:textSize="16sp"
+        android:fontFamily="@font/pretendard_semibold"
+        app:layout_constraintStart_toEndOf="@+id/detail_img"
+        app:layout_constraintTop_toTopOf="@+id/detail_img" />
+
+    <TextView
+        android:id="@+id/room_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여자도미토리(4인)"
+        android:textSize="14sp"
+        android:fontFamily="@font/pretendard_regular"
+        app:layout_constraintStart_toStartOf="@+id/booked_name"
+        app:layout_constraintTop_toBottomOf="@+id/booked_name" />
+
+    <LinearLayout
+        android:id="@+id/selected_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/selected_count"
+        app:layout_constraintStart_toStartOf="@+id/booked_name">
+
+        <ImageView
+            android:layout_width="9.48dp"
+            android:layout_height="10.67dp"
+            android:src="@drawable/calendar_check" />
+
         <TextView
-            android:id="@+id/booked_name"
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6.18 수"
+            android:layout_marginStart="4dp"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
+            />
+
+        <TextView
+            android:id="@+id/to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="제주 끌림 365 게스트하우스"
-            android:textSize="16sp"
-            android:fontFamily="@font/pretendard_semibold"
-            app:layout_constraintStart_toEndOf="@+id/detail_img"
-            app:layout_constraintTop_toTopOf="@+id/detail_img" />
+            android:text="-"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/room_type"
+            android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여자도미토리(4인)"
-            android:textSize="14sp"
+            android:layout_marginStart="8dp"
+            android:text="6.19 목"
             android:fontFamily="@font/pretendard_regular"
-            app:layout_constraintStart_toStartOf="@+id/booked_name"
-            app:layout_constraintTop_toBottomOf="@+id/booked_name" />
+            android:textSize="12sp" />
 
-        <LinearLayout
-            android:id="@+id/selected_date"
+        <TextView
+            android:id="@+id/date_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/selected_count"
-            app:layout_constraintStart_toStartOf="@+id/booked_name">
+            android:layout_marginStart="4dp"
+            android:text=", 1박"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="12sp" />
+    </LinearLayout>
 
-            <ImageView
-                android:layout_width="9.48dp"
-                android:layout_height="10.67dp"
-                android:src="@drawable/calendar_check" />
+    <LinearLayout
+        android:id="@+id/selected_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_img"
+        app:layout_constraintStart_toStartOf="@+id/booked_name">
 
-            <TextView
-                android:id="@+id/start_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6.18 수"
-                android:layout_marginStart="4dp"
-                android:textSize="12sp"
-                android:fontFamily="@font/pretendard_regular"
-                />
+        <ImageView
+            android:layout_width="9.33dp"
+            android:layout_height="11.33dp"
+            android:src="@drawable/bottom_nav_my" />
 
-            <TextView
-                android:id="@+id/to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="-"
-                android:fontFamily="@font/pretendard_regular"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/end_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="6.19 목"
-                android:fontFamily="@font/pretendard_regular"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/date_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text=", 1박"
-                android:fontFamily="@font/pretendard_regular"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/selected_count"
+        <TextView
+            android:id="@+id/adult_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/detail_img"
-            app:layout_constraintStart_toStartOf="@+id/booked_name">
+            android:layout_marginStart="4dp"
+            android:text="성인 1"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="12sp" />
 
-            <ImageView
-                android:layout_width="9.33dp"
-                android:layout_height="11.33dp"
-                android:src="@drawable/bottom_nav_my" />
+        <TextView
+            android:id="@+id/count_comma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text=","
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/adult_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="성인 1"
-                android:fontFamily="@font/pretendard_regular"
-                android:textSize="12sp" />
+        <TextView
+            android:id="@+id/child_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text=""
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="12sp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/count_comma"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text=","
-                android:textSize="12sp"
-                android:fontFamily="@font/pretendard_regular"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/child_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text=""
-                android:fontFamily="@font/pretendard_regular"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/boarder3"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/gray100"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_img" />
+    <View
+        android:id="@+id/boarder3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_img" />
 
     <TextView
         android:id="@+id/refund_policy"
@@ -351,7 +347,7 @@
 
 
     <LinearLayout
-        android:id="@+id/list_btn"
+        android:id="@+id/bookedList_btn"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginBottom="20dp"
@@ -387,12 +383,12 @@
         app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/list_btn">
+        app:layout_constraintStart_toEndOf="@id/bookedList_btn">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="예약내역 보기"
+            android:text="홈으로 이동"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:fontFamily="@font/pretendard_semibold" />

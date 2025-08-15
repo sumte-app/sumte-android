@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedDetailBinding
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.launch
@@ -33,8 +35,7 @@ class BookedDetailFragment : Fragment() {
         }
         //사용자정보 없이 조회 가능
         val repository = ReservationRepository(requireContext())
-
-        // CoroutineScope를 사용해 API 호출
+        // 데이터 bind
         viewLifecycleOwner.lifecycleScope.launch {
             val detail = repository.getReservationDetail(reservationId)
             if (detail != null) {
@@ -47,34 +48,51 @@ class BookedDetailFragment : Fragment() {
                 binding.dateCount.text = "${detail.nightCount}박"
                 binding.adultCount.text = "${detail.adultCount}명"
                 binding.childCount.text = if (detail.childCount > 0) "${detail.childCount}명" else ""
+
+                //취소일 때
+                if (detail.status == "CANCELED") {
+                    binding.statusCancel.visibility = View.VISIBLE
+                    binding.cancelBtn.isEnabled = false
+                    binding.cancelBtn.setBackgroundResource(R.drawable.apply_btn_disabled_style)
+
+                    val dimAlpha = 0.5f
+                    binding.detailImg.alpha = dimAlpha
+                    binding.houseName.alpha = dimAlpha
+                    binding.roomType.alpha = dimAlpha
+                    binding.selectedDate.alpha = dimAlpha
+                    binding.selectedCount.alpha = dimAlpha
+                }
             } else {
                 Log.e("BookedDetailFragment", "Failed to fetch reservation detail")
             }
         }
-
-//        bundle버전
-//        val bookedData = arguments?.getParcelable<BookedData>("bookedData")
-//        if (bookedData == null) {
-//            Log.e("BookedDetailFragment", "bookedData is null!")
-//        } else {
-//            bookedData?.let {
-//                binding.bookedDate.text = it.bookedDate
-//                binding.houseName.text = it.houseName
-//                binding.roomType.text = it.roomType
-//                binding.startDate.text = it.startDate
-//                binding.endDate.text = it.endDate
-//                binding.dateCount.text = it.dateCount
-//                binding.adultCount.text = "${it.adultCount}명"
-//                binding.childCount.text = "${it.childCount}명"
-//                // 필요하면 더 바인딩 추가
-//            }
-//        }
         binding.cancelBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.VISIBLE
         }
+        //예약취소 api호출
+        binding.yesBtn.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val response = repository.cancelReservation(reservationId)
+
+                if (response?.success == true) {
+                    Toast.makeText(requireContext(), "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
+                    binding.popupOverlay.visibility = View.GONE
+                    // 취소완료 화면으로 이동
+                    val fragment = BookedCancelFragment()
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.booked_list_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    Toast.makeText(requireContext(), "예약 취소 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        //예약유지버튼
         binding.noBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.GONE
         }
+
         binding.backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

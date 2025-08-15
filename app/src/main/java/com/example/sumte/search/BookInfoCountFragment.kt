@@ -39,11 +39,11 @@ class BookInfoCountFragment : Fragment() {
         //버튼이미지세팅
         binding.adultMinusBtn.setImageResource(
             if (adultCount > 1) R.drawable.minus_green else R.drawable.minus_gray
-
         )
         binding.childMinusBtn.setImageResource(
             if (childCount > 0) R.drawable.minus_green else R.drawable.minus_gray
         )
+
         //숫자변화
         binding.adultPlusBtn.setOnClickListener {
             adultCount++
