@@ -1,7 +1,6 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sumte.MyReservationItem
-import com.example.sumte.ReservationService
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
