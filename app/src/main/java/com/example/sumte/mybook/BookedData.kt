@@ -13,5 +13,8 @@ data class BookedData(
     val endDate: String,
     val dateCount: String,
     val adultCount: Int,
-    val childCount: Int
+    val childCount: Int,
+    val roomId: Int,
+    val canWriteReview: Boolean,
+    val reviewWritten: Boolean
 ) : Parcelable
