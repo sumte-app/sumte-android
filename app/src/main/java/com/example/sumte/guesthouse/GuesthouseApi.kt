@@ -12,7 +12,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 
-// GuesthouseApi.kt
 interface GuesthouseApi {
 
     @GET("guesthouse/home")
@@ -34,7 +33,7 @@ interface GuesthouseApi {
 
     @POST("/guesthouse/search")
     suspend fun searchGuesthouses(
-        @Query("page") page: Int,   // 1부터 시작
+        @Query("page") page: Int,
         @Query("size") size: Int,
         @Body body: GuesthouseSearchRequest
     ): ApiPageResponse<GuesthouseItemResponse>

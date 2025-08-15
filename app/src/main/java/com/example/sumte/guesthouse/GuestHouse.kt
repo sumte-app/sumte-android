@@ -17,7 +17,6 @@ data class GuestHouse(
 
 private fun formatCheckin(s: String?): String {
     if (s.isNullOrBlank()) return ""
-    // "HH:mm" 또는 "HH:mm:ss" 형태만 포맷
     val hhmm = Regex("""^(\d{1,2}):(\d{2})(?::\d{2})?$""")
     val m = hhmm.matchEntire(s.trim())
     return if (m != null) {
@@ -25,7 +24,7 @@ private fun formatCheckin(s: String?): String {
         val min = m.groupValues[2].toInt()
         "%02d:%02d 체크인".format(h, min)
     } else {
-        s // 형식이 다르면 그대로 표시
+        s
     }
 }
 
@@ -37,7 +36,7 @@ fun List<GuesthouseItemResponse>.toUi(): List<GuestHouse> =
             location = d.addressRegion.orEmpty(),
             price = d.lowerPrice?.let { "%,d원".format(it) } ?: "가격 정보 없음",
             imageResId = R.drawable.sumte_logo1,
-            time = formatCheckin(d.checkinTime),   // ✅ 변경
+            time = formatCheckin(d.checkinTime),
             imageUrl = d.imageUrl
         )
     }

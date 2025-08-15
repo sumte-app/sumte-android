@@ -61,11 +61,10 @@ class FilteringFragment: Fragment() {
 
         binding.filteringRangeslider.apply {
             valueFrom = 1000f
-            valueTo   = 300_000f   // ✅ 먼저 최대값을 올리고
-            values    = listOf(1000f, 300_000f)  // ✅ 그 다음 values를 세팅
+            valueTo   = 300_000f
+            values    = listOf(1000f, 300_000f)
         }
 
-        // RangeSlider 부분
         binding.filteringRangeslider.addOnChangeListener { slider, _, _ ->
             val minPrice = slider.values[0].toInt()
             val maxPrice = slider.values[1].toInt()
@@ -80,7 +79,6 @@ class FilteringFragment: Fragment() {
             ))
         }
 
-        //인원 선택 드롭다운 부분
         binding.filteringPeopleCountTv.setOnClickListener { view ->
             val popup = PopupMenu(requireContext(), view)
             popup.menu.add("인원 선택")
@@ -114,7 +112,6 @@ class FilteringFragment: Fragment() {
             popup.show()
         }
 
-        //부가 서비스 선택시
         serviceTextViews.forEach{ textView->
             textView.setOnClickListener{
                 val isSelected = textView.tag=="selected"
@@ -135,7 +132,6 @@ class FilteringFragment: Fragment() {
             }
         }
 
-        //이용 대상 선택시
         targetTextViews.forEach{textView->
             textView.setOnClickListener{
                 val isSelected=textView.tag=="selected"
@@ -155,7 +151,7 @@ class FilteringFragment: Fragment() {
                 }
             }
         }
-        //지역 설정 선택시
+
         fun setSelected(textView: TextView, selected: Boolean) {
             if (selected) {
                 textView.setBackgroundResource(R.drawable.filtering_selected)
@@ -171,7 +167,7 @@ class FilteringFragment: Fragment() {
         regionTextView.forEach{textView->
             if (textView != regionJejusiTextView) {
                 textView.setOnClickListener {
-                    // If "제주도 전체" is selected, unselect it first
+
                     if (regionJejusiTextView.tag == "selected") {
                         setSelected(regionJejusiTextView, false)
                     }
@@ -201,7 +197,6 @@ class FilteringFragment: Fragment() {
         regionJejusiTextView.setOnClickListener {
             val isSelected = regionJejusiTextView.tag=="selected"
             if (!isSelected) {
-                // 이벤트 선택 → 나머지 다 해제 + 이벤트 선택
                 regionTextView.forEach { setSelected(it, false) }
                 setSelected(regionJejusiTextView, true)
             } else {
@@ -209,7 +204,7 @@ class FilteringFragment: Fragment() {
             }
         }
 
-        //재설정 버튼
+
         fun resetLinearLayoutTextViews(linearLayout: LinearLayout) {
             for (i in 0 until linearLayout.childCount) {
                 val view = linearLayout.getChildAt(i)
@@ -264,7 +259,7 @@ class FilteringFragment: Fragment() {
             val peopleCountStr = binding.filteringPeopleCountTv.text.toString()
             val people = peopleCountStr.takeIf { it != "인원 선택" }?.removeSuffix("명")?.toIntOrNull() ?: 1
 
-            // 라벨 → 서버 값 매핑
+
             fun mapService(s: String) = when (s.trim()) {
                 "이벤트"   -> "이벤트"
                 "파티"     -> "파티"
@@ -275,7 +270,7 @@ class FilteringFragment: Fragment() {
             fun mapTarget(s: String) = when (s.trim()) {
                 "여성전용" -> "여성전용"
                 "남성전용" -> "남성전용"
-                "애견 동반" -> "애견동반"   // ★ 띄어쓰기 교정
+                "애견 동반" -> "애견동반"
                 else -> s.replace(" ", "")
             }
             fun mapRegion(s: String) = when (s.trim()) {
@@ -304,7 +299,6 @@ class FilteringFragment: Fragment() {
                 putStringArrayList("optionService", ArrayList(optionService))
                 putStringArrayList("targetAudience", ArrayList(targetAudience))
                 putStringArrayList("region", ArrayList(regions))
-                // 필요하면 keyword, dates 추가
             }
 
             parentFragmentManager.beginTransaction()
@@ -315,17 +309,5 @@ class FilteringFragment: Fragment() {
         }
 
 
-        //fragment한테 전달할거면 이거로
-//        val bundle=Bundle().apply{
-//            putInt("price_min", priceMin)
-//            putInt("price_max", priceMax)
-//            putString("people_count", peopleCount ?: "")
-//            putStringArrayList("services", ArrayList(selectedServices))
-//            putStringArrayList("targets", ArrayList(selectedTargets))
-//            putStringArrayList("regions", ArrayList(selectedRegions1))
-//            putStringArrayList("regions", ArrayList(selectedRegions2))
-//            putStringArrayList("regions", ArrayList(selectedRegions3))
-//        }
-        //받는 쪽에서 arguments?.getInt("price_min")로 꺼내면 됨
     }
 }
