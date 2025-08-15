@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog_round"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvMsg"
+        android:text="승인유효시간이 초과됐어요"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="16dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/frame_480993178"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

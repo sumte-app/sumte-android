@@ -1,5 +1,6 @@
 package com.example.sumte.mybook
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemBooklistBinding
 import com.example.sumte.databinding.ItemHistoryBinding
+import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 

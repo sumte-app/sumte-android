@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -31,7 +29,21 @@
             android:exported="false" />
         <activity
             android:name=".payment.PaymentActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="myapp"
+                    android:host="pay"
+                    android:pathPrefix="/kakaopay" />
+            </intent-filter>
+
+        </activity>
 
         <activity android:name=".review.ReviewWriteActivity"/>
         <activity android:name=".review.ReviewManageActivity"/>
@@ -63,7 +75,7 @@
 
         <activity android:name=".ImageUpload.ImageUploadActivity"/>
         <activity android:name=".signup.EmailInputActivity" />
-        <activity android:name=".VerificationInputActivity" />
+        <activity android:name=".signup.VerificationInputActivity" />
         <activity android:name=".signup.PasswordInputActivity" />
         <activity android:name=".signup.SignupProfileActivity" />
         <activity android:name=".signup.SignupCompleteActivity" />

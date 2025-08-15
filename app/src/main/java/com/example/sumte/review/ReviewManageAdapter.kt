@@ -9,8 +9,6 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.sumte.MyReview
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemReviewBinding
 
@@ -34,11 +32,10 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
         notifyItemRemoved(pos)
     }
 
-    fun updateItem(position: Int, newReview: ReviewRequest) {
+    fun updateItem(position: Int, newReview: ReviewRequest2) {
         val old = items[position]
         items[position] = old.copy(
             roomId = newReview.roomId,
-            imageUrls = newReview.imageUrls,
             contents = newReview.contents,
             score = newReview.score
         )
@@ -79,6 +76,8 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
             }
 
             itemReviewEditTv.setOnClickListener {
+                Log.d("ID_CHECK", "수정 버튼 클릭 - Intent에 담을 Review ID: ${item.id}")
+                Log.d("ROOOOOOOOOOOOOOOOOOOMIDDDDDDDDDDDDDDD", "roomId: ${item.roomId}")
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
                     putExtra("reviewId", item.id)

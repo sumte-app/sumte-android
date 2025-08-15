@@ -24,7 +24,7 @@
             android:gravity="center"
             android:text="닉네임 관리"
             android:textSize="16dp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/pretendard_semibold" />
     </LinearLayout>
 
     <View
@@ -51,7 +51,7 @@
             android:layout_marginHorizontal="24dp"
             android:text="제주숨숨이"
             android:textSize="22sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:backgroundTint="@color/black"/>
 
         <ImageView
@@ -88,6 +88,7 @@
             android:layout_marginStart="4dp"
             android:text="닉네임을 입력해 주세요"
             android:textColor="@color/red"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -113,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="확인"
                 android:textColor="@color/black"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -127,6 +129,7 @@
                 android:layout_height="wrap_content"
                 android:text="취소"
                 android:textColor="@color/gray400"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -182,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:text="중복된 닉네임입니다."
                 android:textSize="16sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/pretendard_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -204,7 +207,7 @@
                     android:text="확인"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/pretendard_semibold" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

@@ -1,6 +1,9 @@
 package com.example.sumte.guesthouse
 
 import com.example.sumte.BaseResponse
+import com.example.sumte.search.ApiPageResponse
+import com.example.sumte.search.GuesthouseItemResponse
+import com.example.sumte.search.GuesthouseSearchRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,6 +17,7 @@ interface GuesthouseApi {
 
     @GET("guesthouse/home")
     suspend fun getGuesthousesHome(
+        @Query("keyword") keyword: String?  = null,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<BaseResponse<PageDto<GuesthouseHomeItemDto>>>
@@ -27,6 +31,13 @@ interface GuesthouseApi {
         @Query("ownerType") ownerType: String,
         @Query("ownerId") ownerId: Long
     ): Response<List<ImageDto>>
+
+    @POST("/guesthouse/search")
+    suspend fun searchGuesthouses(
+        @Query("page") page: Int,   // 1부터 시작
+        @Query("size") size: Int,
+        @Body body: GuesthouseSearchRequest
+    ): ApiPageResponse<GuesthouseItemResponse>
 }
 
 

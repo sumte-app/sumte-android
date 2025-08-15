@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.R
 import com.example.sumte.databinding.ActivityPasswordInputBinding
@@ -24,6 +25,11 @@ class PasswordInputActivity : AppCompatActivity() {
         //  이메일 hint 설정
         val emailFromIntent = intent.getStringExtra("email")
         binding.etEmail.hint = emailFromIntent ?: "example@email.com"
+
+        val backBtn = findViewById<ImageButton>(R.id.backBtn)
+        backBtn.setOnClickListener {
+            finish() // 현재 화면 닫고 이전 화면으로
+        }
 
         //  비밀번호 보기/숨기기 토글
         binding.ivTogglePassword.setOnClickListener {

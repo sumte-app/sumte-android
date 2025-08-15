@@ -164,7 +164,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/count_comma"
+                android:id="@+id/countComma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -178,6 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="아동 1"
+                android:visibility="gone"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
         </LinearLayout>

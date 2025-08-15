@@ -12,14 +12,12 @@ sealed interface RoomUiState {
 data class GuesthouseInfo(
     val name: String,
     val address: String?,
-    val imageUrls: List<String>
+    val imageUrls: List<String>,
+    val averageScore: Double?,
+    val reviewCount: Int?,
 )
 
 
-data class Review(
-    val rating: Double,
-    val count: Int
-)
 
 class HouseDetailViewModel(
     private val repo: RoomRepository
@@ -31,8 +29,7 @@ class HouseDetailViewModel(
     private val _header = MutableLiveData<GuesthouseInfo>()
     val header: LiveData<GuesthouseInfo> = _header
 
-    private val _review = MutableLiveData<Review?>()
-    val review: LiveData<Review?> = _review
+
 
     // 단건 조회 (roomId로)
     fun loadRoom(roomId: Int) {
@@ -68,7 +65,9 @@ class HouseDetailViewModel(
                 _header.value = GuesthouseInfo(
                     name = d.name,
                     address = d.address,
-                    imageUrls = d.imageUrls ?: emptyList()
+                    imageUrls = d.imageUrls ?: emptyList(),
+                    averageScore= d.averageScore,
+                    reviewCount = d.reviewCount
                 )
             } catch (_: Exception) {
                 // 헤더 실패 시 조용히 무시(필요하면 별도 에러 상태 추가 가능)
@@ -76,10 +75,6 @@ class HouseDetailViewModel(
         }
     }
 
-    fun loadReview(guesthouseId: Int){
-        viewModelScope.launch {
-            _review.value = Review(rating = 4.5, count = 2)
-        }
-    }
+
 
 }
