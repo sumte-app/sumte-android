@@ -23,6 +23,7 @@ class BookedAdapter(
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
         RecyclerView.ViewHolder(binding.root){
         fun bind(bookedData: BookedData) {
+            binding.houseName.text = bookedData.houseName
             binding.bookedDate.text = bookedData.bookedDate
             binding.roomType.text = bookedData.roomType
             binding.startDate.text = bookedData.startDate
@@ -39,6 +40,11 @@ class BookedAdapter(
                 binding.childCount.text = "${bookedData.childCount}명"
                 binding.countComma.visibility = View.VISIBLE
             }
+
+            //리뷰 작성가능시에만 후기작성
+            //binding.reviewBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
+
 
             binding.reviewBtn.setOnClickListener {
                 // 리뷰작성 페이지 이동

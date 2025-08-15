@@ -68,7 +68,10 @@ class BookedListMainFragment : Fragment() {
                         endDate = item.endDate,
                         dateCount = "${item.nightCount}박",
                         adultCount = item.adultCount,
-                        childCount = item.childCount
+                        childCount = item.childCount,
+                        status = item.status,
+                        canWriteReview = item.canWriteReview,
+                        reviewWritten = item.reviewWritten
                     )
                 }
                 adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
