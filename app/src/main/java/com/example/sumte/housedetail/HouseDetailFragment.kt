@@ -244,6 +244,8 @@ class HouseDetailFragment : Fragment() {
             Log.d("HD/F", "header updated: name=${h.name}, addr=${h.address}, imgs=${h.imageUrls.size}")
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
+            binding.tvReview.text = h.averageScore.toString()
+            binding.tvReviewCount.text = h.reviewCount.toString()
 
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
@@ -253,6 +255,8 @@ class HouseDetailFragment : Fragment() {
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
                 updatePageIndicator(current, total)
             }
+
+
         }
     }
 
