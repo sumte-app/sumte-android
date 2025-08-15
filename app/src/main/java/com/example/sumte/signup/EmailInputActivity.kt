@@ -6,10 +6,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.sumte.R
-import com.example.sumte.VerificationInputActivity
+import com.example.sumte.signup.VerificationInputActivity
 import com.example.sumte.databinding.ActivityEmailInputBinding
 import com.example.sumte.RetrofitClient
 import kotlinx.coroutines.Job
@@ -33,6 +34,11 @@ class EmailInputActivity : AppCompatActivity() {
         // 초깃값
         updateNextButton(isEnabled = false)
         hideEmailError()
+
+        val backBtn = findViewById<ImageButton>(R.id.backBtn)
+        backBtn.setOnClickListener {
+            finish() // 현재 화면 닫고 이전 화면으로
+        }
 
         // 이메일 형식 + 중복 확인 (디바운스 400ms)
         binding.etEmail.addTextChangedListener(object : TextWatcher {

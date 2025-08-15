@@ -4,10 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingTop="104dp"
+    android:paddingTop="60dp"
     >
 
 
+    <!-- 뒤로가기 버튼 -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/arrow_left"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- 제목 -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
@@ -18,8 +30,10 @@
         android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.9" />
+        app:layout_constraintTop_toBottomOf="@id/backBtn"
+        app:layout_constraintWidth_percent="0.9"
+        android:layout_marginTop="20dp" />
+
 
     <TextView
         android:id="@+id/labelName"

@@ -59,10 +59,17 @@ class FilteringFragment: Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        binding.filteringRangeslider.apply {
+            valueFrom = 1000f
+            valueTo   = 300_000f   // ✅ 먼저 최대값을 올리고
+            values    = listOf(1000f, 300_000f)  // ✅ 그 다음 values를 세팅
+        }
+
         // RangeSlider 부분
         binding.filteringRangeslider.addOnChangeListener { slider, _, _ ->
             val minPrice = slider.values[0].toInt()
             val maxPrice = slider.values[1].toInt()
+
             binding.filteringMinpriceTv.text = "${minPrice}원"
             binding.filteringMaxpriceTv.text="${maxPrice}원+"
             binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
@@ -215,7 +222,7 @@ class FilteringFragment: Fragment() {
 
         binding.filteringResetLl.setOnClickListener{
             binding.filteringCheckbox.isChecked = false
-            binding.filteringRangeslider.values = listOf(1000f, 100000f)
+            binding.filteringRangeslider.values = listOf(1000f, 300000f)
             binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(),
                 R.color.gray400
             ))
@@ -251,39 +258,62 @@ class FilteringFragment: Fragment() {
 
         val filterViewModel = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
         binding.filteringApplyTv.setOnClickListener {
-            val priceMin=binding.filteringRangeslider.values[0].toInt()
-            val priceMax=binding.filteringRangeslider.values[0].toInt()
-            val peopleCount=binding.filteringPeopleCountTv.text.toString().takeIf{it != "인원 선택"}
-            val selectedServices=getSelectedItemsFromLinearLayout(binding.filteringExtraServiceLl)
-            val selectedTargets=getSelectedItemsFromLinearLayout(binding.filteringTargetLl)
-            val selectedRegions1=getSelectedItemsFromLinearLayout(binding.filteringRegion1Ll)
-            val selectedRegions2=getSelectedItemsFromLinearLayout(binding.filteringRegion2Ll)
-            val selectedRegions3=getSelectedItemsFromLinearLayout(binding.filteringRegion3Ll)
+            val priceMin = binding.filteringRangeslider.values[0].toInt()
+            val priceMax = binding.filteringRangeslider.values[1].toInt()
 
-            val filterOptions = FilterOptions(
-                availableOnly = true, // or false depending on toggle/switch 상태
-                priceMin = priceMin,
-                priceMax = priceMax,
-                peopleCount = peopleCount,
-                selectedServices = selectedServices,
-                selectedTargets = selectedTargets,
-                selectedRegions1 = selectedRegions1,
-                selectedRegions2 = selectedRegions2,
-                selectedRegions3 = selectedRegions3
-            )
-            filterViewModel.applyFilters(filterOptions)
-            //activity로 값들 전달
-//            val intent = Intent(requireContext(), SearchResultActivity::class.java)
-//            intent.putExtra("filterOptions", filterOptions)
-//            startActivity(intent)
+            val peopleCountStr = binding.filteringPeopleCountTv.text.toString()
+            val people = peopleCountStr.takeIf { it != "인원 선택" }?.removeSuffix("명")?.toIntOrNull() ?: 1
 
-            filterViewModel.applyFilters(filterOptions)
+            // 라벨 → 서버 값 매핑
+            fun mapService(s: String) = when (s.trim()) {
+                "이벤트"   -> "이벤트"
+                "파티"     -> "파티"
+                "개인커튼" -> "개인커튼"
+                "조식포함" -> "조식포함"
+                else -> s
+            }
+            fun mapTarget(s: String) = when (s.trim()) {
+                "여성전용" -> "여성전용"
+                "남성전용" -> "남성전용"
+                "애견 동반" -> "애견동반"   // ★ 띄어쓰기 교정
+                else -> s.replace(" ", "")
+            }
+            fun mapRegion(s: String) = when (s.trim()) {
+                "제주도 전체" -> "제주도"
+                "제주시"     -> "제주시"
+                "서귀포시"   -> "서귀포시"
+                else -> s
+            }
+
+            fun selected(ll: LinearLayout) = getSelectedItemsFromLinearLayout(ll)
+
+            val optionService  = (selected(binding.filteringExtraServiceLl)).map(::mapService)
+            val targetAudience = (selected(binding.filteringTargetLl)).map(::mapTarget)
+
+            val regions = buildList {
+                addAll(selected(binding.filteringRegion1Ll))
+                addAll(selected(binding.filteringRegion2Ll))
+                addAll(selected(binding.filteringRegion3Ll))
+            }.map(::mapRegion)
+
+            val args = Bundle().apply {
+                putBoolean("viewEnableReservation", binding.filteringCheckbox.isChecked)
+                putInt("minPrice", priceMin)
+                putInt("maxPrice", priceMax)
+                putInt("people", people)
+                putStringArrayList("optionService", ArrayList(optionService))
+                putStringArrayList("targetAudience", ArrayList(targetAudience))
+                putStringArrayList("region", ArrayList(regions))
+                // 필요하면 keyword, dates 추가
+            }
+
             parentFragmentManager.beginTransaction()
-                .replace(R.id.search_result_all_cl, SearchResultFragment())
-                .addToBackStack(null)
+                .setReorderingAllowed(true)
+                .replace(R.id.book_info_container, SearchResultFragment().apply { arguments = args })
+                .addToBackStack("search_result")
                 .commit()
-
         }
+
 
         //fragment한테 전달할거면 이거로
 //        val bundle=Bundle().apply{
