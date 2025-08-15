@@ -105,14 +105,38 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
 
-//        // 전체 후기로 이동하는 코드
-//       // binding.ivHouseAllReview.setOnClickListener {
-//            // 전체 후기로 이동하는 코드 이동
-////            val context = itemView.context
-////            val intent = Intent(context, ReviewListFragment::class.java)
-////            intent.putExtra("guesthouseId", guesthouseId)
-////            context.startActivity(intent)
-//        }
+        binding.tvSeeAllReviews.setOnClickListener {
+            val headerData = houseDetailVM.header.value
+            if (headerData != null) {
+                val averageScore = headerData.averageScore
+                val reviewCount = headerData.reviewCount
+                Log.d("DEBUG_HouseDetail", "전달하려는 averageScore 값: $averageScore")
+
+                // ReviewListFragment 인스턴스 생성
+                val reviewListFragment = ReviewListFragment()
+
+                // 데이터를 담을 Bundle 생성
+                val bundle = Bundle()
+                bundle.putLong("guesthouseId_key", guesthouseId.toLong()) // guesthouseId도 함께 전달
+                bundle.putDouble("averageScore_key", averageScore ?: 0.0)
+                bundle.putInt("reviewCount_key", reviewCount ?: 0)
+
+                // Fragment에 Bundle 설정
+                reviewListFragment.arguments = bundle
+
+                // Fragment 전환
+                parentFragmentManager.beginTransaction()
+//                    .replace(R.id.main_container, reviewListFragment)
+                    .add(R.id.main_container, reviewListFragment) 
+                    .hide(this)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                // 데이터가 아직 준비되지 않았을 경우 사용자에게 알림
+                Toast.makeText(requireContext(), "정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             val request = ReservationRequest(
@@ -200,8 +224,9 @@ class HouseDetailFragment : Fragment() {
         observeHeader()
 
         if (guesthouseId > 0){
-            val startDate = "2025-08-08"
-            val endDate   = "2025-08-29"
+            val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+            val startDate = bookInfoVM.startDate.format(fmt)
+            val endDate   = bookInfoVM.endDate.format(fmt)
 
             Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
             houseDetailVM.loadGuesthouse(guesthouseId)
@@ -311,6 +336,11 @@ class HouseDetailFragment : Fragment() {
 
         // 찜 상태 확인 및 클릭 리스너
         setupLikeButton()
+
+        // ViewModel에 저장된 위치로 스크롤 복원
+        binding.nVHouseDetail.post {
+            binding.nVHouseDetail.scrollTo(0, houseDetailVM.scrollPosition)
+        }
     }
     //재시작할 때
     override fun onResume() {
@@ -366,4 +396,8 @@ class HouseDetailFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        houseDetailVM.scrollPosition = binding.nVHouseDetail.scrollY
+        super.onDestroyView()
+    }
 }

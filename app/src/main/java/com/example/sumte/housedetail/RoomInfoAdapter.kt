@@ -36,10 +36,10 @@ class RoomInfoAdapter(
                 .error(android.R.color.darker_gray)
                 .into(ivRoomImage)
 
-            ivReserve.setOnClickListener {
-                //root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
-                if (!available) return@setOnClickListener
-                onReserveClick(room)
+            Log.d("RoomInfoAdapter", "roomId=${room.id}, reservable=${room.reservable}" )
+            ivReserve.setOnClickListener(null)
+            if (available) {
+                ivReserve.setOnClickListener { onReserveClick(room) }
             }
             //상세보기
             tvRoomDetail.setOnClickListener {
