@@ -15,7 +15,7 @@ import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 
-//이미지 일단 제외
+
 class BookedAdapter(
     private val items: List<BookedData>,
     private val fragment: Fragment
