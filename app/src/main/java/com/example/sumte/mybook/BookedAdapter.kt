@@ -41,7 +41,9 @@ class BookedAdapter(
             }
 
             binding.reviewBtn.setOnClickListener {
-                // 리뷰작성 페이지 이동
+                val intent=Intent(itemView.context, ReviewWriteActivity::class.java)
+                intent.putExtra("roomId", bookedData.roomId)
+                itemView.context.startActivity(intent)
             }
 
             //상세보기 페이지
