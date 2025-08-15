@@ -73,6 +73,7 @@ class BookedListMainFragment : Fragment() {
                         dateCount = "${item.nightCount}박",
                         adultCount = item.adultCount,
                         childCount = item.childCount,
+                        status = item.status,
                         roomId = item.roomId,
                         canWriteReview = item.canWriteReview,
                         reviewWritten = item.reviewWritten

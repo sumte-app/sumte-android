@@ -56,7 +56,7 @@ data class MyReservationData(
 )
 
 data class MyReservationItem(
-    val id: Int,
+    val reservationId: Int,
     val guestHouseName: String,
     val roomName: String,
     val imageUrl: String?,

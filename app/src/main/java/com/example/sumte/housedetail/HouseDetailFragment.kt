@@ -346,6 +346,10 @@ class HouseDetailFragment : Fragment() {
 
         binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
 
+        binding.homeIcon.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
