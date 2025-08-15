@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +24,9 @@ import kotlinx.coroutines.launch
 
 //이미지 일단 제외
 class BookedAdapter(
-    private val items: List<BookedData>,
-    private val fragment: Fragment  // Fragment 넘기기
+    private var items: List<BookedData>,
+    private val fragment: Fragment,  // Fragment 넘기기
+    private val reviewLauncher: ActivityResultLauncher<Intent>
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
 
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
@@ -62,11 +64,11 @@ class BookedAdapter(
                         // 서버에 보낼 "빈 리뷰" 데이터 생성
                         val requestBody = ReviewRequest(
                             roomId = bookedData.roomId,
-                            contents = "",
+                            contents = " ",
                             score = 1
                         )
                         // 1. 서버로 보내는 데이터가 무엇인지 정확히 로그로 확인합니다.
-                        Log.d("ReviewAPI_Debug", "Request Body: $requestBody")
+                        Log.d("ReviewAPI_Debug", "[리팩토링 후] Request Body: $requestBody")
 
                         // 리뷰 등록 API 호출
                         val response = ApiClient.reviewService.postReview(requestBody)
@@ -88,14 +90,14 @@ class BookedAdapter(
                             // API 호출 실패
                             // 2. API 호출 실패 시, 서버가 보내는 에러 메시지를 확인합니다.
                             val errorBody = response.errorBody()?.string() ?: "No error body"
-                            Log.e("ReviewAPI_Debug", "API Error Code: ${response.code()}, Error Body: $errorBody")
+                            Log.e("ReviewAPI_Debug", "[리팩토링 후] API Error - Code: ${response.code()}, Body: $errorBody")
                             Toast.makeText(itemView.context, "리뷰 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
                             Log.e("BookedAdapter", "Failed to post review: ${response.code()}")
                         }
 
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
-                        Toast.makeText(itemView.context, "오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                        Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)
                         Log.e("BookedAdapter", "Exception in postReview", e)
                     }
                 }
@@ -128,5 +130,8 @@ class BookedAdapter(
 
     override fun getItemCount(): Int = items.size
 
-
+    fun updateData(newItems: List<BookedData>) {
+        this.items = newItems
+        notifyDataSetChanged() // DiffUtil을 사용하면 더 효율적입니다.
+    }
 }
