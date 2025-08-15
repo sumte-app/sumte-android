@@ -200,8 +200,9 @@ class HouseDetailFragment : Fragment() {
         observeHeader()
 
         if (guesthouseId > 0){
-            val startDate = "2025-08-08"
-            val endDate   = "2025-08-29"
+            val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+            val startDate = bookInfoVM.startDate.format(fmt)
+            val endDate   = bookInfoVM.endDate.format(fmt)
 
             Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
             houseDetailVM.loadGuesthouse(guesthouseId)
