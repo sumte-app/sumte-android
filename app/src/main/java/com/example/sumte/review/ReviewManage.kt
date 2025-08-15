@@ -61,6 +61,14 @@ class ReviewManage: Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("ReviewManage", "onResume() called. Reloading reviews.")
+        currentPage = 0
+        isLastPage = false
+        loadUserReviews(currentPage)
+    }
+
     fun loadUserReviews(page: Int) {
         isLoading = true
 
@@ -141,7 +149,7 @@ class ReviewManage: Fragment() {
         }
     }
 
-    fun updateReview(reviewId: Long, updatedRequest: ReviewRequest, position: Int) {
+    fun updateReview(reviewId: Long, updatedRequest: ReviewRequest2, position: Int) {
         lifecycleScope.launch {
             try {
                 val response = ApiClient.reviewService.patchReview(reviewId, updatedRequest)

@@ -1,4 +1,4 @@
-package com.example.sumte
+package com.example.sumte.review
 
 data class MyReview(
     val id: Long,

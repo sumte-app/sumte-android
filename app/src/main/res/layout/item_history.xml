@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="애월 게스트하우스"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@id/time_icon"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="6.18 수"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="-"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -56,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="6.19 목"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -64,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=","
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"
             android:visibility="gone" />
         <!--        <TextView-->
@@ -80,6 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=","
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toEndOf="@id/date_change_bar"
         app:layout_constraintTop_toTopOf="@id/date_change_bar"/>
     <LinearLayout
@@ -95,12 +100,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="성인 1"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=","
+            android:fontFamily="@font/pretendard_regular"
             android:visibility="gone"
             android:textSize="12sp"/>
         <TextView
@@ -109,6 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="아동 1"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"/>
     </LinearLayout>
 

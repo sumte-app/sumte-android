@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -57,6 +58,11 @@ class SignupProfileActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        val backBtn = findViewById<ImageButton>(R.id.backBtn)
+        backBtn.setOnClickListener {
+            finish() // 현재 화면 닫고 이전 화면으로
+        }
 
         // 가입 완료 버튼 클릭
         binding.btnSubmit.setOnClickListener {

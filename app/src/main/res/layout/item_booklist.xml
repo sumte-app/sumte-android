@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="2024.11.03 (일)"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -23,7 +23,7 @@
         android:text="D-2"
         android:textSize="16sp"
         android:textColor="@color/primary"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@id/booked_date"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:text="상세보기"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toStartOf="@id/detail_arrow"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +75,7 @@
         android:layout_marginStart="8dp"
         android:text="제주 끌림 365 게스트하우스"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintStart_toEndOf="@+id/detail_img"
         app:layout_constraintTop_toTopOf="@+id/detail_img" />
 
@@ -84,6 +85,7 @@
         android:layout_height="wrap_content"
         android:text="여자도미토리(4인)"
         android:textSize="14sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toStartOf="@+id/house_name"
         app:layout_constraintTop_toBottomOf="@+id/house_name" />
 
@@ -106,6 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6.18 수"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="4dp"
             android:textSize="12sp" />
 
@@ -115,6 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="-"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -123,6 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="6.19 목"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -131,6 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=","
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -139,6 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="1박"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -163,6 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="성인 1"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
         <TextView
@@ -172,6 +180,7 @@
             android:layout_marginStart="4dp"
             android:text=","
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             android:visibility="gone" />
 
         <TextView
@@ -180,6 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=""
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -199,6 +209,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="후기 작성"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/primary"/>
 
     </LinearLayout>

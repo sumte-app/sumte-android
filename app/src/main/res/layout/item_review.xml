@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="제주 고고애월 게스트 하우스"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray900"
             app:layout_constraintStart_toStartOf="@+id/item_review_cl"
             app:layout_constraintTop_toTopOf="@+id/item_review_cl"/>
@@ -41,6 +41,7 @@
             android:layout_marginTop="5dp"
             android:text="여자도미토리 (최대 4인실 입실 가능)"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/gray400"
             app:layout_constraintStart_toStartOf="@+id/item_review_title_tv"
             app:layout_constraintTop_toBottomOf="@+id/item_review_title_tv"/>
@@ -89,6 +90,7 @@
             android:layout_height="wrap_content"
             android:text="2024.11.03"
             android:textSize="12sp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/gray300"
             app:layout_constraintEnd_toEndOf="@+id/item_review_cl"
             app:layout_constraintBottom_toBottomOf="@+id/item_review_star5"/>
@@ -114,6 +116,7 @@
             android:layout_marginTop="10dp"
             android:text="즐겁게 놀다 갑니다~~"
             android:textSize="14sp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/gray800"
             app:layout_constraintTop_toBottomOf="@+id/review_image_container"
             app:layout_constraintStart_toStartOf="@+id/review_image_container"/>
@@ -133,7 +136,7 @@
             android:layout_height="wrap_content"
             android:text="수정"
             android:textSize="12sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray500"
             app:layout_constraintStart_toEndOf="@+id/item_review_edit_iv"
             app:layout_constraintTop_toTopOf="@+id/item_review_edit_iv"
@@ -151,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="삭제"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@color/gray500"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/item_review_cl"

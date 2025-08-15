@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -77,7 +75,7 @@
 
         <activity android:name=".ImageUpload.ImageUploadActivity"/>
         <activity android:name=".signup.EmailInputActivity" />
-        <activity android:name=".VerificationInputActivity" />
+        <activity android:name=".signup.VerificationInputActivity" />
         <activity android:name=".signup.PasswordInputActivity" />
         <activity android:name=".signup.SignupProfileActivity" />
         <activity android:name=".signup.SignupCompleteActivity" />

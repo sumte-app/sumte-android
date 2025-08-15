@@ -17,7 +17,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/snackbar_action_cancel_tv"
         app:layout_constraintHorizontal_weight="1"
-        android:text="찜 목록에서 삭제했어요." />
+        android:text="찜 목록에서 삭제했어요."
+        android:fontFamily="@font/pretendard_regular"
+        />
 
     <TextView
         android:id="@+id/snackbar_action_cancel_tv"
@@ -29,5 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/pretendard_regular"
         android:text="실행 취소" />
 </androidx.constraintlayout.widget.ConstraintLayout>

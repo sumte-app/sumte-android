@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="사진 추가"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textColor="@android:color/black"
             android:layout_centerVertical="true"/>
 
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="카메라로 촬영하기"
-            android:textStyle="normal"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="앨범에서 선택하기"
-            android:textStyle="normal"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>

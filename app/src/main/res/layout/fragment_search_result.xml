@@ -39,6 +39,7 @@
             android:textColorHint="@color/gray400"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:fontFamily="@font/pretendard_regular"
             android:background="@null"
             android:layout_marginStart="16dp" />
     </LinearLayout>
@@ -93,7 +94,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.18 수"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:fontFamily="@font/pretendard_regular"
+                />
 
             <TextView
                 android:id="@+id/to"
@@ -101,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="-"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp" />
 
             <TextView
@@ -109,6 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="6.19 목"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp" />
 
             <TextView
@@ -117,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text=","
+                android:fontFamily="@font/pretendard_regular"
                 android:visibility="visible"
                 android:textSize="12sp"/>
 
@@ -126,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="1박"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -148,6 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="성인 1"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp"/>
             <TextView
                 android:id="@+id/count_comma"
@@ -155,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text=","
+                android:fontFamily="@font/pretendard_regular"
                 android:visibility="gone"
                 android:textSize="12sp"/>
             <TextView
@@ -163,6 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="아동 1"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>

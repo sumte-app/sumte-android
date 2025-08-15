@@ -29,7 +29,7 @@
             android:gravity="center"
             android:text="날짜, 인원 선택"
             android:textSize="16dp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/pretendard_semibold" />
 
         <View
             android:layout_width="12dp"
@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="6.18 수"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp" />
 
                 <TextView
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="-"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp" />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="6.19 목"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp" />
 
                 <TextView
@@ -105,7 +105,7 @@
                     android:layout_marginStart="4dp"
                     android:text=","
                     android:visibility="visible"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp"/>
 
                 <TextView
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="1박"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp" />
 
                 <View
@@ -143,12 +143,15 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="일"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="월"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
@@ -156,6 +159,7 @@
                     android:layout_height="wrap_content"
                     android:text="화"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
@@ -163,6 +167,7 @@
                     android:layout_height="wrap_content"
                     android:text="수"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
@@ -170,6 +175,7 @@
                     android:layout_height="wrap_content"
                     android:text="목"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
@@ -177,6 +183,7 @@
                     android:layout_height="wrap_content"
                     android:text="금"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
                 <TextView
@@ -184,6 +191,7 @@
                     android:layout_height="wrap_content"
                     android:text="토"
                     android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:gravity="center"
                     android:layout_weight="1"/>
             </LinearLayout>
@@ -219,7 +227,7 @@
                     android:textSize="16dp"
                     android:gravity="center"
                     android:layout_weight="1"
-                    android:textStyle="bold"/>
+                    android:fontFamily="@font/pretendard_semibold"/>
                 <ImageView
                     android:id="@+id/right_btn"
                     android:layout_width="6dp"
@@ -283,7 +291,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="성인 1"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp"
                     android:layout_marginStart="4dp"/>
 
@@ -295,14 +303,14 @@
                     android:text=","
                     android:visibility="gone"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/pretendard_semibold" />
                 <TextView
                     android:id="@+id/child_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="아동 1"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:textSize="16dp"/>
                 <View
                     android:layout_width="0dp"
@@ -314,7 +322,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="변경하기"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    />
 
                 <ImageView
                     android:layout_width="16dp"
@@ -353,7 +363,7 @@
                 android:text="적용하기"
                 android:textColor="@color/white"
                 android:textSize="16dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/pretendard_semibold" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

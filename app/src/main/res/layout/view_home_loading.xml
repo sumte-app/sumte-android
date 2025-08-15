@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="나만의 숨터"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="22sp"
             android:textColor="#62A75D"/>
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="를"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:textSize="22sp"/>
     </LinearLayout>
 
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="찾아가는 중이에요"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@id/tv_loading_title"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,6 +87,7 @@
         android:layout_height="wrap_content"
         android:text="잠시만 기다려주세요!"
         android:textSize="14sp"
+        android:fontFamily="@font/pretendard_regular"
         android:textColor="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

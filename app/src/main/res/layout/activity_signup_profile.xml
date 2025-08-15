@@ -4,10 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingTop="104dp"
+    android:paddingTop="60dp"
     >
 
 
+    <!-- 뒤로가기 버튼 -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/arrow_left"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- 제목 -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
@@ -15,11 +27,13 @@
         android:text="필수정보를 입력해주세요"
         android:textColor="@color/black"
         android:textSize="22sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.9" />
+        app:layout_constraintTop_toBottomOf="@id/backBtn"
+        app:layout_constraintWidth_percent="0.9"
+        android:layout_marginTop="20dp" />
+
 
     <TextView
         android:id="@+id/labelName"
@@ -29,6 +43,7 @@
         android:text="실명"
         android:textColor="@color/black"
         android:textSize="12sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
@@ -42,6 +57,7 @@
         android:background="@drawable/input_field_selector"
         android:padding="16dp"
         android:textSize="16sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/labelName"
@@ -55,6 +71,7 @@
         android:text="생년월일"
         android:textColor="@color/black"
         android:textSize="12sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etName"
@@ -83,7 +100,9 @@
             android:inputType="number"
             android:padding="12dp"
             android:textColorHint="#C1C1C1"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:fontFamily="@font/pretendard_regular"
+            />
 
         <Space
             android:layout_width="8dp"
@@ -100,6 +119,7 @@
             android:inputType="number"
             android:padding="12dp"
             android:textColorHint="#C1C1C1"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp" />
 
         <Space
@@ -117,6 +137,7 @@
             android:inputType="number"
             android:padding="12dp"
             android:textColorHint="#C1C1C1"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -136,6 +157,7 @@
         android:layout_height="16dp"
         android:visibility="gone"
         android:text="만 19세 미만은 가입이 불가합니다."
+        android:fontFamily="@font/pretendard_regular"
         android:textColor="#FF2327"
         android:textSize="12sp"
         android:layout_marginStart="2dp"
@@ -150,6 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="성별"
+        android:fontFamily="@font/pretendard_regular"
         android:textColor="@color/black"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -178,7 +201,7 @@
             android:paddingEnd="8dp"
             android:text="여성"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:theme="@style/Signup.Sumte"
             />
 
@@ -193,6 +216,7 @@
             android:text="남성"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:fontFamily="@font/pretendard_regular"
             android:theme="@style/Signup.Sumte"
             />
     </RadioGroup>
@@ -205,6 +229,7 @@
         android:text="닉네임"
         android:textColor="@color/black"
         android:textSize="12sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rgGender"
@@ -219,6 +244,7 @@
         android:hint="닉네임"
         android:padding="16dp"
         android:textSize="16sp"
+        android:fontFamily="@font/pretendard_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/labelNickname"
@@ -242,6 +268,7 @@
         android:text="이미 사용 중인 닉네임입니다."
         android:textColor="#FF2327"
         android:textSize="12sp"
+        android:fontFamily="@font/pretendard_regular"
         android:layout_marginStart="2dp"
         app:layout_constraintStart_toEndOf="@id/nickname_error_arrow"
         app:layout_constraintTop_toTopOf="@id/nickname_error_arrow"
@@ -257,6 +284,7 @@
         android:enabled="false"
         android:text="가입 완료"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -33,6 +33,7 @@ import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.reservation.ReservationRepository
 import com.example.sumte.review.Review
 import com.example.sumte.review.ReviewCardAdapter
+import com.example.sumte.review.ReviewListFragment
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.BookInfoViewModel
 import kotlinx.coroutines.launch
@@ -45,6 +46,11 @@ class HouseDetailFragment : Fragment() {
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
+
+    // 찜 상태 관리를 위한 ViewModel
+    private val guestHouseVM: GuestHouseViewModel by lazy {
+        ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
+    }
 
     private val bookInfoVM by lazy {
         ViewModelProvider(
@@ -98,6 +104,16 @@ class HouseDetailFragment : Fragment() {
         })
         updatePageIndicator(1, 0)
 
+
+        // 전체 후기로 이동하는 코드
+        binding.ivHouseAllReview.setOnClickListener {
+            // 전체 후기로 이동하는 코드 이동
+//            val context = itemView.context
+//            val intent = Intent(context, ReviewListFragment::class.java)
+//            intent.putExtra("guesthouseId", guesthouseId)
+//            context.startActivity(intent)
+        }
+
         adapter = RoomInfoAdapter(emptyList()) { room ->
             val request = ReservationRequest(
                 roomId = room.id,
@@ -111,51 +127,33 @@ class HouseDetailFragment : Fragment() {
             lifecycleScope.launch {
                 val repository = ReservationRepository(requireContext())
                 val response = repository.createReservation(request)
-
-                // null이면(로그인 등) 바로 종료
-                if (response == null) {
-                    Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-
-                // HTTP 레벨 체크
-                if (!response.isSuccessful) {
-                    Log.e("Reservation_Fail", "HTTP ${response.code()} ${response.message()}\n${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "${response.message()}", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-
-                // 바디 파싱 + 서버 success 체크
-                val body = response.body()
-                val resId = body?.data?.reservationId
-                if (body?.success != true || resId == null) {
-                    Log.e("Reservation_Fail", "서버 실패 or reservationId 누락: body=$body")
+                if (response?.isSuccessful == true) {
+                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("Reservation_Fail", "code=${response?.code()}, msg=${response?.message()}, body=${response?.errorBody()?.string()}")
                     Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
-                    return@launch
                 }
-
-                val start = bookInfoVM.startDate
-                val end   = bookInfoVM.endDate
-                val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
-                val amount = room.price * nights
-
-                val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
-                    putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
-                }
-                startActivity(intent)
-
             }
+            val start = bookInfoVM.startDate
+            val end   = bookInfoVM.endDate
+            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+            val amount = room.price * nights
 
+            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
+                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
+
+                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
+            }
+            startActivity(intent)
 
         }
 
@@ -200,7 +198,7 @@ class HouseDetailFragment : Fragment() {
         // ViewModel 상태 관찰
         observeState()
         observeHeader()
-        
+
         if (guesthouseId > 0){
             val startDate = "2025-08-08"
             val endDate   = "2025-08-29"
@@ -306,6 +304,9 @@ class HouseDetailFragment : Fragment() {
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
             startActivity(intent)
         }
+
+        // 찜 상태 확인 및 클릭 리스너
+        setupLikeButton()
     }
     //재시작할 때
     override fun onResume() {
@@ -329,6 +330,36 @@ class HouseDetailFragment : Fragment() {
         binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
         binding.childCount.text = if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
         binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+    }
+
+    // 찜 버튼 초기 설정 함수
+    private fun setupLikeButton() {
+        // 찜 상태가 변경될 때마다 UI를 자동으로 업데이트
+        viewLifecycleOwner.lifecycleScope.launch {
+            guestHouseVM.likedGuestHouseIds.collect { likedIds ->
+                val isLiked = likedIds.contains(guesthouseId)
+                updateLikeButtonUI(isLiked)
+            }
+        }
+
+        // 찜 버튼 클릭 시 찜 추가/삭제 로직 실행
+        binding.ivLike.setOnClickListener {
+            val isCurrentlyLiked = guestHouseVM.likedGuestHouseIds.value.contains(guesthouseId)
+            if (isCurrentlyLiked) {
+                guestHouseVM.removeLike(guesthouseId)
+            } else {
+                guestHouseVM.addLike(guesthouseId)
+            }
+        }
+    }
+
+    // 찜 상태에 따라 하트 아이콘을 변경하는 함수
+    private fun updateLikeButtonUI(isLiked: Boolean) {
+        if (isLiked) {
+            binding.ivLike.setImageResource(R.drawable.heart_black)
+        } else {
+            binding.ivLike.setImageResource(R.drawable.heart)
+        }
     }
 
 }
