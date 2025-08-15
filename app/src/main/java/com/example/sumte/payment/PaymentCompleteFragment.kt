@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import com.example.sumte.HomeFragment
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentPaymentCompleteBinding
+import com.example.sumte.housedetail.HouseDetailFragment
 
 
 class PaymentCompleteFragment : Fragment() {
@@ -25,8 +27,14 @@ class PaymentCompleteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentPaymentCompleteBinding.inflate(inflater, container, false)
+
+        binding.homeBtn.setOnClickListener{
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, HomeFragment())
+                .addToBackStack(null)
+                .commit()
+        }
         return binding.root
     }
 
