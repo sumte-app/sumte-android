@@ -10,7 +10,7 @@ class BookInfoActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
         const val EXTRA_KEYWORD = "keyword"
-        const val EXTRA_SOURCE = "source" // 호출한 곳 정보
+        const val EXTRA_SOURCE = "source" //소스
 
         const val TYPE_DATE = "date"
         const val TYPE_COUNT = "count"
@@ -53,7 +53,7 @@ class BookInfoActivity : AppCompatActivity() {
                 finish() // HouseDetail에서 왔으면 단순 종료
             }
             else -> {
-                val keyword = "" // 필요하다면 ViewModel이나 인자로부터 가져오기
+                val keyword = "" //키워드
                 val fragment = SearchResultFragment().apply {
                     arguments = Bundle().apply {
                         putString("keyword", keyword)
