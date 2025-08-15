@@ -94,6 +94,5 @@ class PaymentViewModel(private val repo: PaymentRepository) : ViewModel() {
     }
 
 
-    // 필요하면 성공/실패 후 화면에서 다시 Idle로 돌리고 싶을 때 사용
     fun reset() { _state.value = PayUiState.Idle }
 }

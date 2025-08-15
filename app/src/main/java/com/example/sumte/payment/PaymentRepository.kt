@@ -40,8 +40,7 @@ class PaymentRepository(context: Context) {
     ): Response<PaymentApproveResponse<PaymentApproveData>>? {
         val service = authedServiceOrNull() ?: return null
 
-        // 서버가 기대하는 JSON 키에 맞춰 전송하세요.
-        // 아래 PaymentApproveRequest 참고.
+
         val resp = service.approvePayment(id, token)
 
         if (!resp.isSuccessful) {

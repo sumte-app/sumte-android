@@ -32,7 +32,7 @@ class HouseImageAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val url = getItem(position)
         with(holder.binding.ivPageImage) {
-            // 필요하면 사이즈 힌트: .override(width, height)
+
             Glide.with(this)
                 .load(url)
                 .placeholder(R.drawable.sample_house1)
@@ -43,7 +43,7 @@ class HouseImageAdapter(
     }
 
     override fun onViewRecycled(holder: VH) {
-        // 재활용 시 이미지 정리(깜박임/누수 예방)
+
         Glide.with(holder.binding.ivPageImage).clear(holder.binding.ivPageImage)
         super.onViewRecycled(holder)
     }
