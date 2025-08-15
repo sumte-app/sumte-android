@@ -105,7 +105,6 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
 
-        // 전체 후기로 이동하는 코드
         binding.tvSeeAllReviews.setOnClickListener {
             val headerData = houseDetailVM.header.value
             if (headerData != null) {
@@ -128,7 +127,7 @@ class HouseDetailFragment : Fragment() {
                 // Fragment 전환
                 parentFragmentManager.beginTransaction()
 //                    .replace(R.id.main_container, reviewListFragment)
-                    .add(R.id.main_container, reviewListFragment) // ◀︎ 새 프래그먼트를 추가하고
+                    .add(R.id.main_container, reviewListFragment) 
                     .hide(this)
                     .addToBackStack(null)
                     .commit()
@@ -137,6 +136,7 @@ class HouseDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             val request = ReservationRequest(
@@ -224,8 +224,9 @@ class HouseDetailFragment : Fragment() {
         observeHeader()
 
         if (guesthouseId > 0){
-            val startDate = "2025-08-08"
-            val endDate   = "2025-08-29"
+            val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+            val startDate = bookInfoVM.startDate.format(fmt)
+            val endDate   = bookInfoVM.endDate.format(fmt)
 
             Log.d("HD/F", "call loadGuesthouse($guesthouseId)")
             houseDetailVM.loadGuesthouse(guesthouseId)

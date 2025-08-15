@@ -235,6 +235,9 @@ class GuestHouseViewModel(
     // =============================
     // 홈 DTO -> UI 매핑
     // (홈 응답의 imageUrl은 사용하지 않음. 이미지는 /images로 따로)
+
+    private fun String?.hhmm(): String =
+        this?.takeIf { it.isNotBlank() }?.take(5) ?: "-"
     // =============================
     private fun mapHomeToUi(dtos: List<GuesthouseHomeItemDto>): List<GuestHouse> =
         dtos.map { d ->
@@ -246,7 +249,9 @@ class GuestHouseViewModel(
                 price = if (minPrice > 0) "%,d원".format(minPrice) else "가격 정보 없음",
                 imageUrl = null,
                 imageResId = R.drawable.sumte_logo1,
-                time = d.checkInTime.orEmpty()
+                time = d.checkInTime.hhmm(),
+                averageScore = d.averageScore,
+                reviewCount = d.reviewCount
             )
         }
 
@@ -275,7 +280,7 @@ class GuestHouseViewModel(
         Log.d("GH", "fetchPage() page=$serverPage size=$pageSize")
         return try {
             val res = api.getGuesthousesHome(
-                keyword = null,                 // ✅ 홈목록은 키워드 없이
+                keyword = null,
                 page = serverPage,
                 size = pageSize
             )
@@ -283,7 +288,23 @@ class GuestHouseViewModel(
             if (!res.isSuccessful) return emptyList()
 
             val homeDtos: List<GuesthouseHomeItemDto> = res.body()?.data?.content.orEmpty()
+
+            // ✅ 여기: 서버에서 넘어온 원본 값 그대로 찍기
+            homeDtos.forEachIndexed { idx, d ->
+                Log.d(
+                    "HOME_DTO",
+                    "[$idx] id=${d.guestHouseId}, name=${d.name}, " +
+                            "avg=${d.averageScore}, reviews=${d.reviewCount}, " +
+                            "checkIn=${d.checkInTime}, minPrice=${d.minPrice}, img=${d.imageUrl}"
+                )
+            }
+
             val base = mapHomeToUi(homeDtos)
+
+            // (선택) UI로 매핑된 값도 확인하고 싶으면 시간/제목만 가볍게
+            base.forEachIndexed { idx, gh ->
+                Log.d("HOME_UI", "[$idx] id=${gh.id}, title=${gh.title}, time=${gh.time}")
+            }
 
             // 썸네일 병렬 조회 후 주입
             coroutineScope {
@@ -299,6 +320,7 @@ class GuestHouseViewModel(
             emptyList()
         }
     }
+
     // UI 1-based → 서버 0-based 보정 + 캐시 갱신
     suspend fun fetchPageAndCache(pageUi: Int, pageSize: Int): List<GuestHouse> {
         val serverPage = pageUi - 1
