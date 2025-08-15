@@ -15,8 +15,7 @@ import retrofit2.http.Query
 
 data class ReviewRequest(
     val roomId: Long,
-    val imageUrls: List<String>?,
-    val contents: String,
+    val contents: String?,
     val score: Int
 )
 
@@ -26,6 +25,12 @@ data class ReviewRequest2(
     val score: Int
 )
 
+data class ReviewCreateRequest(
+    val roomId: Long,
+    val contents: String,
+    val score: Int,
+    val imageUrls: List<String>
+)
 data class ImageUploadRequest(
     val ownerType: String,
     val ownerId: Long,
@@ -59,7 +64,7 @@ interface ReviewService {
     @POST("reviews")
     suspend fun postReview(
         @Body body: ReviewRequest
-    ): Response<Unit>
+    ): Response<Long>
 
     @GET("reviews/myReviews")
     suspend fun getMyReviews(
