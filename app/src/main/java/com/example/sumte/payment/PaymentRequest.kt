@@ -11,7 +11,8 @@ data class PaymentRequest(
 
 data class PaymentApproveRequest(
     val reservationId: Int,
-    val pg_token: String
+    val pg_token: String,
+    val appScheme: String?
 )
 
 

@@ -136,8 +136,15 @@ class PaymentActivity : AppCompatActivity() {
                     hideProcessingDialog()
                     currentPaymentId = st.data.paymentId
                     persistPaymentId(currentPaymentId!!)
-                    val url = st.data.paymentUrl
-                    openPaymentUrl(url)
+
+                    // 새 결제 시 플래그 리셋(재시도 대비)
+                    openedOnce = false
+                    handledDeepLink = false
+                    navigatedToComplete = false
+
+                    val url=st.data.paymentUrl
+                    // ✅ 앱 스킴 우선, 실패하면 웹으로 폴백
+                    openPayment(st.data.appScheme, st.data.paymentUrl)
                     Log.d("Payment", "ready url=$url")
                 }
                 is PayUiState.Error -> {
@@ -458,4 +465,24 @@ class PaymentActivity : AppCompatActivity() {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
+    private fun openPayment(appScheme: String?, webUrl: String) {
+        if (openedOnce) return
+        openedOnce = true
+
+        val triedApp = try {
+            if (!appScheme.isNullOrBlank()) {
+                Log.d("Payment", "openPayment appScheme=$appScheme")
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appScheme)))
+                true
+            } else false
+        } catch (e: Exception) {
+            Log.w("Payment", "openPayment appScheme failed: ${e.message}")
+            false
+        }
+
+        if (!triedApp) {
+            Log.d("Payment", "openPayment fallback webUrl=$webUrl")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webUrl)))
+        }
+    }
 }

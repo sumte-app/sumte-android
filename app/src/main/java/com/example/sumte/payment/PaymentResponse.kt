@@ -11,7 +11,8 @@ data class PaymentResponse(
 
 data class PaymentData(
     val paymentId: Int,
-    val paymentUrl: String
+    val paymentUrl: String,
+    val appScheme: String?
 )
 
 data class PaymentApproveResponse<T>(
