@@ -1,10 +1,10 @@
 package com.example.sumte.housedetail
 
-import android.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.sumte.R
 import com.example.sumte.databinding.ItemRoomImageBinding
 
 class RoomImagePagerAdapter(
@@ -24,7 +24,7 @@ class RoomImagePagerAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         Glide.with(holder.binding.img)
             .load(items[position])
-            .placeholder(R.color.darker_gray)
+            .placeholder(R.color.gray400)
             .into(holder.binding.img)
     }
 

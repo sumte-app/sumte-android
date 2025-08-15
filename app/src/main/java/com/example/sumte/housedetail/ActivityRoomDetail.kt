@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
@@ -86,25 +87,9 @@ class ActivityRoomDetail : AppCompatActivity() {
         }
 
         // 방 상세 데이터 관찰
-        houseDetailVM.state.observe(this) { state ->
-            when (state) {
-                is RoomUiState.Loading -> {
-                    // 필요시 로딩 표시
-                }
-                is RoomUiState.Success -> {
-                    val room = state.items.firstOrNull()
-                    if (room != null) {
-                        bindRoomInfo(room)
-                        // 서버 이미지 있으면 여기서 교체
-                       /* if (!room.imageUrls.isNullOrEmpty()) {
-                            setRoomImages(room.imageUrls)
-                        }*/
-                    }
-                }
-                is RoomUiState.Error -> {
-                    Toast.makeText(this, state.msg, Toast.LENGTH_SHORT).show()
-                }
-            }
+        houseDetailVM.roomDetail.observe(this) { room: RoomDetailInfo ->
+            bindRoomInfo(room)
+            setRoomImages(room.imageUrls)   // 서버 이미지 뷰페이저 반영
         }
 
         // 상세 API 호출
@@ -157,14 +142,17 @@ class ActivityRoomDetail : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun bindRoomInfo(room: RoomInfo) {
+    private fun bindRoomInfo(room: RoomDetailInfo) {
         binding.apply {
             tvRoomName.text = room.name
             tvPrice.text = String.format("%,d원", room.price)
             tvPeopleInfo1.text = "기준인원 ${room.standardCount}인"
             tvPeopleInfo2.text = "(정원 ${room.totalCount}인)"
             tvCheckInOutText.text = "체크인 ${room.checkin} - 체크아웃 ${room.checkout}"
+            tvBasicDesc.text = room.content
         }
+
+
     }
 
     /** 이미지 목록 세팅 (null/빈 경우 기본 이미지) */

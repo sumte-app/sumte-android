@@ -105,14 +105,14 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
 
-        // 전체 후기로 이동하는 코드
-        binding.ivHouseAllReview.setOnClickListener {
-            // 전체 후기로 이동하는 코드 이동
-//            val context = itemView.context
-//            val intent = Intent(context, ReviewListFragment::class.java)
-//            intent.putExtra("guesthouseId", guesthouseId)
-//            context.startActivity(intent)
-        }
+//        // 전체 후기로 이동하는 코드
+//       // binding.ivHouseAllReview.setOnClickListener {
+//            // 전체 후기로 이동하는 코드 이동
+////            val context = itemView.context
+////            val intent = Intent(context, ReviewListFragment::class.java)
+////            intent.putExtra("guesthouseId", guesthouseId)
+////            context.startActivity(intent)
+//        }
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
             val request = ReservationRequest(
