@@ -56,11 +56,12 @@ class BookedListMainFragment : Fragment() {
         binding.bookedListRecyclerview.adapter = adapter
 
         bookedVM.fetchBookedList()
-
+        //데이터전달부분
         lifecycleScope.launch {
             bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
+                        reservationId = item.id,
                         bookedDate = item.startDate,
                         houseName = item.guestHouseName,
                         roomType = item.roomName,
@@ -68,7 +69,10 @@ class BookedListMainFragment : Fragment() {
                         endDate = item.endDate,
                         dateCount = "${item.nightCount}박",
                         adultCount = item.adultCount,
-                        childCount = item.childCount
+                        childCount = item.childCount,
+                        status = item.status,
+                        canWriteReview = item.canWriteReview,
+                        reviewWritten = item.reviewWritten
                     )
                 }
                 adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)

@@ -2,6 +2,7 @@ package com.example.sumte.mybook
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +20,11 @@ class BookedAdapter(
     private val items: List<BookedData>,
     private val fragment: Fragment  // Fragment 넘기기
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
-
+    //ui전달부분
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
         RecyclerView.ViewHolder(binding.root){
         fun bind(bookedData: BookedData) {
+            binding.houseName.text = bookedData.houseName
             binding.bookedDate.text = bookedData.bookedDate
             binding.roomType.text = bookedData.roomType
             binding.startDate.text = bookedData.startDate
@@ -40,6 +42,9 @@ class BookedAdapter(
                 binding.countComma.visibility = View.VISIBLE
             }
 
+            //리뷰 작성가능시에만 후기작성
+            //binding.reviewBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
             binding.reviewBtn.setOnClickListener {
                 // 리뷰작성 페이지 이동
             }
@@ -48,7 +53,9 @@ class BookedAdapter(
             binding.detailBox.setOnClickListener {
                 val detailFragment = BookedDetailFragment()
                 val bundle = Bundle().apply {
-                    putParcelable("bookedData", bookedData)
+                    putInt("reservationId", bookedData.reservationId)
+                    Log.d("reservationId", "${bookedData.reservationId}")
+
                 }
                 detailFragment.arguments = bundle
 
@@ -57,6 +64,19 @@ class BookedAdapter(
                     .addToBackStack(null)
                     .commit()
             }
+
+//            binding.detailBox.setOnClickListener {
+//                val detailFragment = BookedDetailFragment()
+//                val bundle = Bundle().apply {
+//                    putParcelable("bookedData", bookedData)
+//                }
+//                detailFragment.arguments = bundle
+//
+//                fragment.parentFragmentManager.beginTransaction()
+//                    .replace(R.id.booked_list_container, detailFragment)
+//                    .addToBackStack(null)
+//                    .commit()
+//            }
         }
 
     }
