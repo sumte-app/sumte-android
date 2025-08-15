@@ -344,48 +344,48 @@
             android:overScrollMode="never"
             android:nestedScrollingEnabled="false" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clReviewSection"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/rvInfo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.9">
-
-        <TextView
-            android:id="@+id/tvReviewScore"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clReviewSection"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="4.4 (215)"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/llSeeAllReviews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="@id/tvReviewScore"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/rvInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.9">
 
             <TextView
-                android:id="@+id/tvSeeAllReviews"
+                android:id="@+id/tvReviewScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="전체보기"
-                android:textSize="12sp"
-                android:textColor="@color/gray500" />
+                android:text="4.4 (215)"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/ivArrowRight"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/arrow_right" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/llSeeAllReviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="@id/tvReviewScore"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tvSeeAllReviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="전체보기"
+                    android:textSize="12sp"
+                    android:textColor="@color/gray500" />
+
+                <ImageView
+                    android:id="@+id/ivArrowRight"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/arrow_right" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvReviewList"

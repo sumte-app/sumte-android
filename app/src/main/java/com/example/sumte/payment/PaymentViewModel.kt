@@ -14,6 +14,13 @@ sealed class PayUiState {
     data class Error(val msg: String) : PayUiState()
 }
 
+sealed interface ApproveUiState {
+    object Idle : ApproveUiState
+    object Loading : ApproveUiState
+    data class Success(val data: PaymentApproveData) : ApproveUiState
+    data class Error(val message: String) : ApproveUiState
+}
+
 class PaymentViewModel(private val repo: PaymentRepository) : ViewModel() {
     private val _state = MutableStateFlow<PayUiState>(PayUiState.Idle)
     val state: StateFlow<PayUiState> = _state
@@ -41,6 +48,28 @@ class PaymentViewModel(private val repo: PaymentRepository) : ViewModel() {
                 _state.value = PayUiState.Error(msg)
             } finally {
                 inFlight = false
+            }
+        }
+    }
+
+    private val _approveState = MutableStateFlow<ApproveUiState>(ApproveUiState.Idle)
+    val approveState: StateFlow<ApproveUiState> = _approveState
+
+    fun approve(paymentId: Int, pgToken: String) {
+        _approveState.value = ApproveUiState.Loading
+        viewModelScope.launch {
+            try {
+                val res = repo.approvePayment(paymentId, pgToken)
+                if (res == null) {
+                    _approveState.value = ApproveUiState.Error("로그인이 필요합니다.")
+                } else if (res.isSuccessful && res.body()?.success == true) {
+                    _approveState.value = ApproveUiState.Success(res.body()!!.data)
+                } else {
+                    val msg = res.body()?.message ?: (res.errorBody()?.string() ?: "결제 승인 실패")
+                    _approveState.value = ApproveUiState.Error(msg)
+                }
+            } catch (e: Exception) {
+                _approveState.value = ApproveUiState.Error(e.message ?: "네트워크 오류")
             }
         }
     }

@@ -2,6 +2,10 @@ package com.example.sumte
 
 
 import com.example.sumte.review.ReviewResponse
+import com.example.sumte.signup.EmailSendReq
+import com.example.sumte.signup.EmailSendRes
+import com.example.sumte.signup.EmailVerifyReq
+import com.example.sumte.signup.EmailVerifyRes
 import com.example.sumte.signup.SignUpRequest
 import retrofit2.Call
 import retrofit2.Response
@@ -24,6 +28,12 @@ interface ApiService {
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 10,
     ): Response<ReviewResponse>
+
+    @POST("/email/send")
+    suspend fun sendEmail(@Body req: EmailSendReq): EmailSendRes
+
+    @POST("/email/verify")
+    suspend fun verifyEmail(@Body req: EmailVerifyReq): EmailVerifyRes
 
 
 }
