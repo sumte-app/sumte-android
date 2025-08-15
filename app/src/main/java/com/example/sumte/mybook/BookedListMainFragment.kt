@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class BookedListMainFragment : Fragment() {
     private lateinit var binding: FragmentBookedListMainBinding
     private lateinit var adapter: BookedAdapter
-    private lateinit var viewModel: BookedViewModel
+    private lateinit var bookedVM: BookedViewModel
 
 //    private lateinit var binding: FragmentBookedListMainBinding
 //    private val viewModel: BookedViewModel by viewModels()
@@ -47,7 +47,7 @@ class BookedListMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val repository = ReservationRepository(requireContext())
         val factory = BookedViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(BookedViewModel::class.java)
+        bookedVM = ViewModelProvider(this, factory).get(BookedViewModel::class.java)
 
         binding.backBtn.setOnClickListener { requireActivity().finish() }
 
@@ -55,10 +55,10 @@ class BookedListMainFragment : Fragment() {
         binding.bookedListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.bookedListRecyclerview.adapter = adapter
 
-        viewModel.fetchBookedList()
+        bookedVM.fetchBookedList()
 
         lifecycleScope.launch {
-            viewModel.bookedList.collectLatest { list ->
+            bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
                         bookedDate = item.startDate,
