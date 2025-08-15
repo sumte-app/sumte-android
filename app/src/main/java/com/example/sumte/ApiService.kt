@@ -26,5 +26,4 @@ interface ApiService {
     @POST("/email/verify")
     suspend fun verifyEmail(@Body req: EmailVerifyReq): EmailVerifyRes
 
-
 }

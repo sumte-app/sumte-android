@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 //이미지 일단 제외
 class BookedAdapter(
     private var items: List<BookedData>,
-    private val fragment: Fragment,  // Fragment 넘기기
-    private val reviewLauncher: ActivityResultLauncher<Intent>
+    private val fragment: Fragment,
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
 
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
@@ -64,10 +63,9 @@ class BookedAdapter(
                         // 서버에 보낼 "빈 리뷰" 데이터 생성
                         val requestBody = ReviewRequest(
                             roomId = bookedData.roomId,
-                            contents = " ",
+                            contents = "",
                             score = 1
                         )
-                        // 1. 서버로 보내는 데이터가 무엇인지 정확히 로그로 확인합니다.
                         Log.d("ReviewAPI_Debug", "[리팩토링 후] Request Body: $requestBody")
 
                         // 리뷰 등록 API 호출
@@ -88,7 +86,6 @@ class BookedAdapter(
                             }
                         } else {
                             // API 호출 실패
-                            // 2. API 호출 실패 시, 서버가 보내는 에러 메시지를 확인합니다.
                             val errorBody = response.errorBody()?.string() ?: "No error body"
                             Log.e("ReviewAPI_Debug", "[리팩토링 후] API Error - Code: ${response.code()}, Body: $errorBody")
                             Toast.makeText(itemView.context, "리뷰 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
@@ -132,6 +129,6 @@ class BookedAdapter(
 
     fun updateData(newItems: List<BookedData>) {
         this.items = newItems
-        notifyDataSetChanged() // DiffUtil을 사용하면 더 효율적입니다.
+        notifyDataSetChanged()
     }
 }

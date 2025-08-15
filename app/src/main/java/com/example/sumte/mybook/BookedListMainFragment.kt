@@ -39,18 +39,6 @@ class BookedListMainFragment : Fragment() {
         }
     }
 
-    // 1. ReviewBookedWriteActivity로부터 결과를 받아 처리할 Launcher를 선언합니다.
-    private val reviewResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        // 리뷰 작성/수정 화면에서 돌아왔을 때 이 코드가 실행됩니다.
-        if (result.resultCode == Activity.RESULT_OK) {
-            // 결과가 '성공'이면, 목록을 새로고침하여 변경된 내용을 즉시 반영합니다.
-            Log.d("BookedListMainFragment", "Review activity finished with RESULT_OK. Refreshing list.")
-            bookedVM.fetchBookedList()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,7 +55,7 @@ class BookedListMainFragment : Fragment() {
 
         binding.backBtn.setOnClickListener { requireActivity().finish() }
 
-        adapter = BookedAdapter(emptyList(), this, reviewResultLauncher)
+        adapter = BookedAdapter(emptyList(), this)
         binding.bookedListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.bookedListRecyclerview.adapter = adapter
 
@@ -90,12 +78,16 @@ class BookedListMainFragment : Fragment() {
                         reviewWritten = item.reviewWritten
                     )
                 }
-//                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
-//                binding.bookedListRecyclerview.adapter = adapter
-                adapter.updateData(bookedDataList)
+                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
+                binding.bookedListRecyclerview.adapter = adapter
             }
         }
         // 화면이 처음 생성될 때 목록을 불러옵니다.
         bookedVM.fetchBookedList()
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        bookedVM.fetchBookedList()
+//    }
 }
