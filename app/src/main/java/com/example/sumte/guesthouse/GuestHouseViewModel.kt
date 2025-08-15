@@ -38,26 +38,31 @@ class GuestHouseViewModel(
     private val _likedGuesthouses = MutableStateFlow<List<GuesthouseSummaryDto>>(emptyList())
     val likedGuesthouses: StateFlow<List<GuesthouseSummaryDto>> = _likedGuesthouses
 
+    // ★ 화면 전용 키워드(서버에는 보내지 않음): SearchResultFragment에서 region 선택 시 "제주시" 등 설정
+    var clientKeywordOverride: String? = null
 
-    // 찜 목록을 서버에서 불러오는 함수
-//    fun loadLikedGuesthouses() {
-//        viewModelScope.launch {
-//            try {
-//                // LikeService의 getLikes 함수를 호출
-//                val response = likeService.getLikes()
-//                if (response.isSuccessful) {
-//                    _likedGuesthouses.value = response.body()?.content ?: emptyList()
-//                }
-//            } catch (e: Exception) {
-//                // 에러 처리
-//                Log.e("GuestHouseViewModel", "Failed to load liked guesthouses", e)
-//            }
-//        }
-//    }
+    private fun makeRegionPayload(city: String?): List<String>? {
+        if (city.isNullOrBlank()) return null
+        val province = when (city) {
+            "제주시", "서귀포시" -> "제주도"
+            else -> null
+        }
+        return province?.let { listOf(it, city) } ?: listOf(city)
+    }
+
+    private fun normalizeRegion(region: List<String>?): List<String>? {
+        if (region.isNullOrEmpty()) return null
+        return if (region.size == 1) {
+            makeRegionPayload(region[0])
+        } else {
+            region.take(2)
+        }
+    }
+
+    // -------------------- (찜 관련: 원본 유지) --------------------
     fun loadLikedGuesthouses() {
         viewModelScope.launch {
             try {
-                // 1단계: 찜한 게스트하우스의 ID 목록을 가져옵니다.
                 val likesResponse = likeService.getLikes()
                 if (!likesResponse.isSuccessful) {
                     _likedGuesthouses.value = emptyList()
@@ -72,7 +77,6 @@ class GuestHouseViewModel(
                     return@launch
                 }
 
-                // 2단계: 각 ID에 해당하는 게스트하우스 요약 정보를 병렬로 가져옵니다.
                 val summaryList = guesthouseIds.map { id ->
                     async {
                         try {
@@ -88,9 +92,8 @@ class GuestHouseViewModel(
                             null
                         }
                     }
-                }.awaitAll().filterNotNull() // 모든 작업이 끝날 때까지 기다린 후, 성공한(null이 아닌) 결과만 모읍니다.
+                }.awaitAll().filterNotNull()
 
-                // 3단계: 최종적으로 만들어진 DTO 리스트를 StateFlow에 바로 할당합니다.
                 _likedGuesthouses.value = summaryList
 
             } catch (e: Exception) {
@@ -100,40 +103,32 @@ class GuestHouseViewModel(
         }
     }
 
-    // 찜 취소 함수 (ID를 받아서 처리)
     fun removeLike(guesthouseId: Int) {
         Log.d("DEBUG_LIKE", "===[ 찜 취소 시도 ]=== ID: $guesthouseId")
         viewModelScope.launch {
             try {
                 val response = likeService.removeLikes(guesthouseId)
                 if (response.isSuccessful) {
-                    // 1. HomeFragment를 위한 ID 목록 업데이트
                     Log.d("DEBUG_LIKE", "[성공] API 응답 코드: ${response.code()}")
                     _likedGuestHouseIds.value = _likedGuestHouseIds.value - guesthouseId
-
-                    // 2. LikeFragment를 위한 찜 목록 리스트 업데이트
                     _likedGuesthouses.value = _likedGuesthouses.value.filterNot { it.id == guesthouseId }
-                }else{
+                } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("DEBUG_LIKE", "[실패] API 응답 코드: ${response.code()}, 에러 메시지: $errorBody")
                 }
             } catch (e: Exception) {
-                // 에러 처리
                 Log.e("DEBUG_LIKE", "[예외 발생] 찜 취소 중 에러", e)
             }
         }
     }
-
 
     fun addLike(guesthouseId: Int) {
         viewModelScope.launch {
             try {
                 val response = likeService.addLikes(guesthouseId)
                 if (response.isSuccessful) {
-                    // 찜이 추가되었으므로, 전체 찜 목록을 다시 불러와서
-                    // 두 StateFlow를 모두 최신 상태로 유지.
-                    loadLikedGuesthouses() // 찜 목록 리스트 갱신
-                    updateLikedStatusForVisibleItems() // 홈 화면 찜 상태 갱신
+                    loadLikedGuesthouses()
+                    updateLikedStatusForVisibleItems()
                 }
             } catch (e: Exception) {
                 Log.e("GuestHouseViewModel", "Failed to add like", e)
@@ -141,27 +136,18 @@ class GuestHouseViewModel(
         }
     }
 
-//    private val _initialLikesLoaded = MutableStateFlow(false)
-//    val initialLikesLoaded: StateFlow<Boolean> = _initialLikesLoaded
-//
-//    init { loadInitialLikes() }
-
     suspend fun updateLikedStatusForVisibleItems() {
-        // ViewModel이 가진 전체 아이템 목록이 비어있으면 찜 목록도 비웁니다.
         if (items.isEmpty()) {
             _likedGuestHouseIds.value = emptySet()
             return
         }
 
-        // 현재 `items` 리스트에 있는 모든 게스트하우스의 ID를 Int 리스트로 변환
         val currentVisibleIds = items.map { it.id.toInt() }
 
         try {
-            // 새로운 API를 호출하여 현재 보이는 ID들 중 찜한 ID 목록을 가져옵니다.
             val response = likeService.checkFavorites(guesthouseIds = currentVisibleIds)
 
             if (response.isSuccessful) {
-                // API가 성공적으로 찜된 ID 목록(List<Int>)을 반환하면 Set으로 변환하여 덮어씁니다.
                 _likedGuestHouseIds.value = response.body()?.toSet() ?: emptySet()
                 Log.d("ViewModel_Likes", "찜 상태 업데이트 완료: ${_likedGuestHouseIds.value}")
             } else {
@@ -171,33 +157,9 @@ class GuestHouseViewModel(
             Log.e("ViewModel_Likes", "찜 상태 업데이트 중 에러", e)
         }
     }
-//    private fun loadInitialLikes() {
-//        viewModelScope.launch {
-//            try {
-//                val response = likeService.getLikes(size = 200)
-//                if (response.isSuccessful) {
-//                    // 서버 스키마에 맞춰 Int로 추출
-//                    val likedIds: Set<Int> = response.body()?.content
-//                        ?.mapNotNull { it.id }   // 필요 시 .toInt() 로 변환
-//                        ?.toSet()
-//                        ?: emptySet()
-//                    _likedGuestHouseIds.value = likedIds
-//                    Log.d("ViewModel_Likes", "초기 찜 목록: ${_likedGuestHouseIds.value}")
-//                } else {
-//                    Log.e("GuestHouseViewModel", "초기 찜 로딩 실패 code=${response.code()}")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("GuestHouseViewModel", "초기 찜 로딩 에러", e)
-//            } finally {
-//                _initialLikesLoaded.value = true
-//            }
-//        }
-//    }
-
     fun isLiked(guestHouse: GuestHouse): Boolean {
         return _likedGuestHouseIds.value.contains(guestHouse.id.toInt())
     }
-
     fun toggleLike(guestHouse: GuestHouse, onStateUpdated: () -> Unit) {
         viewModelScope.launch {
             val idInt = guestHouse.id.toInt()
@@ -222,6 +184,7 @@ class GuestHouseViewModel(
             }
         }
     }
+    // ------------------------------------------------
 
     // ---------- 홈 목록 캐시(뒤로가기 복원용) ----------
     val items = mutableListOf<GuestHouse>()   // HomeFragment에서 사용
@@ -235,9 +198,6 @@ class GuestHouseViewModel(
     // =============================
     // 홈 DTO -> UI 매핑
     // (홈 응답의 imageUrl은 사용하지 않음. 이미지는 /images로 따로)
-
-    private fun String?.hhmm(): String =
-        this?.takeIf { it.isNotBlank() }?.take(5) ?: "-"
     // =============================
     private fun mapHomeToUi(dtos: List<GuesthouseHomeItemDto>): List<GuestHouse> =
         dtos.map { d ->
@@ -249,9 +209,7 @@ class GuestHouseViewModel(
                 price = if (minPrice > 0) "%,d원".format(minPrice) else "가격 정보 없음",
                 imageUrl = null,
                 imageResId = R.drawable.sumte_logo1,
-                time = d.checkInTime.hhmm(),
-                averageScore = d.averageScore,
-                reviewCount = d.reviewCount
+                time = d.checkInTime.orEmpty()
             )
         }
 
@@ -329,14 +287,11 @@ class GuestHouseViewModel(
         if (pageUi == 1) items.clear()
         items.addAll(list)
         updateLikedStatusForVisibleItems()
-        // 캐시된 items 리스트를 기반으로 ID 목록을 갱신
-//        _guesthouseIds.value = items.map { it.id.toInt() }
 
         isLastPageCached = list.isEmpty()
         if (!isLastPageCached) nextPage = pageUi + 1
         return list
     }
-
 
     // ---------- 검색/필터 상태 ----------
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -345,21 +300,20 @@ class GuestHouseViewModel(
     var currentFilter: GuesthouseSearchRequest? = null
         private set
 
-    private var filterPage = 1              // UI 1-based
+    private var filterPage = 1              // ★ 검색 API는 1-based
     private val filterSize = 20
     private var filterIsLast = false
     private val filteredLoaded = mutableListOf<GuestHouse>()
 
-    /**
-     * SearchFragment에서 keyword만 넘길 때:
-     * setFilterAndRefresh(GuesthouseSearchRequest(keyword = "제주시"))
-     * 다른 필터(가격/인원/옵션 등)는 copy로 채워서 전달.
-     */
     fun setFilterAndRefresh(filter: GuesthouseSearchRequest) {
-        currentFilter = filter
+        val normalized = filter.copy(region = normalizeRegion(filter.region))
+
+        currentFilter = normalized
         filterPage = 1
         filterIsLast = false
         filteredLoaded.clear()
+
+        Log.d("SEARCH", "setFilter region(norm)=${normalized.region}")
         fetchNextFiltered()
     }
 
@@ -368,7 +322,6 @@ class GuestHouseViewModel(
         _state.value = UiState.Success(items.toList(), isLastPageCached)
     }
 
-    // 변경 전 fetchNextFiltered()를 아래로 전부 교체
     fun fetchNextFiltered() {
         val filter = currentFilter ?: return
         if (filterIsLast) return
@@ -376,65 +329,88 @@ class GuestHouseViewModel(
         _state.value = UiState.Loading
 
         viewModelScope.launch {
-            // 공통: 클라이언트 키워드 필터 함수
+            fun normalizeRegionLocal(region: List<String>?): List<String>? {
+                if (region.isNullOrEmpty()) return null
+                return if (region.size == 1) {
+                    makeRegionPayload(region[0])
+                } else region.take(2)
+            }
+
             fun applyClientKeywordFilter(list: List<GuestHouse>, keyword: String?): List<GuestHouse> {
                 val kw = keyword?.trim()?.lowercase().orEmpty()
                 if (kw.isEmpty()) return list
                 return list.filter { gh ->
-                    gh.title.lowercase().contains(kw) ||
-                            gh.location.lowercase().contains(kw)
+                    gh.title.lowercase().contains(kw) || gh.location.lowercase().contains(kw)
                 }
             }
 
-            // 1) 1차: 현재 필터로 조회
+            val filterNorm = filter.copy(region = normalizeRegionLocal(filter.region))
+
+            // ---------- 1차: 현재 필터로 조회 (★ 1-based 그대로 보냄) ----------
+            Log.d(
+                "SEARCH",
+                "REQ(1) page=$filterPage kw=${filterNorm.keyword} region=${filterNorm.region} people=${filterNorm.people}"
+            )
             val firstResult = runCatching {
-                Log.d("SEARCH", "REQ(1) page=$filterPage kw=${filter.keyword} region=${filter.region} people=${filter.people}")
-                api.searchGuesthouses(page = filterPage, size = filterSize, body = filter)
+                api.searchGuesthouses(page = filterPage, size = filterSize, body = filterNorm)
             }.getOrElse { e ->
-                _state.value = UiState.Error(e.message)
-                return@launch
+                _state.value = UiState.Error(e.message); return@launch
             }
 
             if (!firstResult.success || firstResult.data == null) {
-                _state.value = UiState.Error(firstResult.message ?: "search failed")
-                return@launch
+                _state.value = UiState.Error(firstResult.message ?: "search failed"); return@launch
             }
 
             var pageData = firstResult.data!!
-            Log.d("SEARCH", "RES(1) ok=${firstResult.success} page=${pageData.number} recv=${pageData.content.size} last=${pageData.last}")
+            Log.d(
+                "SEARCH",
+                "RES(1) ok=${firstResult.success} page=${pageData.number} recv=${pageData.content.size} last=${pageData.last}"
+            )
 
-            // 1차 결과 매핑 + ✅ 클라 키워드 필터
-            var uiItems = applyClientKeywordFilter(pageData.content.toUi(), filter.keyword)
+            // ★ 1차 결과 매핑 + 클라 키워드(override 우선)로 재필터
+            var uiItems = applyClientKeywordFilter(
+                pageData.content.toUi(),
+                clientKeywordOverride ?: filterNorm.keyword
+            )
 
-            // 2) 2차: 0/1페이지 + 0건 + keyword 있고 region 비었을 때 region=[keyword]로 재조회
+            // ---------- 2차: 키워드만 있고 region 비었고 0건일 때, region=[keyword] 재조회 ----------
             val needSecondTry = (filterPage == 1 || filterPage == 0) &&
                     uiItems.isEmpty() &&
-                    !filter.keyword.isNullOrBlank() &&
-                    (filter.region.isNullOrEmpty())
+                    !filterNorm.keyword.isNullOrBlank() &&
+                    (filterNorm.region.isNullOrEmpty())
 
             if (needSecondTry) {
-                val filterWithRegion = filter.copy(region = listOf(filter.keyword!!.trim()))
+                val regionFromKw = normalizeRegionLocal(listOf(filterNorm.keyword!!.trim()))
+                val filterWithRegion = filterNorm.copy(region = regionFromKw)
+
+                Log.d(
+                    "SEARCH",
+                    "REQ(2) page=$filterPage kw=${filterWithRegion.keyword} region=${filterWithRegion.region} people=${filterWithRegion.people}"
+                )
                 val secondResult = runCatching {
-                    Log.d("SEARCH", "REQ(2) page=$filterPage kw=${filterWithRegion.keyword} region=${filterWithRegion.region} people=${filterWithRegion.people}")
                     api.searchGuesthouses(page = filterPage, size = filterSize, body = filterWithRegion)
                 }.getOrElse { e ->
-                    _state.value = UiState.Error(e.message)
-                    return@launch
+                    _state.value = UiState.Error(e.message); return@launch
                 }
 
                 if (secondResult.success && secondResult.data != null) {
                     pageData = secondResult.data!!
-                    Log.d("SEARCH", "RES(2) ok=${secondResult.success} page=${pageData.number} recv=${pageData.content.size} last=${pageData.last}")
-                    // 2차 결과 매핑 + ✅ 클라 키워드 필터
-                    uiItems = applyClientKeywordFilter(pageData.content.toUi(), filter.keyword)
+                    Log.d(
+                        "SEARCH",
+                        "RES(2) ok=${secondResult.success} page=${pageData.number} recv=${pageData.content.size} last=${pageData.last}"
+                    )
+                    uiItems = applyClientKeywordFilter(
+                        pageData.content.toUi(),
+                        clientKeywordOverride ?: filterNorm.keyword
+                    )
                 }
             }
 
-            // 3) 폴백: 그래도 0개면 /guesthouse/home?keyword= 로 한 번 더
-            val keywordOnly = !filter.keyword.isNullOrBlank()
+            // ---------- 3) 폴백: /guesthouse/home?keyword= ----------
+            val keywordOnly = !filterNorm.keyword.isNullOrBlank()
             if ((filterPage == 1 || filterPage == 0) && uiItems.isEmpty() && keywordOnly) {
                 try {
-                    val kw = filter.keyword!!.trim()
+                    val kw = filterNorm.keyword!!.trim()
                     val homeRes = api.getGuesthousesHome(keyword = kw, page = 0, size = filterSize)
                     if (homeRes.isSuccessful) {
                         val homeDtos = homeRes.body()?.data?.content.orEmpty()
@@ -451,20 +427,21 @@ class GuestHouseViewModel(
                                 time = d.checkInTime.orEmpty()
                             )
                         }
-                        // ✅ 폴백 결과도 반드시 클라 키워드 필터
-                        val filteredFallback = applyClientKeywordFilter(fallbackUi, kw)
+                        val filteredFallback = applyClientKeywordFilter(
+                            fallbackUi,
+                            clientKeywordOverride ?: kw
+                        )
                         filteredLoaded += filteredFallback
-                        filterIsLast = true // 폴백은 한 페이지만
+                        filterIsLast = true
                         _state.value = UiState.Success(filteredLoaded.toList(), filterIsLast)
                         return@launch
                     }
                 } catch (e: Exception) {
                     Log.e("SEARCH", "FALLBACK error", e)
-                    // 폴백 실패시 아래 기본 처리로 진행
                 }
             }
 
-            // ---- 기본 처리 (1/2차 결과 사용, 이미 클라 필터 적용됨) ----
+            // ---------- 기본 처리 ----------
             filteredLoaded += uiItems
             filterIsLast = pageData.last || uiItems.isEmpty()
             if (!filterIsLast) filterPage += 1
@@ -472,5 +449,4 @@ class GuestHouseViewModel(
             _state.value = UiState.Success(filteredLoaded.toList(), filterIsLast)
         }
     }
-
 }

@@ -67,7 +67,8 @@ data class MyReservationItem(
     val nightCount: Int,
     val status: String,
     val canWriteReview: Boolean,
-    val reviewWritten: Boolean
+    val reviewWritten: Boolean,
+    val roomId: Int
 )
 
 
