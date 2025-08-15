@@ -77,6 +77,14 @@ interface ReviewService {
         @Body body: ReviewRequest2
     ): Response<Unit>
 
+    @GET("reviews/guesthouse/{guesthouseId}")
+    suspend fun getGuesthouseReviews(
+        @Path("guesthouseId") guesthouseId: Long,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String = "createdAt,DESC"
+    ): Response<ReviewPageResponse>
+
     @GET("s3/presigned-urls")
     suspend fun getPresignedUrls(
         @Query("fileNames") fileNames: List<String>,

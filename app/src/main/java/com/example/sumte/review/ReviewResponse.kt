@@ -1,24 +1,6 @@
 package com.example.sumte.review
 
-data class ReviewResponse(
-//    val content: List<Review>,
-//    val totalElements: Int,
-//    val totalPages: Int,
-//    val number: Int,
-//    val size: Int,
-//    val empty: Boolean
-    val id: Int,
-    val imageUrls: List<String>?,
-    val contents: String?,
-    val score: Int,
-    val authorNickname: String,
-    val createdAt: String,
-    val roomName: String,
-    val guesthouseName: String,
-    val content: List<ReviewListResponse>
-)
-
-data class ReviewListResponse(
+data class ReviewItem(
     val id: Int,
     val imageUrls: List<String>?,
     val contents: String?,
@@ -27,4 +9,14 @@ data class ReviewListResponse(
     val createdAt: String,
     val roomName: String,
     val guesthouseName: String
+)
+
+// ReviewPageResponse.kt
+data class ReviewPageResponse(
+    val content: List<ReviewItem>,
+    val totalElements: Int,
+    val totalPages: Int,
+    val number: Int, // 현재 페이지 번호
+    val size: Int,   // 페이지 크기
+    val empty: Boolean
 )

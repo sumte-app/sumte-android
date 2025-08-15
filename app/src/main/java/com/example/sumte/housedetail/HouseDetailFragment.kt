@@ -106,7 +106,7 @@ class HouseDetailFragment : Fragment() {
 
 
         // 전체 후기로 이동하는 코드
-        binding.ivHouseAllReview.setOnClickListener {
+        binding.tvSeeAllReviews.setOnClickListener {
             // 전체 후기로 이동하는 코드 이동
 //            val context = itemView.context
 //            val intent = Intent(context, ReviewListFragment::class.java)
