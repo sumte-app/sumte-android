@@ -301,16 +301,21 @@ class HouseDetailFragment : Fragment() {
         }
 
         binding.dateChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
+                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+            }
             startActivity(intent)
         }
 
         binding.countChangeBar.setOnClickListener {
-            val intent = Intent(requireContext(), BookInfoActivity::class.java)
-            intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+            val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
+                putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
+                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+            }
             startActivity(intent)
         }
+
 
         // 찜 상태 확인 및 클릭 리스너
         setupLikeButton()
