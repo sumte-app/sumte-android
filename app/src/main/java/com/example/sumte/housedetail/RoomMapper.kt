@@ -27,7 +27,7 @@ fun RoomDetailDto.toRoomDetailInfo(): RoomDetailInfo = RoomDetailInfo(
     content = content,
     checkin = trimSec(checkin),
     checkout = trimSec(checkout),
-    imageUrls = imageUrls.normalizeUrls()     // 리스트 정제
+    imageUrls = imageUrls.normalizeUrls()
 )
 
 
@@ -48,9 +48,9 @@ private fun trimSec(s: String): String {
     return if (s.count { it == ':' } == 2 && s.endsWith(":00")) s.dropLast(3) else s
 }
 
-// 목록 DTO가 현재 String(Non-null)이라면 이 버전 사용
+
 private fun String?.asUrlOrNull(): String? {
-    val t = this?.trim() ?: return null      // null이면 바로 null
+    val t = this?.trim() ?: return null
     if (t.isEmpty() || t.equals("null", true)) return null
     return t
 }

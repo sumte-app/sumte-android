@@ -65,7 +65,7 @@ class HouseDetailFragment : Fragment() {
         )[BookInfoViewModel::class.java]
     }
 
-    //게하 id값 받아오기
+
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
         fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
@@ -75,7 +75,7 @@ class HouseDetailFragment : Fragment() {
 
     private var guesthouseId: Int = -1
 
-    // ViewModel
+
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
         object : ViewModelProvider.Factory {
@@ -89,7 +89,7 @@ class HouseDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         guesthouseId = arguments?.getInt(ARG_GUESTHOUSE_ID) ?: -1
         if (guesthouseId <= 0) {
-            // 인자 없으면 즉시 종료(개발 중엔 토스트 + 로그)
+
             Log.e("HD/F", "guesthouseId missing. args=$arguments")
             Toast.makeText(requireContext(), "잘못된 접근입니다.", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
@@ -127,10 +127,10 @@ class HouseDetailFragment : Fragment() {
                 bundle.putDouble("averageScore_key", averageScore ?: 0.0)
                 bundle.putInt("reviewCount_key", reviewCount ?: 0)
 
-                // Fragment에 Bundle 설정
+
                 reviewListFragment.arguments = bundle
 
-                // Fragment 전환
+
                 parentFragmentManager.beginTransaction()
 //                    .replace(R.id.main_container, reviewListFragment)
                     .add(R.id.main_container, reviewListFragment) 
@@ -138,14 +138,14 @@ class HouseDetailFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
             } else {
-                // 데이터가 아직 준비되지 않았을 경우 사용자에게 알림
+
                 Toast.makeText(requireContext(), "정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
-            // 날짜/금액 먼저 계산
+
             val start = bookInfoVM.startDate
             val end   = bookInfoVM.endDate
             val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
@@ -175,7 +175,7 @@ class HouseDetailFragment : Fragment() {
                     Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
                     Log.d("Reservation", "reservationId=$resId")
 
-                    // ✅ 예약 성공일 때만 결제 화면으로 이동
+
                     val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId) // ★ 필수
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
@@ -241,7 +241,7 @@ class HouseDetailFragment : Fragment() {
             startActivity(intent)
         }
 
-        Log.d("HD/F", "ARG id=" + arguments?.getInt("guesthouseId")) // ① 전달 확인
+        Log.d("HD/F", "ARG id=" + arguments?.getInt("guesthouseId"))
         Log.d("HD/F", "use id=$guesthouseId")
         // ViewModel 상태 관찰
         observeState()
@@ -263,12 +263,12 @@ class HouseDetailFragment : Fragment() {
 
     private fun observeState() {
         houseDetailVM.state.observe(viewLifecycleOwner) { st ->
-            // st가 어떤 상태인지 로그로 확인
+            // st 상태 확인
             Log.d("HouseDetailFragment", "State changed: ${st::class.java.simpleName}")
 
             when (st) {
                 is RoomUiState.Success -> {
-                    // Success 상태일 때, 리스트가 비어있는지, 데이터가 있는지 확인
+
                     Log.d("HouseDetailFragment", "Success! Item count: ${st.items.size}")
                     if (st.items.isNotEmpty()) {
                         Log.d("HouseDetailFragment", "First item: ${st.items[0]}")
@@ -276,12 +276,12 @@ class HouseDetailFragment : Fragment() {
                     adapter.submitList(st.items)
                 }
                 is RoomUiState.Error -> {
-                    // 에러 상태일 때, 어떤 메시지가 오는지 확인
+
                     Log.e("HouseDetailFragment", "Error: ${st.msg}")
                     Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
                 }
                 RoomUiState.Loading -> {
-                    // 로딩 상태인지 확인
+
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -298,7 +298,7 @@ class HouseDetailFragment : Fragment() {
 
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
-                // 리스트 반영 후 인디케이터 갱신 (현재 페이지 보존)
+
                 val total = urls.size
                 val current = if (total == 0) 0
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)

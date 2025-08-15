@@ -85,7 +85,7 @@ class HouseDetailViewModel(
                     reviewCount = d.reviewCount
                 )
             } catch (_: Exception) {
-                // 헤더 실패 시 조용히 무시(필요하면 별도 에러 상태 추가 가능)
+
             }
         }
     }
