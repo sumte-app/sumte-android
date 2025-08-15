@@ -3,22 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="104dp"
+    android:paddingTop="60dp"
     android:background="@color/white">
 
-    <!-- Title -->
+    <!-- 뒤로가기 버튼 -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/arrow_left"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="@id/verification_title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- 제목 -->
     <TextView
         android:id="@+id/verification_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="이메일로 발송된\n인증번호를 입력해주세요 "
+        android:text="이메일로 발송된\n인증번호를 입력해주세요"
         android:textSize="22sp"
         android:textColor="@color/black"
         android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.9"
-        android:layout_marginStart="24dp" />
+        android:layout_marginTop="20dp" />
+
 
     <!-- 휴대폰 번호 subtitle -->
     <TextView

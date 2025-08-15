@@ -39,7 +39,9 @@ fun GuesthouseDto.toGuesthouseInfo(): GuesthouseInfo =
         address = listOfNotNull(addressRegion, addressDetail)
             .filter { it.isNotBlank() }
             .joinToString(" "),
-        imageUrls = imageUrls ?: emptyList()
+        imageUrls = imageUrls ?: emptyList(),
+        averageScore = averageScore,
+        reviewCount = reviewCount
     )
 
 private fun trimSec(s: String): String {

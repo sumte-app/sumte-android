@@ -8,18 +8,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.ApiClient
+import com.example.sumte.GuesthouseSummaryDto
 import com.example.sumte.R
 import com.example.sumte.databinding.CustomSnackbarBinding
 import com.example.sumte.databinding.FragmentLikeBinding
+import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
     private lateinit var binding: FragmentLikeBinding
     private lateinit var adapter: LikeAdapter
+    private lateinit var viewModel: GuestHouseViewModel
     private val likeService = ApiClient.likeService
 
     override fun onCreateView(
@@ -36,55 +40,48 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         adapter = LikeAdapter(mutableListOf(), this)
         binding.likeRv.layoutManager = LinearLayoutManager(requireContext())
         binding.likeRv.adapter = adapter
+        viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
 
-        loadFavorites()
-    }
-
-    private fun loadFavorites() {
-        lifecycleScope.launch {
-            try {
-                val response = likeService.getLikes()
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    body?.let {
-                        adapter.setItems(it.content)
-                    }
-                } else {
-                    Log.e("LikeFragment", "Failed: ${response.code()}")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        // ViewModel의 StateFlow를 구독하여 UI 자동 업데이트
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.likedGuesthouses.collect { likedList ->
+                adapter.setItems(likedList)
             }
         }
+//        loadFavorites()
     }
 
-    override fun onLikeRemoved(guestHouse: LikedGuesthouse) {
-        lifecycleScope.launch {
-            try {
-                val response = likeService.removeLikes(guestHouse.id)
-                if (response.isSuccessful) {
-                    adapter.removeItem(guestHouse)
-                    showCustomSnackbar(binding.root, "찜 목록에서 삭제했어요.", {
-                        undoRemove(guestHouse)
-                    }, R.id.bottom_nav_view)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    // 화면이 다시 보일 때마다 최신 찜 목록을 불러오도록
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadLikedGuesthouses()
     }
 
-    private fun undoRemove(guestHouse: LikedGuesthouse) {
-        lifecycleScope.launch {
-            try {
-                val response = likeService.addLikes(guestHouse.id)
-                if (response.isSuccessful) {
-                    adapter.addItem(guestHouse)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+//    private fun loadFavorites() {
+//        lifecycleScope.launch {
+//            try {
+//                val response = likeService.getLikes()
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//                    body?.let {
+//                        adapter.setItems(it.content)
+//                    }
+//                } else {
+//                    Log.e("LikeFragment", "Failed: ${response.code()}")
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+
+    override fun onLikeRemoved(guestHouse: GuesthouseSummaryDto) {
+        viewModel.removeLike(guestHouse.id)
+
+        showCustomSnackbar(binding.root, "찜 목록에서 삭제했어요.", {
+            // '실행 취소' 기능도 ViewModel을 통해 구현해야 합니다. (아래 2번 참고)
+            viewModel.addLike(guestHouse.id) // 예시
+        }, R.id.bottom_nav_view)
     }
 
     private fun showCustomSnackbar(rootView: View, message: String, onAction: () -> Unit, anchorViewId: Int? = null) {

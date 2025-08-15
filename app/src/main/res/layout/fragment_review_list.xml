@@ -67,7 +67,7 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/review_myreview_count_tv"
+            android:id="@+id/review_list_score_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -88,9 +88,9 @@
             android:textColor="@color/gray900"
             android:textSize="16sp"
             android:textStyle="normal"
-            app:layout_constraintStart_toEndOf="@+id/review_myreview_count_tv"
-            app:layout_constraintTop_toTopOf="@+id/review_myreview_count_tv"
-            app:layout_constraintBottom_toBottomOf="@+id/review_myreview_count_tv"/>
+            app:layout_constraintStart_toEndOf="@+id/review_list_score_tv"
+            app:layout_constraintTop_toTopOf="@+id/review_list_score_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/review_list_score_tv"/>
 
         <TextView
             android:id="@+id/review_list_count_tv"

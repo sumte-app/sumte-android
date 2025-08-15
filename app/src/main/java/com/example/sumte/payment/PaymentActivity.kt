@@ -38,6 +38,11 @@ class PaymentActivity : AppCompatActivity() {
     private var selectedPaymentMethod: String = "kakao"
     private var isAllChecked = false
 
+    private var currentPaymentId: Int? = null
+    private var handledDeepLink = false
+
+    private var navigatedToComplete = false
+
     private val viewModel by lazy {
         ViewModelProvider(
             App.instance,
@@ -49,7 +54,7 @@ class PaymentActivity : AppCompatActivity() {
     private val payVm by lazy {
         ViewModelProvider(
             this,
-            PaymentVMFactory(RetrofitClient.paymentRepository)
+            PaymentVMFactory(PaymentRepository(applicationContext))
         )[PaymentViewModel::class.java]
     }
 
@@ -94,6 +99,7 @@ class PaymentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -128,7 +134,18 @@ class PaymentActivity : AppCompatActivity() {
                 is PayUiState.Loading -> showProcessingDialog()
                 is PayUiState.Success -> {
                     hideProcessingDialog()
-                    openPaymentUrl(st.data.paymentUrl)
+                    currentPaymentId = st.data.paymentId
+                    persistPaymentId(currentPaymentId!!)
+
+                    // 새 결제 시 플래그 리셋(재시도 대비)
+                    openedOnce = false
+                    handledDeepLink = false
+                    navigatedToComplete = false
+
+                    val url=st.data.paymentUrl
+                    // ✅ 앱 스킴 우선, 실패하면 웹으로 폴백
+                    openPayment(st.data.appScheme, st.data.paymentUrl)
+                    Log.d("Payment", "ready url=$url")
                 }
                 is PayUiState.Error -> {
                     hideProcessingDialog()
@@ -137,6 +154,43 @@ class PaymentActivity : AppCompatActivity() {
                 else -> Unit
             }
         }.launchIn(lifecycleScope)
+
+        payVm.approveState.onEach { st ->
+            when (st) {
+                is ApproveUiState.Loading -> showProcessingDialog()
+                is ApproveUiState.Success -> {
+                    hideProcessingDialog()
+                    if (navigatedToComplete) return@onEach
+                    navigatedToComplete = true
+
+                    val d = st.data
+                    val frag = PaymentCompleteFragment().apply {
+                        arguments = Bundle().apply {
+                            putInt("amount", d.amount.total)
+                            putString("method", d.paymentMethodType)
+                            putString("paymentId", d.partnerOrderId)
+                            putString("tid", d.tid)
+                        }
+                    }
+
+                    supportFragmentManager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .setCustomAnimations(
+                            android.R.anim.fade_in, android.R.anim.fade_out,
+                            android.R.anim.fade_in, android.R.anim.fade_out
+                        )
+                        .replace(R.id.paymentRootContainer, frag, "payment_complete")
+                        // 뒤로가기로 결제 화면 안 돌아가게 하려면 addToBackStack 생략
+                        .commitAllowingStateLoss()
+                }
+                is ApproveUiState.Error -> {
+                    hideProcessingDialog()
+                    showPaymentFailedFragment(st.message)
+                }
+                else -> Unit
+            }
+        }.launchIn(lifecycleScope)
+
 
 
         bindExtrasToUi()
@@ -150,11 +204,27 @@ class PaymentActivity : AppCompatActivity() {
             val resId = intent.getIntExtra(PaymentExtras.EXTRA_RES_ID,-1)
             val amount = intent.getIntExtra(EXTRA_AMOUNT, 0)
 
-            Log.d("Payment", "start pay: reservationId=$resId, amount=$amount")
-            payVm.startKakao(resId, amount)
+            val totalAmount : Int = amount * nights.toInt()
+
+            Log.d("Payment", "start pay: reservationId=$resId, amount=$totalAmount")
+            payVm.startKakao(resId, totalAmount)
         }
 
+        Log.d("Payment", "onCreate data=${intent?.data}")
+        handleDeepLink(intent?.data)
 
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.d("Payment", "onNewIntent data=${intent?.data}")
+        handleDeepLink(intent?.data)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("Payment", "onResume data=${intent?.data}")
+        if (!handledDeepLink) handleDeepLink(intent?.data)
     }
 
     private fun setupPaymentButtons() {
@@ -291,5 +361,128 @@ class PaymentActivity : AppCompatActivity() {
         return "${date.format(dateFmt)}".trim()
     }
 
+    private fun handleDeepLink(uri: Uri?) {
+        if (uri == null) {
+            Log.d("Payment", "handleDeepLink: uri=null")
+            return
+        }
+        if (handledDeepLink) {
+            Log.d("Payment", "handleDeepLink: already handled")
+            return
+        }
 
+        Log.d("Payment", "handleDeepLink uri=$uri scheme=${uri.scheme} host=${uri.host} path=${uri.path} q=${uri.query}")
+
+        // 1) 현재 사용: myapp://pay/kakaopay/...
+        val isCustomNow =
+            (uri.scheme == "myapp" &&
+                    uri.host == "pay" &&
+                    (uri.path?.startsWith("/kakaopay") == true))
+
+        // 2) 과거 사용(겸허용): sumte://payments/kakaopay/...
+        val isCustomOld =
+            (uri.scheme == "sumte" &&
+                    uri.host == "payments" &&
+                    (uri.path?.startsWith("/kakaopay") == true))
+
+        // 3) (선택) https App Links 허용: https://<YOUR HOST>/payments/kakaopay/...
+        val isAppLinks =
+            (uri.scheme == "https" &&
+                    (uri.host == "sumteapi.duckdns.org" /* 필요 시 도메인 추가 */) &&
+                    // /payments/kakaopay/... 또는 /kakaopay/... 둘 다 허용
+                    (uri.path?.contains("/kakaopay") == true))
+
+        if (!(isCustomNow || isCustomOld || isAppLinks)) {
+            Log.d("Payment", "handleDeepLink: not our callback")
+            return
+        }
+
+        val path = uri.path.orEmpty()
+
+        val isCancel = path.contains("/cancel")
+        val isFail   = path.contains("/fail")
+        val isOk     = !isCancel && !isFail // cancel/fail이 아니면 승인 콜백으로 간주
+
+        when {
+            isCancel -> {
+                handledDeepLink = true
+                showPaymentFailedFragment("결제가 취소되었습니다.")
+            }
+            isFail -> {
+                handledDeepLink = true
+                showPaymentFailedFragment("결제에 실패했습니다.")
+            }
+            else -> {
+                // callback
+                val pgToken = uri.getQueryParameter("pg_token")
+                    ?: uri.getQueryParameter("pgToken")
+                    ?: uri.getQueryParameter("token")
+
+                // payment_id가 쿼리로 올 수도 있으니 우선 사용, 없으면 로컬/메모리
+                val payId = uri.getQueryParameter("payment_id")?.toIntOrNull()
+                    ?: currentPaymentId
+                    ?: retrievePaymentIdPersisted()
+
+                Log.d("Payment", "deeplink pg_token=${pgToken?.take(6)}****, paymentId=$payId")
+
+                if (!pgToken.isNullOrBlank() && payId != null) {
+                    handledDeepLink = true
+                    payVm.approve(payId, pgToken)
+                } else {
+                    Log.w("Payment", "deeplink missing params. pgToken=$pgToken, payId=$payId")
+                }
+            }
+        }
+    }
+
+
+
+
+    private fun persistPaymentId(id: Int) {
+        getSharedPreferences("pay", MODE_PRIVATE)
+            .edit()
+            .putInt("payment_id", id)
+            .apply()
+    }
+
+    private fun retrievePaymentIdPersisted(): Int? {
+        val v = getSharedPreferences("pay", MODE_PRIVATE)
+            .getInt("payment_id", -1)
+        return v.takeIf { it > 0 }
+    }
+
+    private fun clearPersistedPaymentId() {
+        getSharedPreferences("pay", MODE_PRIVATE)
+            .edit()
+            .remove("payment_id")
+            .apply()
+    }
+
+    private fun openUrl(url: String) {
+        if (openedOnce) return
+        openedOnce = true
+        Log.d("Payment", "openPaymentUrl url=$url")
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+
+    private fun openPayment(appScheme: String?, webUrl: String) {
+        if (openedOnce) return
+        openedOnce = true
+
+        val triedApp = try {
+            if (!appScheme.isNullOrBlank()) {
+                Log.d("Payment", "openPayment appScheme=$appScheme")
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appScheme)))
+                true
+            } else false
+        } catch (e: Exception) {
+            Log.w("Payment", "openPayment appScheme failed: ${e.message}")
+            false
+        }
+
+        if (!triedApp) {
+            Log.d("Payment", "openPayment fallback webUrl=$webUrl")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webUrl)))
+        }
+    }
 }

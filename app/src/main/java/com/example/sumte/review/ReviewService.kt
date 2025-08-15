@@ -9,6 +9,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -44,6 +45,16 @@ data class PresignedUrlResponse(
     val presignedUrl: String
 )
 
+data class ImageUri(
+    @SerializedName("url")
+    val uri: String
+)
+
+data class ImageReplaceRequest(
+    @SerializedName("images")
+    val images: List<ImageUri>
+)
+
 interface ReviewService {
     @POST("reviews")
     suspend fun postReview(
@@ -66,12 +77,20 @@ interface ReviewService {
         @Body body: ReviewRequest2
     ): Response<Unit>
 
-    @GET("s3/presignedUrls")
+    @GET("s3/presigned-urls")
     suspend fun getPresignedUrls(
         @Query("fileNames") fileNames: List<String>,
         @Query("ownerType") ownerType: String,
         @Query("ownerId") ownerId: Long
     ): Response<List<PresignedUrlResponse>>
+
+    // 이미지 전체 교체 API 추가
+    @PUT("images/{ownerType}/{ownerId}")
+    suspend fun putReviewImages(
+        @Path("ownerType") ownerType: String,
+        @Path("ownerId") ownerId: Long,
+        @Body body: List<ImageUri>
+    ): Response<Unit>
 
     @POST("/images")
     suspend fun postImages(

@@ -61,6 +61,14 @@ class ReviewManage: Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("ReviewManage", "onResume() called. Reloading reviews.")
+        currentPage = 0
+        isLastPage = false
+        loadUserReviews(currentPage)
+    }
+
     fun loadUserReviews(page: Int) {
         isLoading = true
 

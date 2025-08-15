@@ -1,5 +1,7 @@
 package com.example.sumte
 
+import com.example.sumte.review.MyReview
+
 data class MyReviewPage(
     val totalPages: Int,
     val totalElements: Int,

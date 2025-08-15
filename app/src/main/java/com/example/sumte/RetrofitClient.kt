@@ -43,8 +43,8 @@ object RetrofitClient {
     val api: GuesthouseApi by lazy { instance.create(GuesthouseApi::class.java) }
 
     // 결제 API
-    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
-    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
+//    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
+//    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
 
     // 예약 API 헤더 설정
     fun createReservationService(token: String): ReservationService {
@@ -66,6 +66,27 @@ object RetrofitClient {
         return retrofitWithToken.create(ReservationService::class.java)
     }
 
+
+    fun createPaymentService(token: String): PaymentService {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .addInterceptor { chain ->
+                val req = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+                chain.proceed(req)
+            }
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PaymentService::class.java)
+    }
+
     val emailDuplicationApi: EmailDuplicationApi =
         instance.create(EmailDuplicationApi::class.java)
+
 }
