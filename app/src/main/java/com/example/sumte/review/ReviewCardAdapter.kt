@@ -29,7 +29,7 @@ class ReviewCardAdapter(private val reviews: List<Review>) :
         with(holder.binding) {
             tvDate.text = review.date
             tvReview.text = review.content
-            rbStar.rating = review.rating
+            //rbStar.rating = review.rating
 
             if (!review.imageUrls.isNullOrEmpty()) {
                 Glide.with(ivImage.context)

@@ -1,6 +1,7 @@
 package com.example.sumte.payment
 
 import android.content.Context
+import android.util.Log
 import com.example.sumte.RetrofitClient
 import retrofit2.Response
 
@@ -33,9 +34,20 @@ class PaymentRepository(context: Context) {
     }
 
     // 결제 승인
-    suspend fun approvePayment(id: Int, pgToken: String)
-            : Response<PaymentApproveResponse<PaymentApproveData>>? {
+    suspend fun approvePayment(
+        id: Int,
+        token: String
+    ): Response<PaymentApproveResponse<PaymentApproveData>>? {
         val service = authedServiceOrNull() ?: return null
-        return service.approvePayment(id, pgToken)
+
+
+        val resp = service.approvePayment(id, token)
+
+        if (!resp.isSuccessful) {
+            Log.e("PayRepo", "approve HTTP ${resp.code()} err=${resp.errorBody()?.string()}")
+        } else {
+            Log.d("PayRepo", "approve HTTP ${resp.code()}")
+        }
+        return resp
     }
 }

@@ -49,14 +49,11 @@ class SearchResultFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let { bundle ->
-            // ✅ keyword 키 호환 처리
             keyword = bundle.getString("keyword")
                 ?: bundle.getString(BookInfoActivity.EXTRA_KEYWORD)
 
             val startDateStr = bundle.getString("startDate")
             val endDateStr = bundle.getString("endDate")
-            Log.d("SearchResultFragment", "받아온 startDateStr: $startDateStr")
-            Log.d("SearchResultFragment", "받아온 endDateStr: $endDateStr")
 
             val adultCount = bundle.getInt("adultCount", bookInfoViewModel.adultCount)
             val childCount = bundle.getInt("childCount", bookInfoViewModel.childCount)
@@ -80,45 +77,58 @@ class SearchResultFragment : Fragment() {
         return binding.root
     }
 
+    private fun normalizeRegionArg(region: ArrayList<String>?): List<String>? {
+        if (region.isNullOrEmpty()) return null
+
+        if (region.size == 1) {
+            val city = region[0].trim()
+            val province = when (city) {
+                "제주시", "서귀포시" -> "제주특별자치도"
+                else -> null
+            }
+            return province?.let { listOf(it, city) } ?: listOf(city)
+        }
+
+        val rawProvince = region[0].trim()
+        val city = region[1].trim()
+        val fixedProvince = when (rawProvince) {
+            "제주도", "제주특별자치도" -> "제주특별자치도"
+            else -> rawProvince
+        }
+        return listOf(fixedProvince, city)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 상단 UI 바인딩
         bindBookInfoUI(binding, bookInfoViewModel)
         keyword?.let { binding.searchText.setText(it) }
 
-        // 어댑터
         adapter = GuestHouseAdapter(ghViewModel) { item ->
             Log.d("SearchResult", "click item id=${item.id}")
-            // TODO: 상세 화면 이동
         }
         binding.searchResultRv.layoutManager = LinearLayoutManager(requireContext())
         binding.searchResultRv.adapter = adapter
 
-        // 페이징 스크롤 리스너
         binding.searchResultRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 if (dy <= 0) return
                 val lm = rv.layoutManager as LinearLayoutManager
                 val last = lm.findLastVisibleItemPosition()
-                val shouldLoadMore = last >= (adapter.itemCount - 3)
-                if (shouldLoadMore && !loading && ghViewModel.currentFilter != null) {
+                if (last >= (adapter.itemCount - 3) && !loading && ghViewModel.currentFilter != null) {
                     ghViewModel.fetchNextFiltered()
                 }
             }
         })
 
-        // 상태 수집
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 ghViewModel.state.collect { state ->
                     when (state) {
-                        is UiState.Loading -> {
-                            loading = true
-                        }
+                        is UiState.Loading -> loading = true
                         is UiState.Success -> {
                             loading = false
-                            adapter.submit(state.items) // 어댑터 내 submit 사용
+                            adapter.submit(state.items)
                         }
                         is UiState.Error -> {
                             loading = false
@@ -129,42 +139,43 @@ class SearchResultFragment : Fragment() {
             }
         }
 
-        // 상위/필터 프래그먼트에서 넘어온 값들
         val viewEnableReservation = arguments?.getBoolean("viewEnableReservation")
         val minPrice = arguments?.getInt("minPrice")
         val maxPrice = arguments?.getInt("maxPrice")
-        val peopleArg   = arguments?.getInt("people")
-        val optionService  = arguments?.getStringArrayList("optionService")
+        val peopleArg = arguments?.getInt("people")
+        val optionService = arguments?.getStringArrayList("optionService")
         val targetAudience = arguments?.getStringArrayList("targetAudience")
-        val regionArg      = arguments?.getStringArrayList("region")
+        val regionArg = arguments?.getStringArrayList("region")
 
-        val checkIn  = bookInfoViewModel.startDate?.toYmd()
+        val checkIn = bookInfoViewModel.startDate?.toYmd()
         val checkOut = bookInfoViewModel.endDate?.toYmd()
 
-        // 날짜가 없을 때 people을 보내면 400 날 수 있어 방지
         val hasDates = !checkIn.isNullOrBlank() && !checkOut.isNullOrBlank()
         val peopleSum = (peopleArg ?: 0).takeIf { it > 0 }
             ?: (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
         val peopleForRequest = if (hasDates) peopleSum else null
 
-        // ✅ 서버 요청 DTO 생성(이름 검색은 keyword 중심, region은 전달된 값만)
+        val regionNorm = normalizeRegionArg(regionArg)
+
+        // 핵심 변경: 지역 선택 시 keyword는 city, region=null
+        val effectiveKeyword = regionNorm?.last() ?: keyword
+        val regionForRequest = if (regionNorm != null) null else null // 항상 null 보내서 과필터링 방지
+
         val baseFilter = GuesthouseSearchRequest(
             viewEnableReservation = viewEnableReservation,
             checkIn = checkIn,
             checkOut = checkOut,
-            people = peopleForRequest,          // 날짜 없으면 null
-            keyword = keyword,
+            people = peopleForRequest,
+            keyword = effectiveKeyword,
             minPrice = minPrice,
             maxPrice = maxPrice,
             optionService = optionService,
             targetAudience = targetAudience,
-            region = regionArg                  // keyword로 강제 채우지 않음(AND 방지)
+            region = regionForRequest
         )
 
-        // 첫 검색 실행
         ghViewModel.setFilterAndRefresh(baseFilter)
 
-        // 상단 클릭 이벤트
         binding.searchText.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, SearchFragment())
@@ -196,7 +207,6 @@ class SearchResultFragment : Fragment() {
                 .commit()
         }
 
-        // 액티비티에서 온 FilterOptions 적용(있으면 덮어쓰기)
         val filterOptions: FilterOptions? = if (android.os.Build.VERSION.SDK_INT >= 33) {
             requireActivity().intent.getParcelableExtra("filterOptions", FilterOptions::class.java)
         } else {

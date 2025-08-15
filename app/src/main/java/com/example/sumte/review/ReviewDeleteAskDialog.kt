@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.example.sumte.databinding.DialogReviewDeleteAskBinding
 
@@ -14,6 +16,17 @@ class ReviewDeleteAskDialog ( private val onConfirm: () -> Unit) : DialogFragmen
         val dialog = Dialog(requireContext())
         binding = DialogReviewDeleteAskBinding.inflate(layoutInflater)
         dialog.setContentView(binding!!.root)
+
+        val widthPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            282f,
+            resources.displayMetrics
+        ).toInt()
+
+        dialog.window?.setLayout(
+            widthPx,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 

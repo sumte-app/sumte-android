@@ -36,7 +36,7 @@
             app:layout_constraintTop_toBottomOf="@+id/item_review_list_nickname_tv"/>
 
         <ImageView
-            android:id="@+id/item_review_star1"
+            android:id="@+id/item_review_list_star1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -45,33 +45,33 @@
             app:layout_constraintStart_toEndOf="@+id/item_review_subtitle_tv"
             app:layout_constraintTop_toTopOf="@+id/item_review_subtitle_tv" />
         <ImageView
-            android:id="@+id/item_review_star2"
+            android:id="@+id/item_review_list_star2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            app:layout_constraintStart_toEndOf="@+id/item_review_star1"
-            app:layout_constraintTop_toTopOf="@+id/item_review_star1"/>
+            app:layout_constraintStart_toEndOf="@+id/item_review_list_star1"
+            app:layout_constraintTop_toTopOf="@+id/item_review_list_star1"/>
         <ImageView
-            android:id="@+id/item_review_star3"
+            android:id="@+id/item_review_list_star3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            app:layout_constraintStart_toEndOf="@+id/item_review_star2"
-            app:layout_constraintTop_toTopOf="@+id/item_review_star2"/>
+            app:layout_constraintStart_toEndOf="@+id/item_review_list_star2"
+            app:layout_constraintTop_toTopOf="@+id/item_review_list_star2"/>
         <ImageView
-            android:id="@+id/item_review_star4"
+            android:id="@+id/item_review_list_star4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            app:layout_constraintStart_toEndOf="@+id/item_review_star3"
-            app:layout_constraintTop_toTopOf="@+id/item_review_star3"/>
+            app:layout_constraintStart_toEndOf="@+id/item_review_list_star3"
+            app:layout_constraintTop_toTopOf="@+id/item_review_list_star3"/>
         <ImageView
-            android:id="@+id/item_review_star5"
+            android:id="@+id/item_review_list_star5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star_fill"
-            app:layout_constraintStart_toEndOf="@+id/item_review_star4"
-            app:layout_constraintTop_toTopOf="@+id/item_review_star4"/>
+            app:layout_constraintStart_toEndOf="@+id/item_review_list_star4"
+            app:layout_constraintTop_toTopOf="@+id/item_review_list_star4"/>
 
         <TextView
             android:id="@+id/item_review_date_tv"
@@ -81,7 +81,7 @@
             android:textSize="12sp"
             android:textColor="@color/gray300"
             app:layout_constraintEnd_toEndOf="@+id/item_review_list_cl"
-            app:layout_constraintBottom_toBottomOf="@+id/item_review_star5"/>
+            app:layout_constraintBottom_toBottomOf="@+id/item_review_list_star5"/>
         <LinearLayout
             android:id="@+id/review_list_image_container"
             android:layout_width="match_parent"

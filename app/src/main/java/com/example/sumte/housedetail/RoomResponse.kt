@@ -8,7 +8,7 @@ data class RoomResponse<T>(
     val code: String,
     val message: String,
     @SerializedName("data")
-    val data: T // data 필드의 타입이 고정되지 않고, T에 따라 유연하게 바뀝니다.
+    val data: T
 )
 
 

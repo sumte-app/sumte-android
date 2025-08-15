@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -40,6 +41,7 @@ class PaymentActivity : AppCompatActivity() {
 
     private var currentPaymentId: Int? = null
     private var handledDeepLink = false
+    private var launchedPaymentId: Int? = null
 
     private var navigatedToComplete = false
 
@@ -131,26 +133,23 @@ class PaymentActivity : AppCompatActivity() {
 
         payVm.state.onEach { st ->
             when (st) {
-                is PayUiState.Loading -> showProcessingDialog()
                 is PayUiState.Success -> {
                     hideProcessingDialog()
+
                     currentPaymentId = st.data.paymentId
                     persistPaymentId(currentPaymentId!!)
 
-                    // 새 결제 시 플래그 리셋(재시도 대비)
-                    openedOnce = false
-                    handledDeepLink = false
-                    navigatedToComplete = false
 
-                    val url=st.data.paymentUrl
-                    // ✅ 앱 스킴 우선, 실패하면 웹으로 폴백
+
+                    if (openedOnce || handledDeepLink) {
+                        Log.d("Payment","skip reopen (openedOnce=$openedOnce, handled=$handledDeepLink)")
+                        return@onEach
+                    }
+
+                    launchedPaymentId = st.data.paymentId
                     openPayment(st.data.appScheme, st.data.paymentUrl)
-                    Log.d("Payment", "ready url=$url")
                 }
-                is PayUiState.Error -> {
-                    hideProcessingDialog()
-                    showPaymentFailedFragment(st.msg)
-                }
+                is PayUiState.Error -> {  }
                 else -> Unit
             }
         }.launchIn(lifecycleScope)
@@ -160,31 +159,14 @@ class PaymentActivity : AppCompatActivity() {
                 is ApproveUiState.Loading -> showProcessingDialog()
                 is ApproveUiState.Success -> {
                     hideProcessingDialog()
-                    if (navigatedToComplete) return@onEach
-                    navigatedToComplete = true
-
-                    val d = st.data
-                    val frag = PaymentCompleteFragment().apply {
-                        arguments = Bundle().apply {
-                            putInt("amount", d.amount.total)
-                            putString("method", d.paymentMethodType)
-                            putString("paymentId", d.partnerOrderId)
-                            putString("tid", d.tid)
-                        }
+                    Log.d("Payment", "approve success: code=${st.data.code}, msg=${st.data.message}")
+                    if (!navigatedToComplete) {
+                        showPaymentCompleteFragment(st.data)
                     }
-
-                    supportFragmentManager.beginTransaction()
-                        .setReorderingAllowed(true)
-                        .setCustomAnimations(
-                            android.R.anim.fade_in, android.R.anim.fade_out,
-                            android.R.anim.fade_in, android.R.anim.fade_out
-                        )
-                        .replace(R.id.paymentRootContainer, frag, "payment_complete")
-                        // 뒤로가기로 결제 화면 안 돌아가게 하려면 addToBackStack 생략
-                        .commitAllowingStateLoss()
                 }
                 is ApproveUiState.Error -> {
                     hideProcessingDialog()
+                    Log.d("Payment", "approve error: ${st.message}")
                     showPaymentFailedFragment(st.message)
                 }
                 else -> Unit
@@ -193,19 +175,24 @@ class PaymentActivity : AppCompatActivity() {
 
 
 
+
+
         bindExtrasToUi()
         setupPaymentButtons()
         setupAgreementLogic()
         updatePayButtonState()
 
-        // 결제 버튼
+
         binding.btnPay.setOnClickListener {
             if (!binding.btnPay.isEnabled) return@setOnClickListener
-            val resId = intent.getIntExtra(PaymentExtras.EXTRA_RES_ID,-1)
-            val amount = intent.getIntExtra(EXTRA_AMOUNT, 0)
+            val resId  = intent.getIntExtra(PaymentExtras.EXTRA_RES_ID, -1)
+            if (resId <= 0) {
 
-            val totalAmount : Int = amount * nights.toInt()
+                Toast.makeText(this, "예약 정보가 없습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
+            val totalAmount = intent.getIntExtra(EXTRA_AMOUNT, 0)
             Log.d("Payment", "start pay: reservationId=$resId, amount=$totalAmount")
             payVm.startKakao(resId, totalAmount)
         }
@@ -217,6 +204,7 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        setIntent(intent)
         Log.d("Payment", "onNewIntent data=${intent?.data}")
         handleDeepLink(intent?.data)
     }
@@ -264,11 +252,11 @@ class PaymentActivity : AppCompatActivity() {
             updatePayButtonState()
         }
 
-        // ✅ 전체 동의 클릭 시 모든 체크박스 상태 동기화
+
         binding.clAllAgree.setOnClickListener {
             isAllChecked = !isAllChecked
 
-            // 리스너 잠시 제거
+
             termsList.forEach { it.setOnCheckedChangeListener(null) }
             termsList.forEach { it.isChecked = isAllChecked }
             termsList.forEach { it.setOnCheckedChangeListener { _, _ -> updateAllAgreeState() } }
@@ -278,7 +266,7 @@ class PaymentActivity : AppCompatActivity() {
             updatePayButtonState()
         }
 
-        // ✅ 개별 항목 클릭 시 전체 상태 업데이트
+
         termsList.forEach { cb ->
             cb.setOnCheckedChangeListener { _, _ ->
                 updateAllAgreeState()
@@ -288,7 +276,7 @@ class PaymentActivity : AppCompatActivity() {
 
 
     private fun updateAllAgreeVisual() {
-        // 체크 상태에 따라 이미지 변경
+
         val imageRes = if (isAllChecked) R.drawable.checkbox_check else R.drawable.checkbox
         binding.ivAllAgree.setImageResource(imageRes)
     }
@@ -323,8 +311,38 @@ class PaymentActivity : AppCompatActivity() {
 
     private val TAG_ERROR = "payment_error"
 
+    // PaymentActivity 내부에 추가
+    private fun showPaymentCompleteFragment(
+        resp: PaymentApproveResponse<PaymentApproveData>
+    ) {
+        val d = resp.data
+
+        navigatedToComplete = true
+
+        val frag = PaymentCompleteFragment().apply {
+            arguments = Bundle().apply {
+                putInt("amount", d.amount.total)
+                putString("method", d.paymentMethodType)
+                putString("paymentId", d.partnerOrderId)
+                putString("tid", d.tid)
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .setCustomAnimations(
+                android.R.anim.fade_in, android.R.anim.fade_out,
+                android.R.anim.fade_in, android.R.anim.fade_out
+            )
+            .replace(R.id.paymentRootContainer, frag, "payment_complete")
+            .addToBackStack("payment_complete")
+            .commitAllowingStateLoss()
+    }
+
+
     private fun showPaymentFailedFragment(message: String) {
-        hideProcessingDialog() // 결제중 다이얼로그 내리기
+        hideProcessingDialog()
+        Log.d("Payment","showPaymentFailedFragment: $message")
 
         val frag = PaymentFailedFragment().apply {
             arguments = Bundle().apply { putString("message", message) }
@@ -336,7 +354,9 @@ class PaymentActivity : AppCompatActivity() {
                 android.R.anim.fade_in, android.R.anim.fade_out
             )
             .replace(R.id.paymentRootContainer, frag, "payment_error")
+            .addToBackStack("payment_error")
             .commitAllowingStateLoss()
+
     }
 
 
@@ -349,7 +369,6 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun trimSec(time: String?): String? {
-        // "HH:mm:ss" -> "HH:mm", 이미 "HH:mm"이면 그대로
         if (time.isNullOrBlank()) return null
         return if (time.count { it == ':' } == 2 && time.endsWith(":00")) time.dropLast(3) else time
     }
@@ -357,83 +376,74 @@ class PaymentActivity : AppCompatActivity() {
 
 
     private fun formatDetailLine(date: LocalDate): String {
-        val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd (E)", Locale.KOREAN) // → 2025.06.18 (수)
+        val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd (E)", Locale.KOREAN)
         return "${date.format(dateFmt)}".trim()
     }
 
     private fun handleDeepLink(uri: Uri?) {
-        if (uri == null) {
-            Log.d("Payment", "handleDeepLink: uri=null")
-            return
-        }
-        if (handledDeepLink) {
-            Log.d("Payment", "handleDeepLink: already handled")
-            return
-        }
+        if (uri == null || handledDeepLink) return
 
         Log.d("Payment", "handleDeepLink uri=$uri scheme=${uri.scheme} host=${uri.host} path=${uri.path} q=${uri.query}")
 
-        // 1) 현재 사용: myapp://pay/kakaopay/...
-        val isCustomNow =
-            (uri.scheme == "myapp" &&
-                    uri.host == "pay" &&
-                    (uri.path?.startsWith("/kakaopay") == true))
 
-        // 2) 과거 사용(겸허용): sumte://payments/kakaopay/...
-        val isCustomOld =
-            (uri.scheme == "sumte" &&
-                    uri.host == "payments" &&
-                    (uri.path?.startsWith("/kakaopay") == true))
+        val ours = (uri.scheme == "myapp" && uri.host == "pay")
 
-        // 3) (선택) https App Links 허용: https://<YOUR HOST>/payments/kakaopay/...
-        val isAppLinks =
-            (uri.scheme == "https" &&
-                    (uri.host == "sumteapi.duckdns.org" /* 필요 시 도메인 추가 */) &&
-                    // /payments/kakaopay/... 또는 /kakaopay/... 둘 다 허용
-                    (uri.path?.contains("/kakaopay") == true))
-
-        if (!(isCustomNow || isCustomOld || isAppLinks)) {
+        if (!ours) {
             Log.d("Payment", "handleDeepLink: not our callback")
             return
         }
 
-        val path = uri.path.orEmpty()
 
-        val isCancel = path.contains("/cancel")
-        val isFail   = path.contains("/fail")
-        val isOk     = !isCancel && !isFail // cancel/fail이 아니면 승인 콜백으로 간주
+        val path = uri.path.orEmpty().lowercase()
+        val branch = when {
+            "cancel" in path -> "cancel"
+            "fail"   in path -> "fail"
 
-        when {
-            isCancel -> {
+            "success" in path || "/kakaopay/callback" in path -> "success"
+            else -> "success"
+        }
+        Log.d("Payment", "deeplink branch=$branch")
+
+        when (branch) {
+            "cancel" -> {
                 handledDeepLink = true
                 showPaymentFailedFragment("결제가 취소되었습니다.")
             }
-            isFail -> {
+            "fail" -> {
                 handledDeepLink = true
                 showPaymentFailedFragment("결제에 실패했습니다.")
             }
             else -> {
-                // callback
                 val pgToken = uri.getQueryParameter("pg_token")
                     ?: uri.getQueryParameter("pgToken")
                     ?: uri.getQueryParameter("token")
 
-                // payment_id가 쿼리로 올 수도 있으니 우선 사용, 없으면 로컬/메모리
-                val payId = uri.getQueryParameter("payment_id")?.toIntOrNull()
+                val payId = uri.getQueryParameter("paymentId")?.toIntOrNull()
+                    ?: uri.getQueryParameter("payment_id")?.toIntOrNull()
                     ?: currentPaymentId
                     ?: retrievePaymentIdPersisted()
 
-                Log.d("Payment", "deeplink pg_token=${pgToken?.take(6)}****, paymentId=$payId")
+                Log.d("Payment", "approve params pgToken=${pgToken?.take(6)}****, payId=$payId")
 
-                if (!pgToken.isNullOrBlank() && payId != null) {
-                    handledDeepLink = true
-                    payVm.approve(payId, pgToken)
-                } else {
+                if (pgToken.isNullOrBlank() || payId == null) {
                     Log.w("Payment", "deeplink missing params. pgToken=$pgToken, payId=$payId")
+
+                    handledDeepLink = true
+                    showPaymentFailedFragment("승인 정보가 누락되었습니다.")
+                    return
                 }
+
+
+                handledDeepLink = true
+                showProcessingDialog()
+                Log.d("Payment", ">>> calling payVm.approve()")
+                payVm.approve(payId, pgToken)
             }
         }
     }
+
+
+
 
 
 
@@ -461,28 +471,25 @@ class PaymentActivity : AppCompatActivity() {
     private fun openUrl(url: String) {
         if (openedOnce) return
         openedOnce = true
-        Log.d("Payment", "openPaymentUrl url=$url")
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     private fun openPayment(appScheme: String?, webUrl: String) {
-        if (openedOnce) return
-        openedOnce = true
-
-        val triedApp = try {
-            if (!appScheme.isNullOrBlank()) {
-                Log.d("Payment", "openPayment appScheme=$appScheme")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appScheme)))
-                true
-            } else false
-        } catch (e: Exception) {
-            Log.w("Payment", "openPayment appScheme failed: ${e.message}")
-            false
+        if (openedOnce) {
+            return
         }
-
-        if (!triedApp) {
-            Log.d("Payment", "openPayment fallback webUrl=$webUrl")
+        openedOnce = true
+        try {
+            if (!appScheme.isNullOrBlank()) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appScheme)))
+            } else {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webUrl)))
+            }
+        } catch (e: Exception) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(webUrl)))
         }
     }
+
+
+
 }
