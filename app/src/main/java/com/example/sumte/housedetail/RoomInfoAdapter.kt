@@ -26,15 +26,20 @@ class RoomInfoAdapter(
             tvRoomCapacity.text = "기준인원 ${room.standardCount}인 (정원 ${room.totalCount}인)"
             tvCheckInOut.text = "체크인 ${room.checkin} · 체크아웃 ${room.checkout}"
 
+
+            val available = (room.reservable == true)
+            ivReserve.isEnabled = available
+
             Glide.with(ivRoomImage.context)
                 .load(room.imageUrl)
                 .placeholder(android.R.color.darker_gray)
                 .error(android.R.color.darker_gray)
                 .into(ivRoomImage)
 
-            ivReserve.setOnClickListener {
-                //root.context.startActivity(Intent(root.context, PaymentActivity::class.java))
-                onReserveClick(room)
+            Log.d("RoomInfoAdapter", "roomId=${room.id}, reservable=${room.reservable}" )
+            ivReserve.setOnClickListener(null)
+            if (available) {
+                ivReserve.setOnClickListener { onReserveClick(room) }
             }
             //상세보기
             tvRoomDetail.setOnClickListener {

@@ -35,6 +35,15 @@ class GuestHouseAdapter(
             guesthouseLocationTv.text = guestHouse.location
             guesthousePriceTv.text = guestHouse.price
 
+            // ★ 새로 추가: 평점/리뷰/체크인
+            guesthouseRatingTv.text = guestHouse.averageScore
+                ?.let { String.format("%.1f", it) } ?: "-"
+            guesthouseReviewCountTv.text = "${guestHouse.reviewCount ?: 0}"
+            guesthouseTimeTv.text = guestHouse.time.let {
+                // time이 이미 "HH:mm"으로 매핑돼 있다면 그대로 사용, 아니면 유틸로 정리
+                it.ifBlank { "-" } // 또는 it.toHhMm()
+            }
+
             val url = guestHouse.imageUrl?.trim()
             val ph = guestHouse.imageResId
             Log.d("IMG", "bind ghId=${guestHouse.id} url=$url")

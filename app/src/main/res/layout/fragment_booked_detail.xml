@@ -428,8 +428,12 @@
                     android:textSize="14sp"
                     android:fontFamily="@font/pretendard_semibold" />
             </LinearLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+
+    </FrameLayout>
+
 
 
 

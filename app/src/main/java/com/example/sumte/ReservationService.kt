@@ -72,7 +72,7 @@ data class MyReservationData(
 )
 
 data class MyReservationItem(
-    val id: Int,
+    val reservationId: Int,
     val guestHouseName: String,
     val roomName: String,
     val imageUrl: String?,
@@ -83,7 +83,8 @@ data class MyReservationItem(
     val nightCount: Int,
     val status: String,
     val canWriteReview: Boolean,
-    val reviewWritten: Boolean
+    val reviewWritten: Boolean,
+    val roomId: Long
 )
 
 // 상세 조회 Response

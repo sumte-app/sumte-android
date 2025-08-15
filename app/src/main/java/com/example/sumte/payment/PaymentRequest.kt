@@ -1,5 +1,7 @@
 package com.example.sumte.payment
 
+import com.google.gson.annotations.SerializedName
+
 
 enum class PaymentMethod { CARD, KAKAOPAY }
 
@@ -11,6 +13,7 @@ data class PaymentRequest(
 
 data class PaymentApproveRequest(
     val reservationId: Int,
+    @SerializedName("pg_token")
     val pg_token: String,
     val appScheme: String?
 )
