@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// ---------- UI State (검색 결과 화면용) ----------
+
 sealed interface UiState {
     object Loading : UiState
     data class Success(val items: List<GuestHouse>, val isLast: Boolean) : UiState
@@ -34,11 +34,11 @@ class GuestHouseViewModel(
     private val _likedGuestHouseIds = MutableStateFlow<Set<Int>>(emptySet())
     val likedGuestHouseIds: StateFlow<Set<Int>> = _likedGuestHouseIds
 
-    // LikeFragment에 보여줄 실제 데이터 목록.
+
     private val _likedGuesthouses = MutableStateFlow<List<GuesthouseSummaryDto>>(emptyList())
     val likedGuesthouses: StateFlow<List<GuesthouseSummaryDto>> = _likedGuesthouses
 
-    // ★ 화면 전용 키워드(서버에는 보내지 않음): SearchResultFragment에서 region 선택 시 "제주시" 등 설정
+
     var clientKeywordOverride: String? = null
 
     private fun makeRegionPayload(city: String?): List<String>? {
@@ -59,7 +59,7 @@ class GuestHouseViewModel(
         }
     }
 
-    // -------------------- (찜 관련: 원본 유지) --------------------
+
     fun loadLikedGuesthouses() {
         viewModelScope.launch {
             try {
@@ -184,21 +184,16 @@ class GuestHouseViewModel(
             }
         }
     }
-    // ------------------------------------------------
 
-    // ---------- 홈 목록 캐시(뒤로가기 복원용) ----------
-    val items = mutableListOf<GuestHouse>()   // HomeFragment에서 사용
-    var nextPage: Int = 1                     // UI 1-based
+    val items = mutableListOf<GuestHouse>()
+    var nextPage: Int = 1
     var isLastPageCached: Boolean = false
 
-    // 로드된 모든 게스트하우스의 ID 목록을 저장할 StateFlow
+
     private val _guesthouseIds = MutableStateFlow<List<Int>>(emptyList())
     val guesthouseIds: StateFlow<List<Int>> = _guesthouseIds
 
-    // =============================
-    // 홈 DTO -> UI 매핑
-    // (홈 응답의 imageUrl은 사용하지 않음. 이미지는 /images로 따로)
-    // =============================
+
     private fun mapHomeToUi(dtos: List<GuesthouseHomeItemDto>): List<GuestHouse> =
         dtos.map { d ->
             val minPrice = d.minPrice ?: 0
@@ -209,9 +204,12 @@ class GuestHouseViewModel(
                 price = if (minPrice > 0) "%,d원".format(minPrice) else "가격 정보 없음",
                 imageUrl = null,
                 imageResId = R.drawable.sumte_logo1,
-                time = d.checkInTime.orEmpty()
+                time = d.checkInTime.orEmpty(),
+                averageScore = d.averageScore,
+                reviewCount = d.reviewCount
             )
         }
+
 
     private suspend fun fetchGuesthouseThumbUrl(guestHouseId: Int): String? =
         withContext(Dispatchers.IO) {
@@ -247,7 +245,7 @@ class GuestHouseViewModel(
 
             val homeDtos: List<GuesthouseHomeItemDto> = res.body()?.data?.content.orEmpty()
 
-            // ✅ 여기: 서버에서 넘어온 원본 값 그대로 찍기
+
             homeDtos.forEachIndexed { idx, d ->
                 Log.d(
                     "HOME_DTO",
@@ -259,12 +257,12 @@ class GuestHouseViewModel(
 
             val base = mapHomeToUi(homeDtos)
 
-            // (선택) UI로 매핑된 값도 확인하고 싶으면 시간/제목만 가볍게
+
             base.forEachIndexed { idx, gh ->
                 Log.d("HOME_UI", "[$idx] id=${gh.id}, title=${gh.title}, time=${gh.time}")
             }
 
-            // 썸네일 병렬 조회 후 주입
+
             coroutineScope {
                 base.map { gh ->
                     async {
@@ -279,7 +277,7 @@ class GuestHouseViewModel(
         }
     }
 
-    // UI 1-based → 서버 0-based 보정 + 캐시 갱신
+
     suspend fun fetchPageAndCache(pageUi: Int, pageSize: Int): List<GuestHouse> {
         val serverPage = pageUi - 1
         val list = fetchPage(serverPage, pageSize)
@@ -293,14 +291,14 @@ class GuestHouseViewModel(
         return list
     }
 
-    // ---------- 검색/필터 상태 ----------
+
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state
 
     var currentFilter: GuesthouseSearchRequest? = null
         private set
 
-    private var filterPage = 1              // ★ 검색 API는 1-based
+    private var filterPage = 1
     private val filterSize = 20
     private var filterIsLast = false
     private val filteredLoaded = mutableListOf<GuestHouse>()
@@ -346,7 +344,7 @@ class GuestHouseViewModel(
 
             val filterNorm = filter.copy(region = normalizeRegionLocal(filter.region))
 
-            // ---------- 1차: 현재 필터로 조회 (★ 1-based 그대로 보냄) ----------
+
             Log.d(
                 "SEARCH",
                 "REQ(1) page=$filterPage kw=${filterNorm.keyword} region=${filterNorm.region} people=${filterNorm.people}"
@@ -367,13 +365,13 @@ class GuestHouseViewModel(
                 "RES(1) ok=${firstResult.success} page=${pageData.number} recv=${pageData.content.size} last=${pageData.last}"
             )
 
-            // ★ 1차 결과 매핑 + 클라 키워드(override 우선)로 재필터
+
             var uiItems = applyClientKeywordFilter(
                 pageData.content.toUi(),
                 clientKeywordOverride ?: filterNorm.keyword
             )
 
-            // ---------- 2차: 키워드만 있고 region 비었고 0건일 때, region=[keyword] 재조회 ----------
+
             val needSecondTry = (filterPage == 1 || filterPage == 0) &&
                     uiItems.isEmpty() &&
                     !filterNorm.keyword.isNullOrBlank() &&
@@ -406,7 +404,7 @@ class GuestHouseViewModel(
                 }
             }
 
-            // ---------- 3) 폴백: /guesthouse/home?keyword= ----------
+
             val keywordOnly = !filterNorm.keyword.isNullOrBlank()
             if ((filterPage == 1 || filterPage == 0) && uiItems.isEmpty() && keywordOnly) {
                 try {
@@ -424,9 +422,12 @@ class GuestHouseViewModel(
                                 price = if (minPrice > 0) "%,d원".format(minPrice) else "가격 정보 없음",
                                 imageUrl = d.imageUrl,
                                 imageResId = R.drawable.sumte_logo1,
-                                time = d.checkInTime.orEmpty()
+                                time = d.checkInTime.orEmpty(),
+                                averageScore = d.averageScore,
+                                reviewCount = d.reviewCount
                             )
                         }
+
                         val filteredFallback = applyClientKeywordFilter(
                             fallbackUi,
                             clientKeywordOverride ?: kw
@@ -441,7 +442,8 @@ class GuestHouseViewModel(
                 }
             }
 
-            // ---------- 기본 처리 ----------
+
+
             filteredLoaded += uiItems
             filterIsLast = pageData.last || uiItems.isEmpty()
             if (!filterIsLast) filterPage += 1

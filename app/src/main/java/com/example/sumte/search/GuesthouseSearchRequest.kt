@@ -4,7 +4,7 @@ package com.example.sumte.search
 @kotlinx.parcelize.Parcelize
 data class GuesthouseSearchRequest(
     val viewEnableReservation: Boolean? = null,
-    val checkIn: String? = null,   // "yyyy-MM-dd"
+    val checkIn: String? = null,
     val checkOut: String? = null,
     val people: Int? = null,
     val minPrice: Int? = null,

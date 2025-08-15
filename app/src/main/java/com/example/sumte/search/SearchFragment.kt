@@ -41,7 +41,7 @@ class SearchFragment : Fragment() {
         ).isAppearanceLightStatusBars = true
 
         historyList = loadHistoryList()
-        // 최초 진입 시 저장된 가시성 불러오기
+
         loadHistoryVisibility()
     }
 

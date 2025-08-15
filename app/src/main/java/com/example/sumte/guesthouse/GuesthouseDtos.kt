@@ -23,16 +23,16 @@ data class RoomDto(
 
 data class GuesthouseDto(
     val id: Int,
-    val name: String?,               // ← nullable
-    val addressRegion: String?,      // ← nullable
-    val addressDetail: String?,      // ← nullable
+    val name: String?,
+    val addressRegion: String?,
+    val addressDetail: String?,
     val information: String?,
     val minPrice: Int?,
     val advertisement: String?,
-    val optionServices: List<String>?,   // ← nullable
-    val targetAudience: List<String>?,   // ← nullable
-    val rooms: List<RoomDto>?,           // ← nullable
-    val imageUrls: List<String>?         // ← nullable
+    val optionServices: List<String>?,
+    val targetAudience: List<String>?,
+    val rooms: List<RoomDto>?,
+    val imageUrls: List<String>?
 )
 
 data class PageDto<T>(
