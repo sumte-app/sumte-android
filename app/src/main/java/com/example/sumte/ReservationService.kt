@@ -3,7 +3,9 @@ package com.example.sumte
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 // 예약 API
@@ -19,6 +21,20 @@ interface ReservationService {
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 10
     ): Response<MyReservationResponse>
+
+    //예약상세
+    @GET("reservations/{id}")
+    suspend fun getReservationDetail(
+        @Path("id") reservationId: Int
+    ): Response<ReservationDetailResponse>
+
+    //예약취소
+    @PATCH("reservations/{id}")
+    suspend fun cancelReservation(
+        @Path("id") reservationId: Int
+    ): Response<ReservationResponse<Nothing?>>
+
+
 }
 
 // 예약생성 요청
@@ -69,6 +85,30 @@ data class MyReservationItem(
     val canWriteReview: Boolean,
     val reviewWritten: Boolean,
     val roomId: Long
+)
+
+// 상세 조회 Response
+data class ReservationDetailResponse(
+    val success: Boolean,
+    val code: String?,
+    val message: String?,
+    val data: ReservationDetailData?
+)
+
+// 상세 예약 정보
+data class ReservationDetailData(
+    val reservationId: Int,
+    val guestHouseName: String,
+    val roomName: String,
+    val imageUrl: String?,
+    val adultCount: Int,
+    val childCount: Int,
+    val startDate: String,
+    val endDate: String,
+    val status: String,
+    val nightCount: Int,
+    val totalPrice: Int,
+    val reservedAt: String
 )
 
 

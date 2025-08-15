@@ -156,12 +156,6 @@ class BookInfoDateFragment : Fragment() {
                     }
 
                     binding.dateComma.visibility = if (endDate != null) View.VISIBLE else View.GONE
-
-                    //뷰모델 업데잍 부분
-//                    if (startDate != null && endDate != null) {
-//                        viewModel.startDate = startDate!!
-//                        viewModel.endDate = endDate!!
-//                    }
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
@@ -204,7 +198,7 @@ class BookInfoDateFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-
+        //적용할 때 뷰모델 저장
         binding.applyBtn.setOnClickListener {
             if (startDate != null && endDate != null) {
                 viewModel.startDate = startDate!!

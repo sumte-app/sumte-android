@@ -22,12 +22,12 @@ import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 import kotlinx.coroutines.launch
 
-//이미지 일단 제외
+
 class BookedAdapter(
     private var items: List<BookedData>,
     private val fragment: Fragment,
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
-
+    //ui전달부분
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
         RecyclerView.ViewHolder(binding.root){
         fun bind(bookedData: BookedData) {
@@ -38,11 +38,9 @@ class BookedAdapter(
             binding.endDate.text = bookedData.endDate
             binding.dateCount.text = bookedData.dateCount
             binding.adultCount.text = "${bookedData.adultCount}명"
-
-            // childCount가 0이면 GONE, 아니면 보여주기
             if (bookedData.childCount == 0) {
                 binding.childCount.visibility = View.GONE
-                binding.countComma.visibility = View.GONE  // 쉼표 TextView가 있다면
+                binding.countComma.visibility = View.GONE
             } else {
                 binding.childCount.visibility = View.VISIBLE
                 binding.childCount.text = "${bookedData.childCount}명"
@@ -92,6 +90,27 @@ class BookedAdapter(
                             Log.e("BookedAdapter", "Failed to post review: ${response.code()}")
                         }
 
+
+            //취소시
+            if (bookedData.status == "CANCELED") {
+                val dimAlpha = 0.5f
+                binding.detailImg.alpha = dimAlpha
+                binding.houseName.alpha = dimAlpha
+                binding.roomType.alpha = dimAlpha
+                binding.selectedDate.alpha = dimAlpha
+                binding.selectedCount.alpha = dimAlpha
+
+                binding.status.text = "취소완료"
+
+
+            }
+
+            //리뷰 작성가능시에만 후기작성
+            binding.reviewBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
+
+            binding.reviewBtn.setOnClickListener {
+                // 리뷰작성 페이지 이동
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
                         Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)
@@ -104,7 +123,9 @@ class BookedAdapter(
             binding.detailBox.setOnClickListener {
                 val detailFragment = BookedDetailFragment()
                 val bundle = Bundle().apply {
-                    putParcelable("bookedData", bookedData)
+                    putInt("reservationId", bookedData.reservationId)
+                    Log.d("reservationId", "${bookedData.reservationId}")
+
                 }
                 detailFragment.arguments = bundle
 
@@ -113,6 +134,7 @@ class BookedAdapter(
                     .addToBackStack(null)
                     .commit()
             }
+
         }
 
     }

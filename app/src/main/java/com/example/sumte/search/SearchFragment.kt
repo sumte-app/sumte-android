@@ -41,7 +41,6 @@ class SearchFragment : Fragment() {
         ).isAppearanceLightStatusBars = true
 
         historyList = loadHistoryList()
-
         loadHistoryVisibility()
     }
 
@@ -55,13 +54,10 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 날짜/인원 UI 바인딩(네가 이미 쓰던 함수)
         bindBookInfoUI(binding, viewModel)
 
-        // --- 히스토리 가시성 ---
         binding.history.visibility = if (loadHistoryVisibility()) View.VISIBLE else View.GONE
 
-        // --- 히스토리 어댑터 ---
         historyAdapter = HistoryAdapter(
             historyList,
             saveHistory = { updatedList ->
@@ -78,13 +74,13 @@ class SearchFragment : Fragment() {
         binding.historyRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecyclerview.adapter = historyAdapter
 
-        // --- 검색창 설정 ---
+        //검색창
         binding.searchText.apply {
             setSingleLine(true)
             setHorizontallyScrolling(true)
             inputType = InputType.TYPE_CLASS_TEXT
             imeOptions = EditorInfo.IME_ACTION_SEARCH
-
+            //입력리스너
             setOnEditorActionListener { _, actionId, event ->
                 val isIme =
                     actionId == EditorInfo.IME_ACTION_SEARCH ||
@@ -100,7 +96,6 @@ class SearchFragment : Fragment() {
                 }
             }
 
-            // 일부 키보드 보강
             setOnKeyListener { _, keyCode, keyEvent ->
                 if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_UP) {
                     submitSearch()
@@ -111,13 +106,14 @@ class SearchFragment : Fragment() {
             }
         }
 
-        // --- 날짜/인원 변경 화면 이동 ---
+        // 날짜변경화면 이동
         binding.dateChangeBar.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, BookInfoDateFragment())
                 .addToBackStack(null)
                 .commit()
         }
+        //인원변경화면 이동
         binding.countChangeBar.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, BookInfoCountFragment())
@@ -125,13 +121,12 @@ class SearchFragment : Fragment() {
                 .commit()
         }
 
-        // --- 뒤로가기 ---
+        //뒤로가기
         binding.backBtn.setOnClickListener {
             requireActivity().setResult(AppCompatActivity.RESULT_OK)
             requireActivity().finish()
         }
 
-        // --- 히스토리 전체 삭제 ---
         binding.allDeleteBtn.setOnClickListener {
             historyAdapter.clearAll()
             saveHistoryList(emptyList(), false)

@@ -20,7 +20,6 @@ class MyIdEditFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MyIdViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -66,14 +65,12 @@ class MyIdEditFragment : Fragment() {
 
         viewModel.updateResult.observe(viewLifecycleOwner) { success ->
             if (success) {
-                // 1. SharedPreferences에 새 닉네임 저장
+                // shared에 새 닉네임 저장
                 val sharedPref = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                 sharedPref.edit().putString("nickname", binding.editNickname.text.toString()).apply()
-
-                // 2. 뒤로 가기 (수정 완료)
                 requireActivity().supportFragmentManager.popBackStack()
             } else {
-                // 실패했을 경우 에러 메시지 표시
+                // 에러 메시지 표시
                 showError(true, "닉네임 변경에 실패했습니다. 다시 시도해 주세요.")
             }
         }

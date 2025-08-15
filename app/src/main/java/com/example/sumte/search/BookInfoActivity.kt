@@ -10,21 +10,19 @@ class BookInfoActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
         const val EXTRA_KEYWORD = "keyword"
-        const val EXTRA_SOURCE = "source" //소스
-
+        const val EXTRA_SOURCE = "source"
         const val TYPE_DATE = "date"
         const val TYPE_COUNT = "count"
         const val TYPE_SEARCH_RESULT = "search_result"
     }
-
     private var source: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_info)
-
+        //소스 받고
         source = intent.getStringExtra(EXTRA_SOURCE)
-
+        //소스에따라 분기
         if (savedInstanceState == null) {
             val fragmentType = intent.getStringExtra(EXTRA_FRAGMENT_TYPE) ?: TYPE_DATE
             val fragment = when (fragmentType) {
@@ -50,10 +48,10 @@ class BookInfoActivity : AppCompatActivity() {
     fun onApplyClicked() {
         when (source) {
             "house_detail" -> {
-                finish() // HouseDetail에서 왔으면 단순 종료
+                finish()
             }
             else -> {
-                val keyword = "" //키워드
+                val keyword = "" //검색어 키워드
                 val fragment = SearchResultFragment().apply {
                     arguments = Bundle().apply {
                         putString("keyword", keyword)
@@ -61,7 +59,7 @@ class BookInfoActivity : AppCompatActivity() {
                 }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.book_info_container, fragment)
-                    .addToBackStack(null) // 뒤로가기 시 이전 화면으로
+                    .addToBackStack(null)
                     .commit()
             }
         }
