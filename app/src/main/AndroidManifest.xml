@@ -49,6 +49,7 @@
         <activity android:name=".mybook.BookedListActivity"/>
         <activity android:name=".review.MyReviewActivity"/>
         <activity android:name=".housedetail.ActivityRoomDetail" />
+        <activity android:name=".review.ReviewBookedWriteActivity"/>
         <activity
             android:name=".myid.MyIdActivity"
             android:exported="false" />
