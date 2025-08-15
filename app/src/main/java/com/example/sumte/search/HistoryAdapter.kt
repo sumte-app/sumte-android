@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemHistoryBinding
-
+//검색기록 어댑터
 class HistoryAdapter(
     private val items: MutableList<History>,
     private val saveHistory: (List<History>) -> Unit,
@@ -17,7 +17,6 @@ class HistoryAdapter(
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(history: History) {
             binding.keyword.text = history.keyword
             binding.startDate.text = history.startDate
@@ -33,19 +32,14 @@ class HistoryAdapter(
 
             binding.historyItem.setOnClickListener {
                 val clickedHistory = items[adapterPosition]
-
-                // 기존 위치에서 제거
+                // 중복 검색 시 처리 로직
                 items.removeAt(adapterPosition)
                 notifyItemRemoved(adapterPosition)
-
-                // 맨 앞으로 추가
                 items.add(0, clickedHistory)
                 notifyItemInserted(0)
-
-                // SharedPreferences 저장 콜백 호출
                 saveHistory(items)
 
-                // 화면 전환
+                // 검색결과로 데이터전달
                 val fragment = SearchResultFragment().apply {
                     arguments = Bundle().apply {
                         putString(BookInfoActivity.EXTRA_KEYWORD, clickedHistory.keyword)
@@ -60,14 +54,12 @@ class HistoryAdapter(
                     ?.addToBackStack(null)
                     ?.commit()
             }
-
+            //검색기록 단일 삭제
             binding.deleteBtn.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     items.removeAt(position)
                     notifyItemRemoved(position)
-
-                    // SharedPreferences에 저장하는 콜백 호출
                     saveHistory(items)
                     if (items.isEmpty()) {
                         onEmptyList()
@@ -88,14 +80,13 @@ class HistoryAdapter(
     override fun getItemCount(): Int = items.size
 
     fun contains(item: History): Boolean = items.contains(item)
-
-
+    //히스토리 추가
     fun addItem(item: History) {
-        items.add(0, item)        // 리스트 맨 앞에 새 아이템 추가
-        notifyItemInserted(0)     // 0번 인덱스에 아이템 추가 알림
-        saveHistory(items)        // 변경된 리스트 저장 콜백 호출
+        items.add(0, item)
+        notifyItemInserted(0)
+        saveHistory(items)
     }
-
+    //히스토리 제거
     fun removeItem(item: History) {
         val index = items.indexOf(item)
         if (index != -1) {
@@ -104,7 +95,7 @@ class HistoryAdapter(
             saveHistory(items)
         }
     }
-
+    //히스토리 개수 제한
     fun trimToMaxSize(max: Int) {
         while (items.size > max) {
             val removed = items.removeAt(items.size - 1)
@@ -112,7 +103,7 @@ class HistoryAdapter(
         }
         saveHistory(items)
     }
-
+    //히스토리 전부 삭제
     fun clearAll() {
         val size = items.size
         items.clear()

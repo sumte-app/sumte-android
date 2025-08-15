@@ -4,12 +4,21 @@ import android.content.Context
 import android.util.Log
 import com.example.sumte.MyReservationItem
 import com.example.sumte.ReservationData
+import com.example.sumte.ReservationDetailData
+import com.example.sumte.ReservationDetailResponse
 import com.example.sumte.ReservationRequest
 import com.example.sumte.ReservationResponse
+import com.example.sumte.ReservationService
 import com.example.sumte.RetrofitClient
+import com.example.sumte.RetrofitClient.apiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class ReservationRepository(private val context: Context) {
+
+    private val reservationService = RetrofitClient.createReservationServiceWithoutAuth()
+
 
     // 예약 생성
     suspend fun createReservation(request: ReservationRequest): Response<ReservationResponse<ReservationData>>? {
@@ -52,4 +61,33 @@ class ReservationRepository(private val context: Context) {
             emptyList()
         }
     }
+    //예약 조회
+    suspend fun getReservationDetail(reservationId: Int): ReservationDetailData? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response: Response<ReservationDetailResponse> =
+                    reservationService.getReservationDetail(reservationId)
+                if (response.isSuccessful) {
+                    response.body()?.data
+                } else {
+                    Log.e("ReservationRepository", "예약 상세 조회 실패: ${response.errorBody()?.string()}")
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+    //예약취소
+    suspend fun cancelReservation(reservationId: Int): ReservationResponse<Nothing?>? {
+        return try {
+            val response = reservationService.cancelReservation(reservationId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }

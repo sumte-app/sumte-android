@@ -26,6 +26,7 @@ object RetrofitClient {
             .build()
     }
 
+
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -45,6 +46,14 @@ object RetrofitClient {
     // 결제 API
 //    val paymentService: PaymentService by lazy { instance.create(PaymentService::class.java) }
 //    val paymentRepository: PaymentRepository by lazy { PaymentRepository(paymentService) }
+
+    fun createReservationServiceWithoutAuth(): ReservationService {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ReservationService::class.java)
+    }
 
     // 예약 API 헤더 설정
     fun createReservationService(token: String): ReservationService {

@@ -1,4 +1,4 @@
-// BookInfoUtils.kt
+//바인딩 유지보수 용이를 위해 따로 관리
 package com.example.sumte.common
 
 import android.view.View

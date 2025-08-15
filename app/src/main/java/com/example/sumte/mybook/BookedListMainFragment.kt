@@ -25,10 +25,6 @@ class BookedListMainFragment : Fragment() {
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
 
-//    private lateinit var binding: FragmentBookedListMainBinding
-//    private val viewModel: BookedViewModel by viewModels()
-//    private lateinit var adapter: BookedAdapter
-
     class BookedViewModelFactory(private val repository: ReservationRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BookedViewModel::class.java)) {
@@ -60,12 +56,13 @@ class BookedListMainFragment : Fragment() {
         binding.bookedListRecyclerview.adapter = adapter
 
         bookedVM.fetchBookedList()
-
+        //데이터전달부분
         lifecycleScope.launch {
             bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
-                        bookedDate = item.startDate,
+                        reservationId = item.id,
+                        bookedDate = item.startDate, //수정
                         houseName = item.guestHouseName,
                         roomType = item.roomName,
                         startDate = item.startDate,
