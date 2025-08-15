@@ -5,7 +5,7 @@
     android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:padding="12dp">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clTop"
@@ -14,77 +14,122 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <RatingBar
-            android:id="@+id/rbStar"
+<!--        <RatingBar-->
+<!--            android:id="@+id/rbStar"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:numStars="5"-->
+<!--            android:stepSize="1"-->
+<!--            android:rating="4.0"-->
+<!--            android:progressDrawable="@drawable/rating_star"-->
+<!--            app:layout_constraintStart_toStartOf="@id/clTop"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:padding="0dp"-->
+<!--            android:scaleY="0.9"-->
+<!--            />-->
+        <ImageView
+            android:id="@+id/tvStar1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:numStars="5"
-            android:stepSize="1"
-            android:rating="4.0"
-            android:progressDrawable="@drawable/rating_star"
+            android:src="@drawable/star_fill"
             app:layout_constraintStart_toStartOf="@id/clTop"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:padding="0dp"
-            android:scaleY="0.9"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-        <TextView
-            android:id="@+id/tvDate"
+        <ImageView
+            android:id="@+id/tvStar2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="2025.07.26"
-            android:fontFamily="@font/pretendard_regular"
-            android:textColor="@color/gray400"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clReview"
-        android:layout_width="match_parent"
-        android:layout_height="188dp"
-        app:layout_constraintTop_toBottomOf="@id/clTop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/round_gray"
-        android:layout_marginTop="12dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivImage"
-            android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample_room1"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@id/tvStar1"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:shapeAppearanceOverlay="@style/TopRoundedImage" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/tvStar3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@id/tvStar2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/tvStar4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@id/tvStar3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <ImageView
+            android:id="@+id/tvStar5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/star_fill"
+            app:layout_constraintStart_toEndOf="@id/tvStar4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="2025.07.26"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textColor="@color/gray400"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-        <TextView
-            android:id="@+id/tvReview"
-            android:layout_width="0dp"
-            android:layout_height="68dp"
-            android:text="일단 게스트하우스라는 인식 때문인지 기대를 안하고 갔는데 방을 들어가자마자 깨끗하고 오션뷰라서 너무 놀랐습..."
-            android:fontFamily="@font/pretendard_regular"
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:textColor="@color/gray600"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivImage"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clReview"
+                android:layout_width="200dp"
+                android:layout_height="188dp"
+                app:layout_constraintTop_toBottomOf="@id/clTop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/round_gray"
+                android:layout_marginTop="12dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivImage"
+                    android:layout_width="200dp"
+                    android:layout_height="120dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample_room1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:shapeAppearanceOverlay="@style/TopRoundedImage" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/tvReview"
+                    android:layout_width="200dp"
+                    android:layout_height="68dp"
+                    android:text="일단 게스트하우스라는 인식 때문인지 기대를 안하고 갔는데 방을 들어가자마자 깨끗하고 오션뷰라서 너무 놀랐습..."
+                    android:fontFamily="@font/pretendard_regular"
+                    android:lineSpacingMultiplier="1.36"
+                    android:letterSpacing="-0.02"
+                    android:textSize="12sp"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:textColor="@color/gray600"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ivImage"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>

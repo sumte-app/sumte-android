@@ -1,20 +1,25 @@
 package com.example.sumte.payment
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import com.example.sumte.HomeFragment
 import com.example.sumte.R
-
-
+import com.example.sumte.databinding.FragmentPaymentCompleteBinding
+import com.example.sumte.housedetail.HouseDetailFragment
 
 
 class PaymentCompleteFragment : Fragment() {
+    private lateinit var binding : FragmentPaymentCompleteBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
     }
 
@@ -22,8 +27,15 @@ class PaymentCompleteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_payment_complete, container, false)
+        binding = FragmentPaymentCompleteBinding.inflate(inflater, container, false)
+
+        binding.homeBtn.setOnClickListener{
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, HomeFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,4 +45,6 @@ class PaymentCompleteFragment : Fragment() {
         val tid = requireArguments().getString("tid").orEmpty()
 
     }
+
+
 }

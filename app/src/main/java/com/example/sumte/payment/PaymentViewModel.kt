@@ -2,6 +2,7 @@ package com.example.sumte.payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,9 @@ sealed class PayUiState {
 sealed interface ApproveUiState {
     object Idle : ApproveUiState
     object Loading : ApproveUiState
-    data class Success(val data: PaymentApproveData) : ApproveUiState
+    data class Success(
+        val data: PaymentApproveResponse<PaymentApproveData>
+    ) : ApproveUiState
     data class Error(val message: String) : ApproveUiState
 }
 
@@ -55,24 +58,41 @@ class PaymentViewModel(private val repo: PaymentRepository) : ViewModel() {
     private val _approveState = MutableStateFlow<ApproveUiState>(ApproveUiState.Idle)
     val approveState: StateFlow<ApproveUiState> = _approveState
 
+    // PaymentViewModel.kt
     fun approve(paymentId: Int, pgToken: String) {
         _approveState.value = ApproveUiState.Loading
         viewModelScope.launch {
             try {
                 val res = repo.approvePayment(paymentId, pgToken)
+
                 if (res == null) {
                     _approveState.value = ApproveUiState.Error("로그인이 필요합니다.")
-                } else if (res.isSuccessful && res.body()?.success == true) {
-                    _approveState.value = ApproveUiState.Success(res.body()!!.data)
+                    return@launch
+                }
+
+                val code = res.code()
+                if (!res.isSuccessful) {
+                    val err = res.errorBody()?.string().orEmpty()
+                    android.util.Log.e("PayVM", "approve HTTP $code error=$err")
+                    _approveState.value = ApproveUiState.Error("HTTP $code: ${err.ifBlank { "서버 오류" }}")
+                    return@launch
+                }
+
+                val body = res.body()
+                android.util.Log.d("PayVM", "approve body success=${body?.success} code=${body?.code} msg=${body?.message}")
+
+                if (body?.success == true) {
+                    _approveState.value = ApproveUiState.Success(body)   // ★ 래퍼 그대로
                 } else {
-                    val msg = res.body()?.message ?: (res.errorBody()?.string() ?: "결제 승인 실패")
-                    _approveState.value = ApproveUiState.Error(msg)
+                    _approveState.value = ApproveUiState.Error(body?.message ?: "결제 승인 실패")
                 }
             } catch (e: Exception) {
+                android.util.Log.e("PayVM", "approve exception", e)
                 _approveState.value = ApproveUiState.Error(e.message ?: "네트워크 오류")
             }
         }
     }
+
 
     // 필요하면 성공/실패 후 화면에서 다시 Idle로 돌리고 싶을 때 사용
     fun reset() { _state.value = PayUiState.Idle }
