@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -36,6 +37,9 @@ import com.example.sumte.review.ReviewCardAdapter
 import com.example.sumte.review.ReviewListFragment
 import com.example.sumte.search.BookInfoActivity
 import com.example.sumte.search.BookInfoViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -46,6 +50,8 @@ class HouseDetailFragment : Fragment() {
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
+
+    private var dotJob: Job? = null
 
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
@@ -115,47 +121,65 @@ class HouseDetailFragment : Fragment() {
 //        }
 
         adapter = RoomInfoAdapter(emptyList()) { room ->
+            // 날짜/금액 먼저 계산
+            val start = bookInfoVM.startDate
+            val end   = bookInfoVM.endDate
+            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
+            val totalAmount = room.price * nights
+
             val request = ReservationRequest(
                 roomId = room.id,
                 adultCount = bookInfoVM.adultCount,
                 childCount = bookInfoVM.childCount,
-                startDate = "${bookInfoVM.startDate}",
-                endDate = "${bookInfoVM.endDate}"
+                startDate = start.toString(),
+                endDate = end.toString()
             )
             Log.d("Reservation_Request", request.toString())
 
             lifecycleScope.launch {
                 val repository = ReservationRepository(requireContext())
                 val response = repository.createReservation(request)
-                if (response?.isSuccessful == true) {
+
+                if (response?.isSuccessful == true && response.body()?.success == true) {
+                    val resId = response.body()?.data?.reservationId
+                    if (resId == null) {
+                        Log.e("Reservation", "reservationId is null in success body: ${response.body()}")
+                        Toast.makeText(requireContext(), "예약 실패(응답 오류)", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
                     Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
+                    Log.d("Reservation", "reservationId=$resId")
+
+                    // ✅ 예약 성공일 때만 결제 화면으로 이동
+                    val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId) // ★ 필수
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString())
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount) // 총액을 넘김
+                    }
+                    startActivity(intent)
                 } else {
-                    Log.e("Reservation_Fail", "code=${response?.code()}, msg=${response?.message()}, body=${response?.errorBody()?.string()}")
+                    val code = response?.code()
+                    val msg  = response?.message()
+                    val err  = response?.errorBody()?.string()
+                    Log.e("Reservation_Fail", "code=$code, msg=$msg, body=$err")
                     Toast.makeText(requireContext(), "예약 실패", Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
             }
-            val start = bookInfoVM.startDate
-            val end   = bookInfoVM.endDate
-            val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
-            val amount = room.price * nights
-
-            val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_START, start.toString()) // "YYYY-MM-DD"
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_END,   end.toString())
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKIN_TIME, room.checkin)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, amount)
-
-                // putExtra(PaymentExtras.EXTRA_RES_ID, reservationId)
-            }
-            startActivity(intent)
-
         }
+
+
+
+
 
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
@@ -366,5 +390,43 @@ class HouseDetailFragment : Fragment() {
             binding.ivLike.setImageResource(R.drawable.heart)
         }
     }
+
+    private fun showLoading(show: Boolean) {
+        // include된 view_home_loading 의 root를 표시/숨김
+        binding.homeLoading.root.isVisible = show
+        if (show) startDotAnimation() else stopDotAnimation()
+    }
+
+    private fun startDotAnimation() {
+        val dots = arrayOf(
+            binding.homeLoading.dot1,
+            binding.homeLoading.dot2,
+            binding.homeLoading.dot3
+        )
+        dotJob?.cancel()
+        dotJob = viewLifecycleOwner.lifecycleScope.launch {
+            var i = 0
+            while (isActive) {
+                dots.forEachIndexed { idx, v ->
+                    v.setImageResource(
+                        if (idx == i) R.drawable.dot_green else R.drawable.dot_gray
+                    )
+                }
+                i = (i + 1) % dots.size
+                delay(300)
+            }
+        }
+    }
+
+    private fun stopDotAnimation() {
+        dotJob?.cancel()
+        dotJob = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        stopDotAnimation()
+    }
+
 
 }

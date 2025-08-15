@@ -39,8 +39,7 @@
 
                 <data
                     android:scheme="myapp"
-                    android:host="pay"
-                    android:pathPrefix="/kakaopay" />
+                    android:host="pay" />
             </intent-filter>
 
         </activity>
