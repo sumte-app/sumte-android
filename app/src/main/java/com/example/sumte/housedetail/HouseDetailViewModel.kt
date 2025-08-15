@@ -29,6 +29,8 @@ class HouseDetailViewModel(
     private val _header = MutableLiveData<GuesthouseInfo>()
     val header: LiveData<GuesthouseInfo> = _header
 
+    // 스크롤 위치를 저장할 변수 추가
+    var scrollPosition: Int = 0
 
 
     // 단건 조회 (roomId로)

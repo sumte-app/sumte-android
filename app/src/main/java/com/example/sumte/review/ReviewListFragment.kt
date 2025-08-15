@@ -17,10 +17,12 @@ import kotlinx.coroutines.launch
 
 // 리뷰 전체 조회 화면 코드
 class ReviewListFragment : Fragment() {
-
-    private lateinit var binding: FragmentReviewListBinding
+    private var _binding: FragmentReviewListBinding ?= null
+    private val binding get() = _binding!!
     private lateinit var reviewAdapter: ReviewListAdapter
-    private var guesthouseId: Long = -1L // 전달받을 guesthouseId
+    private var guesthouseId: Long = -1L
+    private var averageScore: Double = 0.0
+    private var reviewCount: Int = 0
 
     private var currentPage = 0
     private var isLastPage = false
@@ -28,22 +30,30 @@ class ReviewListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 다른 프래그먼트에서 guesthouseId를 받는 부분
-        // arguments가 null이 아닐 경우에만 값을 가져오도록 처리
+        // HouseDetailFragment로부터 guesthouseId를 받는 부분
         arguments?.let {
-//            guesthouseId = it.getLong("guesthouseId_key", -1L) // "guesthouseId_key"는 전달하는 쪽에서 사용한 키와 일치해야함.
+            guesthouseId = it.getLong("guesthouseId_key", -1L)
+            averageScore = it.getDouble("averageScore_key", 0.0)
+            reviewCount = it.getInt("reviewCount_key", 0)
+
+            Log.d("DEBUG_ReviewList", "Bundle에서 받은 averageScore 값: $averageScore")
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentReviewListBinding.inflate(inflater, container, false)
+        _binding = FragmentReviewListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 뒤로가기 버튼
+        binding.reviewListArrowIv.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         setupRecyclerView()
 
@@ -52,8 +62,10 @@ class ReviewListFragment : Fragment() {
         } else {
             // guesthouseId가 전달되지 않은 경우의 예외 처리
             Log.e("ReviewListFragment", "Guesthouse ID is not provided.")
-            // 사용자에게 알림을 보여주는 등의 처리를 할 수 있습니다.
+            Toast.makeText(requireContext(), "게스트하우스 정보를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
         }
+        binding.reviewListScoreTv.text=averageScore.toString()
+        binding.reviewListCountTv.text=reviewCount.toString()
     }
 
     // RecyclerView 초기 설정
@@ -80,10 +92,14 @@ class ReviewListFragment : Fragment() {
                     // 응답 본문에서 리뷰 목록(content)을 가져옴
                     val reviewList = response.body()?.content ?: emptyList()
                     if (reviewList.isNotEmpty()) {
+                        binding.noReviewLl.visibility=View.GONE
+                        binding.reviewListRv.visibility=View.VISIBLE
                         reviewAdapter.updateData(reviewList) // 어댑터에 데이터 업데이트
                     } else {
                         // 리뷰가 없는 경우 처리
                         Log.d("ReviewListFragment", "No reviews found.")
+                        binding.noReviewLl.visibility=View.VISIBLE
+                        binding.reviewListRv.visibility=View.GONE
                     }
                 } else {
                     Log.e("ReviewListFragment", "API 응답 실패: ${response.code()}")
@@ -94,16 +110,17 @@ class ReviewListFragment : Fragment() {
         }
     }
 
-    // onResume은 현재 로직에서는 불필요해 보이므로 일단 비워두거나,
-    // 화면에 다시 돌아왔을 때 새로고침이 필요하다면 아래와 같이 수정합니다.
+    // 화면에 다시 돌아왔을 때 새로고침
     override fun onResume() {
         super.onResume()
-        // 필요 시 데이터 새로고침
-        // currentPage = 0
-        // isLastPage = false
-        // if (guesthouseId != -1L) {
-        //     getReviewsFromServer(guesthouseId)
-        // }
+         currentPage = 0
+         isLastPage = false
+         if (guesthouseId != -1L) {
+             getReviewsFromServer(guesthouseId)
+         }
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
