@@ -73,8 +73,10 @@ interface ReviewService {
         @Query("sort") sort: String = "createdAt,DESC"
     ): Response<MyReviewPage>
 
-    @DELETE("reviews/{id}")
-    suspend fun deleteReview(@Path("id") reviewId: Long): Response<Unit>
+    @DELETE("reviews/{reviewId}")
+    suspend fun deleteReview(
+        @Path("reviewId") reviewId: Long
+    ): Response<Unit>
 
     @PATCH("reviews/{reviewId}")
     suspend fun patchReview(
