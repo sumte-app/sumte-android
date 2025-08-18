@@ -127,9 +127,7 @@ class HouseDetailFragment : Fragment() {
                 bundle.putDouble("averageScore_key", averageScore ?: 0.0)
                 bundle.putInt("reviewCount_key", reviewCount ?: 0)
 
-
                 reviewListFragment.arguments = bundle
-
 
                 parentFragmentManager.beginTransaction()
 //                    .replace(R.id.main_container, reviewListFragment)
@@ -138,14 +136,11 @@ class HouseDetailFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
             } else {
-
                 Toast.makeText(requireContext(), "정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
-
         adapter = RoomInfoAdapter(emptyList()) { room ->
-
             val start = bookInfoVM.startDate
             val end   = bookInfoVM.endDate
             val nights = maxOf(1, java.time.temporal.ChronoUnit.DAYS.between(start, end).toInt())
@@ -158,7 +153,6 @@ class HouseDetailFragment : Fragment() {
                 startDate = start.toString(),
                 endDate = end.toString()
             )
-            Log.d("Reservation_Request", request.toString())
 
             lifecycleScope.launch {
                 val repository = ReservationRepository(requireContext())
@@ -200,10 +194,6 @@ class HouseDetailFragment : Fragment() {
                 }
             }
         }
-
-
-
-
 
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
@@ -348,11 +338,12 @@ class HouseDetailFragment : Fragment() {
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
+        //객실 예약가능 정보 반영캘린더
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
                 putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+                putExtra("guesthouseId", guesthouseId)
             }
             startActivity(intent)
         }
