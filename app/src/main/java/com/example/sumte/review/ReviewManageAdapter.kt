@@ -46,6 +46,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
         fun bind(item: MyReview)=with(binding){
             itemReviewTitleTv.text=item.authorNickname
             itemReviewDateTv.text=item.createdAt.substring(0, 10)
+            itemReviewSubtitleTv.text=item.roomName
 
             val starViews = listOf(
                 itemReviewStar1,
@@ -85,6 +86,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                     putExtra("contents", item.contents)
                     putExtra("score", item.score)
                     putExtra("imageUrls", ArrayList(item.imageUrls ?: emptyList()))
+                    putExtra("roomName", item.roomName)
                 }
                 binding.root.context.startActivity(intent)
             }
