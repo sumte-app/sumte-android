@@ -17,5 +17,6 @@ data class BookedData(
     val status: String,
     val roomId: Long,
     val canWriteReview: Boolean,
-    val reviewWritten: Boolean
+    val reviewWritten: Boolean,
+    val reservedAt: String
 ) : Parcelable
