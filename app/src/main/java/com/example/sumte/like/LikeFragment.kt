@@ -57,24 +57,6 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         viewModel.loadLikedGuesthouses()
     }
 
-//    private fun loadFavorites() {
-//        lifecycleScope.launch {
-//            try {
-//                val response = likeService.getLikes()
-//                if (response.isSuccessful) {
-//                    val body = response.body()
-//                    body?.let {
-//                        adapter.setItems(it.content)
-//                    }
-//                } else {
-//                    Log.e("LikeFragment", "Failed: ${response.code()}")
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
-//    }
-
     override fun onLikeRemoved(guestHouse: GuesthouseSummaryDto) {
         viewModel.removeLike(guestHouse.id)
 

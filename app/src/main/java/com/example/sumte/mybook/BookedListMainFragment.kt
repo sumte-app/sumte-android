@@ -25,6 +25,17 @@ class BookedListMainFragment : Fragment() {
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
 
+    private val reviewWriteResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // ReviewBookedWriteActivity에서 RESULT_OK 응답을 보내면 이 블록이 실행
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 리뷰가 작성되었으므로, ViewModel을 통해 목록을 새로고침하도록 요청
+            Log.d("BookedListMainFragment", "리뷰 작성 완료. 목록을 새로고침합니다.")
+            bookedVM.fetchBookedList()
+        }
+    }
+
     class BookedViewModelFactory(private val repository: ReservationRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BookedViewModel::class.java)) {
@@ -45,13 +56,14 @@ class BookedListMainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val repository = ReservationRepository(requireContext())
         val factory = BookedViewModelFactory(repository)
         bookedVM = ViewModelProvider(this, factory).get(BookedViewModel::class.java)
 
         binding.backBtn.setOnClickListener { requireActivity().finish() }
 
-        adapter = BookedAdapter(emptyList(), this)
+        adapter = BookedAdapter(emptyList(), this, reviewWriteResultLauncher)
         binding.bookedListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.bookedListRecyclerview.adapter = adapter
 
@@ -77,8 +89,9 @@ class BookedListMainFragment : Fragment() {
                         reservedAt = item.reservedAt
                     )
                 }
-                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
-                binding.bookedListRecyclerview.adapter = adapter
+//                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
+//                binding.bookedListRecyclerview.adapter = adapter
+                adapter.updateData(bookedDataList)
             }
         }
         // 화면이 처음 생성될 때 목록을 불러옵니다.

@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="여자도미토리 (최대 4인실 입실 가능)"
+            android:text="여자도미토리"
             android:textSize="12sp"
             android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/gray400"
