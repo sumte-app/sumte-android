@@ -91,26 +91,25 @@ class BookedAdapter(
                         }
 
 
-            //취소시
-            if (bookedData.status == "CANCELED") {
-                val dimAlpha = 0.5f
-                binding.detailImg.alpha = dimAlpha
-                binding.houseName.alpha = dimAlpha
-                binding.roomType.alpha = dimAlpha
-                binding.selectedDate.alpha = dimAlpha
-                binding.selectedCount.alpha = dimAlpha
+                        //취소시
+                        if (bookedData.status == "CANCELED") {
+                            val dimAlpha = 0.5f
+                            binding.detailImg.alpha = dimAlpha
+                            binding.houseName.alpha = dimAlpha
+                            binding.roomType.alpha = dimAlpha
+                            binding.selectedDate.alpha = dimAlpha
+                            binding.selectedCount.alpha = dimAlpha
 
-                binding.status.text = "취소완료"
+                            binding.status.text = "취소완료"
+                        }
 
-
-            }
-
-            //리뷰 작성가능시에만 후기작성
-            binding.reviewBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+                        //리뷰 작성가능시에만 후기작성
+                        binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
 
 
-            binding.reviewBtn.setOnClickListener {
-                // 리뷰작성 페이지 이동
+                        binding.reviewWriteBtn.setOnClickListener {
+                            // 리뷰작성 페이지 이동
+                        }
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
                         Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)
