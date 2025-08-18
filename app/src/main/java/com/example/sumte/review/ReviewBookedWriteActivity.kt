@@ -1,5 +1,6 @@
 package com.example.sumte.review
 
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -50,6 +51,9 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
     // Intent로 받아올 ID
     private var reviewId: Long = -1
     private var roomId: Long = -1
+
+    // 내용을 추가하지 않고 창을 닫는 경우을 고려한 변수
+    private var isContentModified = false
 
     // 변경 감지를 위한 원본 데이터 (항상 빈 값으로 시작)
     private var originalContent = ""
@@ -183,11 +187,11 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
 
         try {
-            // --- 이 액티비티는 항상 '수정' 로직만 수행 ---
+            // 이 액티비티는 항상 '수정' 로직만 수행
             val currentImageUrls = photoList.map { it.toString() }
             val isImagesChanged = currentImageUrls.sorted() != originalImageUrls.sorted()
 
-            // 1. 이미지가 변경되었으면 업로드
+            // 이미지가 변경되었으면 업로드
             if (isImagesChanged) {
                 Log.d("ReviewDebug", "Images were changed, starting upload process.")
                 val uploadedImageUris: List<ImageUri> = withContext(Dispatchers.IO) {
@@ -217,7 +221,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
                 if (!imageReplaceResponse.isSuccessful) Log.e("ReviewDebug", "Image replacement failed: ${imageReplaceResponse.code()}")
             }
 
-            // 2. 텍스트나 별점이 변경되었으면 업데이트
+            // 텍스트나 별점이 변경되었으면 업데이트
             val isContentChanged = contents != originalContent
             val isRatingChanged = score != originalRating
             if (isContentChanged || isRatingChanged) {
@@ -225,6 +229,8 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
                 val patchResponse = ApiClient.reviewService.patchReview(reviewId, reviewRequest)
                 if (!patchResponse.isSuccessful) Log.e("ReviewDebug", "patchReview failed: ${patchResponse.code()}")
             }
+
+            setResult(Activity.RESULT_OK)
 
             onSuccess()
 
@@ -234,7 +240,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
     }
 
-    // --- 이하 헬퍼 함수들 ---
+    // 이하 헬퍼 함수들
 
     private fun checkIfChanged() {
         val currentContent = binding.reviewContentEt.text.toString()
@@ -242,8 +248,11 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         val isRatingChanged = selectedRating != originalRating
         val currentImageUrls = photoList.map { it.toString() }
         val isImagesChanged = currentImageUrls.sorted() != originalImageUrls.sorted()
+        val hasChanged = isContentChanged || isRatingChanged || isImagesChanged
 
-        if (isContentChanged || isRatingChanged || isImagesChanged) {
+        isContentModified = hasChanged
+
+        if (hasChanged) {
             binding.reviewApplyDefaultTv.visibility = View.GONE
             binding.reviewApplyTv.visibility = View.VISIBLE
         } else {
@@ -292,6 +301,23 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
                 if (idx < rating) R.drawable.star_fill
                 else R.drawable.star_empty
             )
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 만약 내용이 수정되지 않았고, 유효한 reviewId가 있다면
+        if (!isContentModified && reviewId != -1L) {
+            Log.d("ReviewBookedWriteActivity", "내용이 수정되지 않았으므로 임시 리뷰(id: $reviewId)를 삭제합니다.")
+
+            // 화면이 닫히는 중이므로 결과를 기다릴 필요 없이 삭제 요청만 보냄
+            lifecycleScope.launch {
+                try {
+                    ApiClient.reviewService.deleteReview(reviewId)
+                } catch (e: Exception) {
+                    Log.e("ReviewBookedWriteActivity", "임시 리뷰 삭제 실패: ${e.message}")
+                }
+            }
         }
     }
 }

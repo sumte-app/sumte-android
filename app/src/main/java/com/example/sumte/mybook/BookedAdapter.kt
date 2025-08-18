@@ -32,6 +32,7 @@ import java.util.Locale
 class BookedAdapter(
     private var items: List<BookedData>,
     private val fragment: Fragment,
+    private val reviewWriteLauncher: ActivityResultLauncher<Intent>
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
     //ui전달부분
 
@@ -86,7 +87,7 @@ class BookedAdapter(
             }
 
             //리뷰 작성가능시에만 후기작성
-            binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+//            binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
 
 
             binding.reviewWriteBtn.setOnClickListener {
@@ -112,7 +113,8 @@ class BookedAdapter(
                                 intent.putExtra("BookedRoomId", bookedData.roomId)
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
-                                itemView.context.startActivity(intent)
+//                                itemView.context.startActivity(intent)
+                                reviewWriteLauncher.launch(intent)
                             } else {
                                 Toast.makeText(itemView.context, "리뷰 ID를 받지 못했습니다.", Toast.LENGTH_SHORT).show()
                             }

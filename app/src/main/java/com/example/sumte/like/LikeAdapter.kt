@@ -49,11 +49,12 @@ class LikeAdapter(
                 "시간 정보 없음"
             }
 
-            // 평점과 리뷰 개수를 함께 표시 (예: ⭐ 4.5 (65))
+            // 평점과 리뷰 개수를 함께 표시
             val score = guestHouse.averageScore
             val reviews = guestHouse.reviewCount
             if (score != null && score > 0 && reviews != null) {
-                guesthouseRatingTv.text = "⭐ %.1f (%d)".format(score, reviews)
+                guesthouseRatingTv.text = "%.1f".format(score)
+                guesthouseReviewCountTv.text = "%d".format(reviews)
             } else {
                 guesthouseRatingTv.text = "평점 정보 없음"
             }
