@@ -61,7 +61,7 @@ class BookedListMainFragment : Fragment() {
             bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
-                        reservationId = item.reservationId,
+                        reservationId = item.id,
                         bookedDate = item.startDate, //수정
                         houseName = item.guestHouseName,
                         roomType = item.roomName,
