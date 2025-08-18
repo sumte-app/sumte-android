@@ -66,13 +66,12 @@ data class MyReservationResponse(
     val data: MyReservationData?
 )
 
-
 data class MyReservationData(
     val content: List<MyReservationItem>
 )
-
+//여기가 키미의 reservationId와 충돌
 data class MyReservationItem(
-    val reservationId: Int,
+    val id: Int,
     val guestHouseName: String,
     val roomName: String,
     val imageUrl: String?,
@@ -84,7 +83,8 @@ data class MyReservationItem(
     val status: String,
     val canWriteReview: Boolean,
     val reviewWritten: Boolean,
-    val roomId: Long
+    val roomId: Long,
+    val reservedAt: String //추가
 )
 
 // 상세 조회 Response
@@ -96,6 +96,7 @@ data class ReservationDetailResponse(
 )
 
 // 상세 예약 정보
+//여기도이 id이름맞추기..?
 data class ReservationDetailData(
     val reservationId: Int,
     val guestHouseName: String,

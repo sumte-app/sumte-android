@@ -73,7 +73,8 @@ class BookedListMainFragment : Fragment() {
                         status = item.status,
                         roomId = item.roomId,
                         canWriteReview = item.canWriteReview,
-                        reviewWritten = item.reviewWritten
+                        reviewWritten = item.reviewWritten,
+                        reservedAt = item.reservedAt
                     )
                 }
                 adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)

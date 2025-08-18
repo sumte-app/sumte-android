@@ -12,6 +12,9 @@ import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedDetailBinding
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class BookedDetailFragment : Fragment() {
     lateinit var binding: FragmentBookedDetailBinding
@@ -35,11 +38,17 @@ class BookedDetailFragment : Fragment() {
         }
         //사용자정보 없이 조회 가능
         val repository = ReservationRepository(requireContext())
+        fun formatReservedAt(reservedAt: String): String {
+            val cleanString = reservedAt.substring(0, 19)
+            val ldt = LocalDateTime.parse(cleanString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (E) HH:mm", Locale.KOREAN)
+            return ldt.format(formatter)
+        }
         // 데이터 bind
         viewLifecycleOwner.lifecycleScope.launch {
             val detail = repository.getReservationDetail(reservationId)
             if (detail != null) {
-                binding.bookedDate.text = detail.reservedAt //formatter수정
+                binding.bookedDate.text = formatReservedAt(detail.reservedAt) //formatter수정
                 binding.houseName.text = detail.guestHouseName
                 binding.roomType.text = detail.roomName
                 binding.startDate.text = detail.startDate

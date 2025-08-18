@@ -21,6 +21,12 @@ import com.example.sumte.review.ReviewWriteActivity
 import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 class BookedAdapter(
@@ -28,11 +34,20 @@ class BookedAdapter(
     private val fragment: Fragment,
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
     //ui전달부분
+
+    fun formatReservedAt(reservedAt: String): String {
+        val cleanString = reservedAt.substring(0, 19)
+        val ldt = LocalDateTime.parse(cleanString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (E)", Locale.KOREAN)
+        return ldt.format(formatter)
+    }
+
+
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
         RecyclerView.ViewHolder(binding.root){
         fun bind(bookedData: BookedData) {
             binding.houseName.text = bookedData.houseName
-            binding.bookedDate.text = bookedData.bookedDate
+            binding.bookedDate.text = formatReservedAt(bookedData.reservedAt)
             binding.roomType.text = bookedData.roomType
             binding.startDate.text = bookedData.startDate
             binding.endDate.text = bookedData.endDate
@@ -54,6 +69,24 @@ class BookedAdapter(
                 binding.reviewWriteBtn.visibility=View.VISIBLE
                 binding.reviewWrittenBtn.visibility=View.GONE
             }
+
+            if (bookedData.status == "CANCELED") {
+                val dimAlpha = 0.5f
+                binding.detailImg.alpha = dimAlpha
+                binding.houseName.alpha = dimAlpha
+                binding.roomType.alpha = dimAlpha
+                binding.selectedDate.alpha = dimAlpha
+                binding.selectedCount.alpha = dimAlpha
+
+                binding.reviewWriteBtn.visibility=View.GONE
+                binding.reviewWrittenBtn.visibility=View.GONE
+
+                binding.status.text = "취소완료"
+            }
+
+            //리뷰 작성가능시에만 후기작성
+            binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
 
             binding.reviewWriteBtn.setOnClickListener {
                 fragment.lifecycleScope.launch {
@@ -89,28 +122,6 @@ class BookedAdapter(
                             Toast.makeText(itemView.context, "리뷰 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
                             Log.e("BookedAdapter", "Failed to post review: ${response.code()}")
                         }
-
-
-            //취소시
-            if (bookedData.status == "CANCELED") {
-                val dimAlpha = 0.5f
-                binding.detailImg.alpha = dimAlpha
-                binding.houseName.alpha = dimAlpha
-                binding.roomType.alpha = dimAlpha
-                binding.selectedDate.alpha = dimAlpha
-                binding.selectedCount.alpha = dimAlpha
-
-                binding.status.text = "취소완료"
-
-
-            }
-
-            //리뷰 작성가능시에만 후기작성
-            binding.reviewBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
-
-
-            binding.reviewBtn.setOnClickListener {
-                // 리뷰작성 페이지 이동
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
                         Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)
