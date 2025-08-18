@@ -12,6 +12,7 @@ import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedDetailBinding
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -47,6 +48,7 @@ class BookedDetailFragment : Fragment() {
         // 데이터 bind
         viewLifecycleOwner.lifecycleScope.launch {
             val detail = repository.getReservationDetail(reservationId)
+            Log.d("BookedDetail","${detail}")
             if (detail != null) {
                 binding.bookedDate.text = formatReservedAt(detail.reservedAt) //formatter수정
                 binding.houseName.text = detail.guestHouseName
@@ -71,6 +73,16 @@ class BookedDetailFragment : Fragment() {
                     binding.selectedDate.alpha = dimAlpha
                     binding.selectedCount.alpha = dimAlpha
                 }
+                //만약 현재날짜가 detail.endDate보다 나중이라면
+                val today = java.time.LocalDate.now()
+                val endDate = LocalDate.parse(detail.endDate)
+                if (endDate.isBefore(today)) {
+                    binding.cancelBtn.isEnabled = false
+                    binding.cancelBtn.setBackgroundResource(R.drawable.apply_btn_disabled_style)
+
+                }
+
+
             } else {
                 Log.e("BookedDetailFragment", "Failed to fetch reservation detail")
             }

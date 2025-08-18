@@ -65,11 +65,12 @@ class BookedAdapter(
             if(bookedData.reviewWritten){
                 binding.reviewWriteBtn.visibility=View.GONE
                 binding.reviewWrittenBtn.visibility=View.VISIBLE
+                binding.status.text = ""
             }else{
                 binding.reviewWriteBtn.visibility=View.VISIBLE
                 binding.reviewWrittenBtn.visibility=View.GONE
             }
-
+            //취소시
             if (bookedData.status == "CANCELED") {
                 val dimAlpha = 0.5f
                 binding.detailImg.alpha = dimAlpha

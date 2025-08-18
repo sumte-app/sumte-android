@@ -38,6 +38,9 @@ class BookInfoDateFragment : Fragment() {
     private var endDate: LocalDate? = viewModel.endDate
     private var currentYearMonth: YearMonth = YearMonth.now()
 
+    private var source: String? = null
+    private var guesthouseId: Int? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +53,12 @@ class BookInfoDateFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //게하예약가능 날짜 적용
+        source = activity?.intent?.getStringExtra(BookInfoActivity.EXTRA_SOURCE)
+        Log.d("guesthouseId_source","${source}")
+        guesthouseId = activity?.intent?.getIntExtra("guesthouseId", -1)?.takeIf { it > 0 }
+        Log.d("guesthouseId","${guesthouseId}")
+
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
         bindBookInfoUI(binding, viewModel)
 
@@ -58,8 +67,6 @@ class BookInfoDateFragment : Fragment() {
         }
         binding.customCalendar.dayBinder = object : MonthDayBinder<DayViewContainer>{
             override fun create(view: View) = DayViewContainer(view)
-
-
             override fun bind(container: DayViewContainer, data: CalendarDay) {
                 val date = data.date
                 container.textView.text = date.dayOfMonth.toString()
