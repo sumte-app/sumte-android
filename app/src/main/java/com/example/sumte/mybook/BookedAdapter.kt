@@ -34,6 +34,7 @@ import java.util.Locale
 class BookedAdapter(
     private var items: List<BookedData>,
     private val fragment: Fragment,
+    private val reviewWriteLauncher: ActivityResultLauncher<Intent>
 ) : RecyclerView.Adapter<BookedAdapter.BookedViewHolder>() {
     //ui전달부분
 
@@ -103,7 +104,6 @@ class BookedAdapter(
                 binding.status.visibility = View.GONE
             }
 
-
             binding.reviewWriteBtn.setOnClickListener {
                 fragment.lifecycleScope.launch {
                     try {
@@ -127,7 +127,8 @@ class BookedAdapter(
                                 intent.putExtra("BookedRoomId", bookedData.roomId)
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
-                                itemView.context.startActivity(intent)
+//                                itemView.context.startActivity(intent)
+                                reviewWriteLauncher.launch(intent)
                             } else {
                                 Toast.makeText(itemView.context, "리뷰 ID를 받지 못했습니다.", Toast.LENGTH_SHORT).show()
                             }
@@ -138,6 +139,29 @@ class BookedAdapter(
                             Toast.makeText(itemView.context, "리뷰 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
                             Log.e("BookedAdapter", "Failed to post review: ${response.code()}")
                         }
+
+
+
+                        //취소시
+                        if (bookedData.status == "CANCELED") {
+                            val dimAlpha = 0.5f
+                            binding.detailImg.alpha = dimAlpha
+                            binding.houseName.alpha = dimAlpha
+                            binding.roomType.alpha = dimAlpha
+                            binding.selectedDate.alpha = dimAlpha
+                            binding.selectedCount.alpha = dimAlpha
+
+                            binding.status.text = "취소완료"
+                        }
+
+                        //리뷰 작성가능시에만 후기작성
+                        binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
+
+                        binding.reviewWriteBtn.setOnClickListener {
+                            // 리뷰작성 페이지 이동
+                        }
+
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
                         Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)

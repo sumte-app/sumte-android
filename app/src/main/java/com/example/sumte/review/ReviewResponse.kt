@@ -18,5 +18,6 @@ data class ReviewPageResponse(
     val totalPages: Int,
     val number: Int, // 현재 페이지 번호
     val size: Int,   // 페이지 크기
-    val empty: Boolean
+    val empty: Boolean,
+    val last: Boolean
 )

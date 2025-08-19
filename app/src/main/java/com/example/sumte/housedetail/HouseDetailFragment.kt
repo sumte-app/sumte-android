@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.sumte.ApiClient
 import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
@@ -52,8 +54,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
-
-    //private var dotJob: Job? = null
+    private val reviewAdapter = ReviewCardAdapter()
 
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
@@ -61,7 +62,17 @@ class HouseDetailFragment : Fragment() {
     }
     //예약정보 뷰모델
     private val bookInfoVM by lazy { getBookInfoViewModel() }
+    private val vm: GuestHouseReviewViewModel by viewModels {
 
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val api = ApiClient.reviewService
+                val repo = ReviewRepository(api)
+                @Suppress("UNCHECKED_CAST")
+                return GuestHouseReviewViewModel(repo) as T
+            }
+        }
+    }
 
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
@@ -209,14 +220,31 @@ class HouseDetailFragment : Fragment() {
             }
         })
 
-        // 리뷰 샘플
-        val sampleReviews = listOf(
-            Review("1", "가성비 최고의 숙소", "깨끗하고 위치도 좋았어요. 다음에도 또 오고 싶어요!", "2025-07-13", null, 4.5f),
-            Review("2", "아쉬움이 좀 있었어요", "전체적으로는 괜찮았지만 화장실이 조금 불편했어요.", "2025-07-14", null, 3.0f)
-        )
-        binding.rvReviewList.adapter = ReviewCardAdapter(sampleReviews)
-        binding.rvReviewList.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        binding.rvReviewList.apply {
+            adapter = reviewAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            vm.state.collect { st ->
+                when (st) {
+                    is ReviewUiState.Loading -> {
+                        // 필요하면 로딩 인디케이터 보여주기
+                    }
+                    is ReviewUiState.Success -> {
+                        reviewAdapter.submitList(st.items) // ★ 여기서 주입
+                    }
+                    is ReviewUiState.Error -> {
+                        Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
+
+// 최초 로드 (guesthouseId를 Long으로 변환)
+        vm.loadFirst(guesthouseId.toLong(), size = 10)
 
         // 뒤로가기 & 등록 이동
         binding.ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
@@ -276,8 +304,11 @@ class HouseDetailFragment : Fragment() {
             Log.d("HD/F", "header updated: name=${h.name}, addr=${h.address}, imgs=${h.imageUrls.size}")
             binding.tvTitle.text = h.name
             binding.tvLocation.text = h.address ?: ""
-            binding.tvReview.text = h.averageScore.toString()
+            binding.tvReview.text = String.format("%.1f", h.averageScore ?: 0.0)
             binding.tvReviewCount.text = h.reviewCount.toString()
+
+            binding.tvReviewScore.text = String.format("%.1f", h.averageScore ?: 0.0)
+            binding.tvReviewCount2.text = h.reviewCount.toString()
 
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
