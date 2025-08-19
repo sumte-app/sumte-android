@@ -37,8 +37,8 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="8dp"
-            android:layout_height="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/arrow_left"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toTopOf="parent"
@@ -205,10 +205,9 @@
                     />
                 <ImageView
                     android:id="@+id/ivHouseAllReview"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/arrow_right_gray"
-                    android:layout_marginStart="5dp"
                     app:layout_constraintStart_toEndOf="@id/tvCloseBrace"
                     app:layout_constraintTop_toTopOf="@id/tvCloseBrace"
                     app:layout_constraintBottom_toBottomOf="@+id/tvCloseBrace"/>
@@ -375,17 +374,19 @@
 
                 <ImageView
                     android:id="@+id/ivStar"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/star_fill"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="@+id/tvReviewScore"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvReviewScore"/>
 
                 <TextView
                     android:id="@+id/tvReviewScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_semibold"
+                    android:layout_marginStart="4dp"
                     android:text="4.4"
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@id/ivStar"
@@ -424,7 +425,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/tvReviewScore"
                     app:layout_constraintStart_toEndOf="@id/tvReviewCount2"/>
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/llSeeAllReviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -438,14 +439,19 @@
                         android:layout_height="wrap_content"
                         android:text="전체보기"
                         android:textSize="12sp"
-                        android:textColor="@color/gray500" />
+                        android:textColor="@color/gray500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <ImageView
                         android:id="@+id/ivArrowRight"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/arrow_right" />
-                </LinearLayout>
+                        android:src="@drawable/arrow_right_gray"
+                        app:layout_constraintStart_toEndOf="@+id/tvSeeAllReviews"
+                        app:layout_constraintTop_toTopOf="@+id/tvSeeAllReviews"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvSeeAllReviews"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

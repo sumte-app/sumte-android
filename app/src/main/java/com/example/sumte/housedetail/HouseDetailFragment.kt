@@ -118,7 +118,7 @@ class HouseDetailFragment : Fragment() {
         updatePageIndicator(1, 0)
 
 
-        binding.tvSeeAllReviews.setOnClickListener {
+        binding.llSeeAllReviews.setOnClickListener {
             val headerData = houseDetailVM.header.value
             if (headerData != null) {
                 val averageScore = headerData.averageScore
@@ -139,6 +139,35 @@ class HouseDetailFragment : Fragment() {
                 parentFragmentManager.beginTransaction()
 //                    .replace(R.id.main_container, reviewListFragment)
                     .add(R.id.main_container, reviewListFragment) 
+                    .hide(this)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Toast.makeText(requireContext(), "정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.ivHouseAllReview.setOnClickListener {
+            val headerData = houseDetailVM.header.value
+            if (headerData != null) {
+                val averageScore = headerData.averageScore
+                val reviewCount = headerData.reviewCount
+                Log.d("DEBUG_HouseDetail", "전달하려는 averageScore 값: $averageScore")
+
+                // ReviewListFragment 인스턴스 생성
+                val reviewListFragment = ReviewListFragment()
+
+                // 데이터를 담을 Bundle 생성
+                val bundle = Bundle()
+                bundle.putLong("guesthouseId_key", guesthouseId.toLong()) // guesthouseId도 함께 전달
+                bundle.putDouble("averageScore_key", averageScore ?: 0.0)
+                bundle.putInt("reviewCount_key", reviewCount ?: 0)
+
+                reviewListFragment.arguments = bundle
+
+                parentFragmentManager.beginTransaction()
+//                    .replace(R.id.main_container, reviewListFragment)
+                    .add(R.id.main_container, reviewListFragment)
                     .hide(this)
                     .addToBackStack(null)
                     .commit()
