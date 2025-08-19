@@ -31,6 +31,8 @@ import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
+import com.example.sumte.common.bindBookInfoUI
+import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentHouseDetailBinding
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.reservation.ReservationRepository
@@ -54,18 +56,12 @@ class HouseDetailFragment : Fragment() {
     private lateinit var imageAdapter: HouseImageAdapter
     private val reviewAdapter = ReviewCardAdapter()
 
-
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
         ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
     }
-
-    private val bookInfoVM by lazy {
-        ViewModelProvider(
-            App.instance,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(App.instance)
-        )[BookInfoViewModel::class.java]
-    }
+    //예약정보 뷰모델
+    private val bookInfoVM by lazy { getBookInfoViewModel() }
     private val vm: GuestHouseReviewViewModel by viewModels {
 
         object : ViewModelProvider.Factory {
@@ -78,7 +74,6 @@ class HouseDetailFragment : Fragment() {
         }
     }
 
-
     companion object {
         private const val ARG_GUESTHOUSE_ID = "guesthouseId"
         fun newInstance(guesthouseId: Int) = HouseDetailFragment().apply {
@@ -87,7 +82,6 @@ class HouseDetailFragment : Fragment() {
     }
 
     private var guesthouseId: Int = -1
-
 
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
@@ -275,8 +269,6 @@ class HouseDetailFragment : Fragment() {
             houseDetailVM.loadGuesthouse(guesthouseId)
             Log.d("HD/F", "call loadRooms($guesthouseId)")
             houseDetailVM.loadRooms(guesthouseId, startDate, endDate)}
-
-
         return binding.root
     }
 
@@ -326,8 +318,6 @@ class HouseDetailFragment : Fragment() {
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
                 updatePageIndicator(current, total)
             }
-
-
         }
     }
 
@@ -352,21 +342,8 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val startDate = bookInfoVM.startDate
-        val endDate = bookInfoVM.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-
-        binding.startDate.text = startDate.format(formatter)
-        binding.endDate.text = endDate.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text =
-            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+        bindBookInfoUI(binding, bookInfoVM)
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -385,10 +362,10 @@ class HouseDetailFragment : Fragment() {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
                 putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+                putExtra("guesthouseId", guesthouseId)
             }
             startActivity(intent)
         }
-
 
         // 찜 상태 확인 및 클릭 리스너
         setupLikeButton()
@@ -401,27 +378,8 @@ class HouseDetailFragment : Fragment() {
     //재시작할 때
     override fun onResume() {
         super.onResume()
-        updateUIFromViewModel()
+        bindBookInfoUI(binding, bookInfoVM)
     }
-
-    private fun updateUIFromViewModel() {
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
-
-        val sDate = bookInfoVM.startDate
-        val eDate = bookInfoVM.endDate
-
-        if (sDate != null && eDate != null) {
-            binding.startDate.text = sDate.format(formatter)
-            binding.endDate.text = eDate.format(formatter)
-            val nights = ChronoUnit.DAYS.between(sDate, eDate)
-            binding.dateCount.text = "${nights}박"
-        }
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text = if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
-    }
-
     // 찜 버튼 초기 설정 함수
     private fun setupLikeButton() {
         // 찜 상태가 변경될 때마다 UI를 자동으로 업데이트
@@ -451,10 +409,6 @@ class HouseDetailFragment : Fragment() {
             binding.ivLike.setImageResource(R.drawable.heart)
         }
     }
-
-
-
-
 
     override fun onDestroyView() {
         houseDetailVM.scrollPosition = binding.nVHouseDetail.scrollY
