@@ -113,6 +113,7 @@ class BookedAdapter(
                                 intent.putExtra("BookedRoomId", bookedData.roomId)
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
+                                intent.putExtra("BookedReservationId", bookedData.reservationId)
 //                                itemView.context.startActivity(intent)
                                 reviewWriteLauncher.launch(intent)
                             } else {
