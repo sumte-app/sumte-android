@@ -48,7 +48,6 @@ class BookedDetailFragment : Fragment() {
         // 데이터 bind
         viewLifecycleOwner.lifecycleScope.launch {
             val detail = repository.getReservationDetail(reservationId)
-            Log.d("BookedDetail","${detail}")
             if (detail != null) {
                 binding.bookedDate.text = formatReservedAt(detail.reservedAt) //formatter수정
                 binding.houseName.text = detail.guestHouseName
@@ -60,7 +59,7 @@ class BookedDetailFragment : Fragment() {
                 binding.adultCount.text = "${detail.adultCount}명"
                 binding.childCount.text = if (detail.childCount > 0) "${detail.childCount}명" else ""
 
-                //취소일 때
+                //취소된 예약일 때
                 if (detail.status == "CANCELED") {
                     binding.statusCancel.visibility = View.VISIBLE
                     binding.cancelBtn.isEnabled = false
@@ -94,12 +93,22 @@ class BookedDetailFragment : Fragment() {
         binding.yesBtn.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val response = repository.cancelReservation(reservationId)
-
                 if (response?.success == true) {
                     Toast.makeText(requireContext(), "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
                     binding.popupOverlay.visibility = View.GONE
                     // 취소완료 화면으로 이동
-                    val fragment = BookedCancelFragment()
+                    val fragment = BookedCancelFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("guestHouseName", binding.houseName.text.toString())
+                            putString("roomName", binding.roomType.text.toString())
+                            putString("startDate", binding.startDate.text.toString())
+                            putString("endDate", binding.endDate.text.toString())
+                            putString("nightCount", binding.dateCount.text.toString())
+                            putString("adultCount", binding.adultCount.text.toString())
+                            putString("childCount", binding.childCount.text.toString())
+                            putString("totalPrice", binding.price.text.toString())
+                        }
+                    }
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.booked_list_container, fragment)
                         .addToBackStack(null)

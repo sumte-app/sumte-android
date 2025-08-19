@@ -22,10 +22,12 @@ import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 
@@ -61,14 +63,29 @@ class BookedAdapter(
                 binding.childCount.text = "${bookedData.childCount}명"
                 binding.countComma.visibility = View.VISIBLE
             }
+
             // 후기 작성 여부에 따른 버튼 변경
-            if(bookedData.reviewWritten){
+            if (bookedData.reviewWritten){
                 binding.reviewWriteBtn.visibility=View.GONE
                 binding.reviewWrittenBtn.visibility=View.VISIBLE
                 binding.status.text = ""
-            }else{
+            } else {
                 binding.reviewWriteBtn.visibility=View.VISIBLE
-                binding.reviewWrittenBtn.visibility=View.GONE
+                binding.status.text = ""
+            }
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val startDate = LocalDate.parse((bookedData.startDate), formatter)
+            val endDate = LocalDate.parse(bookedData.endDate, formatter)
+            //canWriteReview 역할
+            if (!LocalDate.now().isAfter(endDate)) {
+                binding.reviewWriteBtn.visibility = View.GONE
+                binding.reviewWrittenBtn.visibility = View.GONE
+                val daysUntilStart = ChronoUnit.DAYS.between(LocalDate.now(), startDate) - 1
+                binding.status.text = when {
+                    daysUntilStart > 0 -> "D-$daysUntilStart"
+                    daysUntilStart == 0L -> "D-day"
+                    else -> ""
+                }
             }
             //취소시
             if (bookedData.status == "CANCELED") {
@@ -82,11 +99,9 @@ class BookedAdapter(
                 binding.reviewWriteBtn.visibility=View.GONE
                 binding.reviewWrittenBtn.visibility=View.GONE
 
-                binding.status.text = "취소완료"
+                binding.statusCancel.visibility = View.VISIBLE
+                binding.status.visibility = View.GONE
             }
-
-            //리뷰 작성가능시에만 후기작성
-            binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
 
 
             binding.reviewWriteBtn.setOnClickListener {

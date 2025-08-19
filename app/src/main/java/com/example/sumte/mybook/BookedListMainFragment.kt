@@ -19,6 +19,7 @@ import com.example.sumte.mybook.BookedData
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class BookedListMainFragment : Fragment() {
     private lateinit var binding: FragmentBookedListMainBinding
@@ -62,7 +63,6 @@ class BookedListMainFragment : Fragment() {
                 val bookedDataList = list.map { item ->
                     BookedData(
                         reservationId = item.id,
-                        bookedDate = item.startDate, //수정
                         houseName = item.guestHouseName,
                         roomType = item.roomName,
                         startDate = item.startDate,
@@ -76,13 +76,12 @@ class BookedListMainFragment : Fragment() {
                         reviewWritten = item.reviewWritten,
                         reservedAt = item.reservedAt
                     )
-                }
-                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
-                binding.bookedListRecyclerview.adapter = adapter
+                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) } // ← 최신 예약이 위로
+
+                // 어댑터를 매번 새로 만들지 말고 updateData 사용
+                adapter.updateData(bookedDataList)
             }
         }
-        // 화면이 처음 생성될 때 목록을 불러옵니다.
-        bookedVM.fetchBookedList()
     }
 
 //    override fun onResume() {
