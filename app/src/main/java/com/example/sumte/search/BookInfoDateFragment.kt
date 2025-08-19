@@ -62,6 +62,10 @@ class BookInfoDateFragment : Fragment() {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
         bindBookInfoUI(binding, viewModel)
 
+        if (source == "houseDetail" && guesthouseId != null) {
+            // 예: 예약 가능한 날짜 불러오기
+        }
+
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
         }
@@ -77,6 +81,11 @@ class BookInfoDateFragment : Fragment() {
                 ))
                 container.textView.alpha = 1f
                 container.textView.isClickable = true
+
+                //houseDetail에서 온 경우
+                if (source == "houseDetail") {
+                    // API에서 받은 예약가능/불가능 날짜 반영x
+                }
 
                 //선택 가능한 때 정의
                 val selected = when {
@@ -166,7 +175,8 @@ class BookInfoDateFragment : Fragment() {
                     binding.customCalendar.notifyCalendarChanged()
                 }
             }
-        }
+        }//여기까지 캘린더 내부 bind
+
         binding.customCalendar.apply {
             val currentMonth = YearMonth.now(seoulZone)
             val firstMonth = currentMonth

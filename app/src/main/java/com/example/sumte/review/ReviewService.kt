@@ -89,7 +89,7 @@ interface ReviewService {
         @Path("guesthouseId") guesthouseId: Long,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sort") sort: String = "createdAt,DESC"
+        @Query("sort") sort: List<String> = listOf("createdAt,DESC")
     ): Response<ReviewPageResponse>
 
     @GET("s3/presigned-urls")

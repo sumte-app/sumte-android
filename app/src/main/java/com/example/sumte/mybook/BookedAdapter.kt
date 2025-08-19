@@ -22,10 +22,12 @@ import com.example.sumte.search.HistoryAdapter
 import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 
@@ -53,23 +55,38 @@ class BookedAdapter(
             binding.startDate.text = bookedData.startDate
             binding.endDate.text = bookedData.endDate
             binding.dateCount.text = bookedData.dateCount
-            binding.adultCount.text = "${bookedData.adultCount}명"
+            binding.adultCount.text = "성인 ${bookedData.adultCount}"
             if (bookedData.childCount == 0) {
                 binding.childCount.visibility = View.GONE
                 binding.countComma.visibility = View.GONE
             } else {
                 binding.childCount.visibility = View.VISIBLE
-                binding.childCount.text = "${bookedData.childCount}명"
+                binding.childCount.text = "아동 ${bookedData.childCount}"
                 binding.countComma.visibility = View.VISIBLE
             }
+
             // 후기 작성 여부에 따른 버튼 변경
-            if(bookedData.reviewWritten){
+            if (bookedData.reviewWritten){
                 binding.reviewWriteBtn.visibility=View.GONE
                 binding.reviewWrittenBtn.visibility=View.VISIBLE
                 binding.status.text = ""
-            }else{
+            } else {
                 binding.reviewWriteBtn.visibility=View.VISIBLE
-                binding.reviewWrittenBtn.visibility=View.GONE
+                binding.status.text = ""
+            }
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val startDate = LocalDate.parse((bookedData.startDate), formatter)
+            val endDate = LocalDate.parse(bookedData.endDate, formatter)
+            //canWriteReview 역할
+            if (!LocalDate.now().isAfter(endDate)) {
+                binding.reviewWriteBtn.visibility = View.GONE
+                binding.reviewWrittenBtn.visibility = View.GONE
+                val daysUntilStart = ChronoUnit.DAYS.between(LocalDate.now(), startDate) - 1
+                binding.status.text = when {
+                    daysUntilStart > 0 -> "D-$daysUntilStart"
+                    daysUntilStart == 0L -> "D-day"
+                    else -> ""
+                }
             }
             //취소시
             if (bookedData.status == "CANCELED") {
@@ -83,12 +100,9 @@ class BookedAdapter(
                 binding.reviewWriteBtn.visibility=View.GONE
                 binding.reviewWrittenBtn.visibility=View.GONE
 
-                binding.status.text = "취소완료"
+                binding.statusCancel.visibility = View.VISIBLE
+                binding.status.visibility = View.GONE
             }
-
-            //리뷰 작성가능시에만 후기작성
-//            binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
-
 
             binding.reviewWriteBtn.setOnClickListener {
                 fragment.lifecycleScope.launch {
@@ -113,6 +127,7 @@ class BookedAdapter(
                                 intent.putExtra("BookedRoomId", bookedData.roomId)
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
+                                intent.putExtra("BookedReservationId", bookedData.reservationId)
 //                                itemView.context.startActivity(intent)
                                 reviewWriteLauncher.launch(intent)
                             } else {
@@ -125,6 +140,29 @@ class BookedAdapter(
                             Toast.makeText(itemView.context, "리뷰 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
                             Log.e("BookedAdapter", "Failed to post review: ${response.code()}")
                         }
+
+
+
+                        //취소시
+                        if (bookedData.status == "CANCELED") {
+                            val dimAlpha = 0.5f
+                            binding.detailImg.alpha = dimAlpha
+                            binding.houseName.alpha = dimAlpha
+                            binding.roomType.alpha = dimAlpha
+                            binding.selectedDate.alpha = dimAlpha
+                            binding.selectedCount.alpha = dimAlpha
+
+                            binding.status.text = "취소완료"
+                        }
+
+                        //리뷰 작성가능시에만 후기작성
+                        binding.reviewWriteBtn.visibility = if (bookedData.canWriteReview) View.VISIBLE else View.GONE
+
+
+                        binding.reviewWriteBtn.setOnClickListener {
+                            // 리뷰작성 페이지 이동
+                        }
+
                     } catch (e: Exception) {
                         // 네트워크 오류 등 예외 발생
                         Log.e("ReviewAPI_Debug", "[리팩토링 후] Exception in postReview", e)

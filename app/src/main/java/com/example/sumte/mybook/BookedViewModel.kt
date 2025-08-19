@@ -16,4 +16,8 @@ class BookedViewModel(private val repository: ReservationRepository) : ViewModel
             _bookedList.value = repository.getMyReservations()
         }
     }
+
+    fun updateBookedList(newList: List<MyReservationItem>) {
+        _bookedList.value = newList
+    }
 }
