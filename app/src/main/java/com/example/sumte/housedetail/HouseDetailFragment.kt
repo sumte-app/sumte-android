@@ -312,21 +312,8 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
-        val startDate = bookInfoVM.startDate
-        val endDate = bookInfoVM.endDate
-        val nights = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
-
-        binding.startDate.text = startDate.format(formatter)
-        binding.endDate.text = endDate.format(formatter)
-        binding.dateCount.text = "${nights}박"
-
-        binding.adultCount.text = "성인 ${bookInfoVM.adultCount}"
-        binding.childCount.text =
-            if (bookInfoVM.childCount > 0) "아동 ${bookInfoVM.childCount}" else ""
-
-        binding.countComma.visibility = if (bookInfoVM.childCount > 0) View.VISIBLE else View.GONE
+        bindBookInfoUI(binding, bookInfoVM)
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -348,7 +335,6 @@ class HouseDetailFragment : Fragment() {
             }
             startActivity(intent)
         }
-
 
         // 찜 상태 확인 및 클릭 리스너
         setupLikeButton()
