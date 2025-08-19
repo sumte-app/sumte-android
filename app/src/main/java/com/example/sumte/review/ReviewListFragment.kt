@@ -14,6 +14,7 @@ import com.example.sumte.RetrofitClient
 import com.example.sumte.SharedPreferencesManager
 import com.example.sumte.databinding.FragmentReviewListBinding
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 // 리뷰 전체 조회 화면 코드
 class ReviewListFragment : Fragment() {
@@ -64,7 +65,8 @@ class ReviewListFragment : Fragment() {
             Log.e("ReviewListFragment", "Guesthouse ID is not provided.")
             Toast.makeText(requireContext(), "게스트하우스 정보를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
         }
-        binding.reviewListScoreTv.text=averageScore.toString()
+        val decimalFormat = DecimalFormat("#.#")
+        binding.reviewListScoreTv.text = decimalFormat.format(averageScore)
         binding.reviewListCountTv.text=reviewCount.toString()
     }
 
