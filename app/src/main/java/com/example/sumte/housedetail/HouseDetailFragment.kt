@@ -53,7 +53,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
 
-    private var dotJob: Job? = null
+    //private var dotJob: Job? = null
 
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
@@ -71,7 +71,6 @@ class HouseDetailFragment : Fragment() {
     }
 
     private var guesthouseId: Int = -1
-
 
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
@@ -332,6 +331,7 @@ class HouseDetailFragment : Fragment() {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
                 putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+                putExtra("guesthouseId", guesthouseId)
             }
             startActivity(intent)
         }

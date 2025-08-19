@@ -54,13 +54,13 @@ class BookedAdapter(
             binding.startDate.text = bookedData.startDate
             binding.endDate.text = bookedData.endDate
             binding.dateCount.text = bookedData.dateCount
-            binding.adultCount.text = "${bookedData.adultCount}명"
+            binding.adultCount.text = "성인 ${bookedData.adultCount}"
             if (bookedData.childCount == 0) {
                 binding.childCount.visibility = View.GONE
                 binding.countComma.visibility = View.GONE
             } else {
                 binding.childCount.visibility = View.VISIBLE
-                binding.childCount.text = "${bookedData.childCount}명"
+                binding.childCount.text = "아동 ${bookedData.childCount}"
                 binding.countComma.visibility = View.VISIBLE
             }
 

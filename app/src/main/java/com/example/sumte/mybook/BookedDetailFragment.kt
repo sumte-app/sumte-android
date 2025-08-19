@@ -56,8 +56,8 @@ class BookedDetailFragment : Fragment() {
                 binding.endDate.text = detail.endDate
                 binding.price.text = "${detail.totalPrice}원"
                 binding.dateCount.text = "${detail.nightCount}박"
-                binding.adultCount.text = "${detail.adultCount}명"
-                binding.childCount.text = if (detail.childCount > 0) "${detail.childCount}명" else ""
+                binding.adultCount.text = "성인 ${detail.adultCount}"
+                binding.childCount.text = if (detail.childCount > 0) ", 아동 ${detail.childCount}" else ""
 
                 //취소된 예약일 때
                 if (detail.status == "CANCELED") {
