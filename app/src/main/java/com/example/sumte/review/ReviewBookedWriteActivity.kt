@@ -233,7 +233,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
             val isContentChanged = contents != originalContent
             val isRatingChanged = score != originalRating
             if (isContentChanged || isRatingChanged) {
-                val reviewRequest = ReviewRequest2(roomId = roomId, contents = contents, score = score)
+                val reviewRequest = ReviewRequest2(reservationId = reservationId, contents = contents, score = score)
                 val patchResponse = ApiClient.reviewService.patchReview(reviewId, reviewRequest)
                 if (!patchResponse.isSuccessful) Log.e("ReviewDebug", "patchReview failed: ${patchResponse.code()}")
             }

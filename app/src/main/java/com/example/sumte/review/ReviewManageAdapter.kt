@@ -52,7 +52,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
     fun updateItem(position: Int, newReview: ReviewRequest2) {
         val old = items[position]
         items[position] = old.copy(
-            roomId = newReview.roomId,
+            reservationId = newReview.reservationId,
             contents = newReview.contents,
             score = newReview.score
         )
@@ -95,7 +95,6 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
 
             itemReviewEditTv.setOnClickListener {
                 Log.d("ID_CHECK", "수정 버튼 클릭 - Intent에 담을 Review ID: ${item.id}")
-                Log.d("ROOOOOOOOOOOOOOOOOOOMIDDDDDDDDDDDDDDD", "roomId: ${item.roomId}")
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
                     putExtra("reviewId", item.id)
@@ -104,6 +103,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                     putExtra("score", item.score)
                     putExtra("imageUrls", ArrayList(item.imageUrls ?: emptyList()))
                     putExtra("roomName", item.roomName)
+                    putExtra("reservationId", item.reservationId)
                 }
                 binding.root.context.startActivity(intent)
             }
