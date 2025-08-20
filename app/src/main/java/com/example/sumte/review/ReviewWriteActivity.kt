@@ -350,6 +350,7 @@ class ReviewWriteActivity : AppCompatActivity() {
         val reviewId = intent.getLongExtra("reviewId", -1)
         val roomId = intent.getLongExtra("roomId", -1)
         val contents = binding.reviewContentEt.text.toString().trim()
+        val reservationId = intent.getIntExtra("reservationId", -1)
         val score = selectedRating
         val imageUrls = intent.getSerializableExtra("imageUrls") as? List<String> ?: emptyList()
 
@@ -430,7 +431,7 @@ class ReviewWriteActivity : AppCompatActivity() {
             if (isEditMode && (isContentChanged || isRatingChanged)) {
                 Log.d("ReviewDebug", "Content or rating changed, calling patchReview.")
                 val reviewRequest = ReviewRequest2(
-                    roomId = roomId,
+                    reservationId = reservationId,
                     contents = contents,
                     score = score
                 )

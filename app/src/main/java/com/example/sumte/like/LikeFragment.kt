@@ -61,8 +61,7 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
         viewModel.removeLike(guestHouse.id)
 
         showCustomSnackbar(binding.root, "찜 목록에서 삭제했어요.", {
-            // '실행 취소' 기능도 ViewModel을 통해 구현해야 합니다. (아래 2번 참고)
-            viewModel.addLike(guestHouse.id) // 예시
+            viewModel.addLike(guestHouse.id)
         }, R.id.bottom_nav_view)
     }
 

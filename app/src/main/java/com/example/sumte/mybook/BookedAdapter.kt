@@ -110,7 +110,7 @@ class BookedAdapter(
                     try {
                         // 서버에 보낼 "빈 리뷰" 데이터 생성
                         val requestBody = ReviewRequest(
-                            roomId = bookedData.roomId,
+                            reservationId = bookedData.reservationId,
                             contents = "",
                             score = 1
                         )

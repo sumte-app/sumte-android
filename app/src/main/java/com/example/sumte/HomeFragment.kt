@@ -48,13 +48,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        binding.mainLogoIv.setOnClickListener {
-            startActivity(Intent(activity, ReviewWriteActivity::class.java))
-        }
-        binding.adsIv.setOnClickListener {
-            startActivity(Intent(activity, ImageUploadActivity::class.java))
-        }
         binding.searchBoxLl.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java)
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
