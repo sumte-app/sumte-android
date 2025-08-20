@@ -104,6 +104,7 @@ class BookedAdapter(
                 binding.status.visibility = View.GONE
             }
 
+
             binding.reviewWriteBtn.setOnClickListener {
                 fragment.lifecycleScope.launch {
                     try {
@@ -128,6 +129,7 @@ class BookedAdapter(
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
                                 intent.putExtra("BookedReservationId", bookedData.reservationId)
+
 //                                itemView.context.startActivity(intent)
                                 reviewWriteLauncher.launch(intent)
                             } else {
