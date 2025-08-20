@@ -207,4 +207,12 @@ class BookedAdapter(
         this.items = newItems
         notifyDataSetChanged()
     }
+
+    fun updateReviewStatus(reservationId: Int, isWritten: Boolean) {
+        val index = items.indexOfFirst { it.reservationId == reservationId }
+        if (index != -1) {
+            items[index].reviewWritten = isWritten
+            notifyItemChanged(index)
+        }
+    }
 }

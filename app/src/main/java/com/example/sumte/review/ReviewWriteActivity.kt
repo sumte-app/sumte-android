@@ -75,6 +75,11 @@ class ReviewWriteActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 val granted = permissions.all { it.value }
                 if (granted) {
+                    // 권한이 허용된 경우, launchCamera()를 실행하도록 onGranted() 호출
+                    Log.d("PermissionDebug", "Camera permission granted. Launching camera.")
+                    launchCamera() // launchCamera()를 직접 호출하거나,
+                    // 또는 `requestPermissionsIfNeeded`에 전달된 `onGranted` 람다를 여기서 실행
+                    // onGranted()
                 } else {
                     Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -272,9 +277,16 @@ class ReviewWriteActivity : AppCompatActivity() {
         val notGranted = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
         }
+        // 디버깅 로그 추가
+        Log.d("PermissionDebug", "Permissions to check: $permissions")
+        Log.d("PermissionDebug", "Not granted permissions: $notGranted")
         if (notGranted.isEmpty()) {
+            // 모든 권한이 이미 허용된 경우
+            Log.d("PermissionDebug", "All permissions are already granted.")
             onGranted()
         } else {
+            // 권한이 필요한 경우
+            Log.d("PermissionDebug", "Requesting permissions...")
             permissionLauncher.launch(notGranted.toTypedArray())
         }
     }

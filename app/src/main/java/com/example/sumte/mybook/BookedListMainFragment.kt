@@ -9,9 +9,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.databinding.FragmentBookedListMainBinding
 import com.example.sumte.mybook.BookedAdapter
@@ -37,27 +39,66 @@ class BookedListMainFragment : Fragment() {
 //            bookedVM.fetchBookedList()
 //        }
 //    }
+
 private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
     ActivityResultContracts.StartActivityForResult()
 ) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
-        // 리뷰가 작성된 예약 건의 ID를 결과로부터 받습니다.
         val completedReservationId = result.data?.getIntExtra("completedReservationId", -1) ?: -1
         if (completedReservationId != -1) {
-            // 현재 ViewModel이 가지고 있는 리스트를 직접 수정합니다.
             val currentList = bookedVM.bookedList.value.toMutableList()
-
-            // 리스트에서 해당 reservationId를 가진 아이템을 찾습니다.
             val itemIndex = currentList.indexOfFirst { it.id == completedReservationId }
-
             if (itemIndex != -1) {
-                // 아이템을 찾았다면, 해당 아이템의 reviewWritten 상태를 true로 변경합니다.
                 val updatedItem = currentList[itemIndex].copy(reviewWritten = true)
                 currentList[itemIndex] = updatedItem
-
-                // 수정된 리스트로 어댑터의 데이터를 업데이트합니다.
-                // (ViewModel의 StateFlow를 업데이트하면 collectLatest가 자동으로 감지하여 UI를 갱신합니다.)
                 bookedVM.updateBookedList(currentList)
+                val updatedBookedDataList = currentList.map { item ->
+                    BookedData(
+                        reservationId = item.id,
+                        houseName = item.guestHouseName,
+                        roomType = item.roomName,
+                        startDate = item.startDate,
+                        endDate = item.endDate,
+                        dateCount = "${item.nightCount}박",
+                        adultCount = item.adultCount,
+                        childCount = item.childCount,
+                        status = item.status,
+                        roomId = item.roomId,
+                        canWriteReview = item.canWriteReview,
+                        reviewWritten = item.reviewWritten,
+                        reservedAt = item.reservedAt
+                    )
+                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
+                adapter.updateData(updatedBookedDataList)
+            }
+        }
+    } else if (result.resultCode == Activity.RESULT_CANCELED) {
+        val canceledReservationId = result.data?.getIntExtra("canceledReservationId", -1) ?: -1
+        if (canceledReservationId != -1) {
+            val currentList = bookedVM.bookedList.value.toMutableList()
+            val itemIndex = currentList.indexOfFirst { it.id == canceledReservationId }
+            if (itemIndex != -1) {
+                val updatedItem = currentList[itemIndex].copy(reviewWritten = false)
+                currentList[itemIndex] = updatedItem
+                bookedVM.updateBookedList(currentList)
+                val updatedBookedDataList = currentList.map { item ->
+                    BookedData(
+                        reservationId = item.id,
+                        houseName = item.guestHouseName,
+                        roomType = item.roomName,
+                        startDate = item.startDate,
+                        endDate = item.endDate,
+                        dateCount = "${item.nightCount}박",
+                        adultCount = item.adultCount,
+                        childCount = item.childCount,
+                        status = item.status,
+                        roomId = item.roomId,
+                        canWriteReview = item.canWriteReview,
+                        reviewWritten = item.reviewWritten,
+                        reservedAt = item.reservedAt
+                    )
+                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
+                adapter.updateData(updatedBookedDataList)
             }
         }
     }
@@ -94,7 +135,12 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
         binding.bookedListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.bookedListRecyclerview.adapter = adapter
 
-        bookedVM.fetchBookedList()
+//        bookedVM.fetchBookedList()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                bookedVM.fetchBookedList()
+            }
+        }
         //데이터전달부분
         lifecycleScope.launch {
             bookedVM.bookedList.collectLatest { list ->
@@ -123,7 +169,6 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
                 adapter.updateData(bookedDataList)
             }
         }
-
 
 //    override fun onResume() {
 //        super.onResume()

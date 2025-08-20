@@ -93,7 +93,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                 reviewImageRv.visibility = View.GONE
             }
 
-            itemReviewEditTv.setOnClickListener {
+            cLReviewEdit.setOnClickListener {
                 Log.d("ID_CHECK", "수정 버튼 클릭 - Intent에 담을 Review ID: ${item.id}")
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
@@ -108,7 +108,7 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                 binding.root.context.startActivity(intent)
             }
 
-            itemReviewDeleteTv.setOnClickListener {
+            cLReviewDelete.setOnClickListener {
                 ReviewDeleteAskDialog(
                     onConfirm = {
                         (fragment as? ReviewManage)

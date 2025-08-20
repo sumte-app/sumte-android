@@ -82,7 +82,7 @@ class HomeFragment : Fragment() {
             isLastPage = viewModel.isLastPageCached
             showLoading(false) // 캐시가 있으니 오버레이 꺼둠
 
-            // ✅ (권장) 화면에 다시 돌아왔을 때를 대비해 찜 상태만 새로고침
+            // 화면에 다시 돌아왔을 때를 대비해 찜 상태만 새로고침
             viewLifecycleOwner.lifecycleScope.launch {
                 // ViewModel에 이미 로드된 아이템들의 찜 정보만 다시 확인
                 viewModel.updateLikedStatusForVisibleItems()
