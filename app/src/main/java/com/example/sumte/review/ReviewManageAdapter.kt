@@ -30,12 +30,29 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
     fun removeItem(pos: Int) {
         items.removeAt(pos)
         notifyItemRemoved(pos)
+        notifyItemRangeChanged(pos, items.size)
     }
+
+    // '실행 취소' 시 특정 위치에 아이템을 다시 추가하는 함수
+    fun addItem(position: Int, item: MyReview) {
+        items.add(position, item)
+        notifyItemInserted(position)
+    }
+
+    // '실행 취소'를 위해 삭제 전 아이템 정보를 가져오는 함수
+    fun getItem(position: Int): MyReview? {
+        return if (position >= 0 && position < items.size) {
+            items[position]
+        } else {
+            null
+        }
+    }
+
 
     fun updateItem(position: Int, newReview: ReviewRequest2) {
         val old = items[position]
         items[position] = old.copy(
-            roomId = newReview.roomId,
+            reservationId = newReview.reservationId,
             contents = newReview.contents,
             score = newReview.score
         )
@@ -76,9 +93,8 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                 reviewImageRv.visibility = View.GONE
             }
 
-            itemReviewEditTv.setOnClickListener {
+            cLReviewEdit.setOnClickListener {
                 Log.d("ID_CHECK", "수정 버튼 클릭 - Intent에 담을 Review ID: ${item.id}")
-                Log.d("ROOOOOOOOOOOOOOOOOOOMIDDDDDDDDDDDDDDD", "roomId: ${item.roomId}")
                 val intent = Intent(binding.root.context, ReviewWriteActivity::class.java).apply{
                     putExtra("isEditMode", true)
                     putExtra("reviewId", item.id)
@@ -87,11 +103,12 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
                     putExtra("score", item.score)
                     putExtra("imageUrls", ArrayList(item.imageUrls ?: emptyList()))
                     putExtra("roomName", item.roomName)
+                    putExtra("reservationId", item.reservationId)
                 }
                 binding.root.context.startActivity(intent)
             }
 
-            itemReviewDeleteTv.setOnClickListener {
+            cLReviewDelete.setOnClickListener {
                 ReviewDeleteAskDialog(
                     onConfirm = {
                         (fragment as? ReviewManage)

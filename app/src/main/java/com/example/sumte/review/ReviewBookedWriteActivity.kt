@@ -1,7 +1,9 @@
 package com.example.sumte.review
 
 import android.app.Activity
+
 import android.content.Intent
+
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -55,7 +57,9 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
 
     // 내용을 추가하지 않고 창을 닫는 경우을 고려한 변수
     private var isContentModified = false
+
     private var reservationId: Int = -1
+
 
     // 변경 감지를 위한 원본 데이터 (항상 빈 값으로 시작)
     private var originalContent = ""
@@ -94,11 +98,23 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
 
     private fun initLaunchers() {
         permissionLauncher =
+//            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+//                if (permissions.all { it.value }) {
+//                    launchCamera() // 권한 허용 시 카메라 즉시 실행
+//                } else {
+//                    Toast.makeText(this, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                if (permissions.all { it.value }) {
-                    launchCamera() // 권한 허용 시 카메라 즉시 실행
+                val granted = permissions.all { it.value }
+                if (granted) {
+                    // 권한이 허용된 경우, launchCamera()를 실행하도록 onGranted() 호출
+                    Log.d("PermissionDebug", "Camera permission granted. Launching camera.")
+                    launchCamera() // launchCamera()를 직접 호출하거나,
+                    // 또는 `requestPermissionsIfNeeded`에 전달된 `onGranted` 람다를 여기서 실행
+                    // onGranted()
                 } else {
-                    Toast.makeText(this, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -180,6 +196,10 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         binding.reviewWriteCancelIv.setOnClickListener {
             if (!isContentModified) {
                 deletePlaceholderReview()
+                val resultIntent = Intent().apply {
+                    putExtra("canceledReservationId", reservationId)
+                }
+                setResult(Activity.RESULT_CANCELED, resultIntent)
             }
             finish()
         }
@@ -233,12 +253,14 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
             val isContentChanged = contents != originalContent
             val isRatingChanged = score != originalRating
             if (isContentChanged || isRatingChanged) {
-                val reviewRequest = ReviewRequest2(roomId = roomId, contents = contents, score = score)
+                val reviewRequest = ReviewRequest2(reservationId = reservationId, contents = contents, score = score)
                 val patchResponse = ApiClient.reviewService.patchReview(reviewId, reviewRequest)
                 if (!patchResponse.isSuccessful) Log.e("ReviewDebug", "patchReview failed: ${patchResponse.code()}")
             }
 
+
 //            setResult(Activity.RESULT_OK)
+
 
             onSuccess()
 
@@ -312,6 +334,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
     }
 
+
     // 성공 다이얼로그를 보여주고, 이전 화면으로 결과를 반환하는 함수.
     private fun showSuccessDialogAndSetResult() {
         ReviewSubmittedDialog {
@@ -326,6 +349,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
     private fun deletePlaceholderReview() {
         if (reviewId != -1L) {
             Log.d("ReviewBookedWriteActivity", "내용이 수정되지 않았으므로 임시 리뷰(id: $reviewId)를 삭제합니다.")
+
             lifecycleScope.launch {
                 try {
                     ApiClient.reviewService.deleteReview(reviewId)

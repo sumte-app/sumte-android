@@ -206,8 +206,13 @@ class HouseDetailFragment : Fragment() {
                     Log.d("Reservation", "reservationId=$resId")
 
 
+                    val createdAtIso = java.time.ZonedDateTime
+                        .now(java.time.ZoneId.of("Asia/Seoul"))
+                        .toLocalDateTime()                    // 오프셋 없이 LocalDateTime
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
+
                     val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId) // ★ 필수
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
@@ -217,7 +222,10 @@ class HouseDetailFragment : Fragment() {
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount) // 총액을 넘김
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT, createdAtIso)
+
+
                     }
                     startActivity(intent)
                 } else {
@@ -259,10 +267,11 @@ class HouseDetailFragment : Fragment() {
             vm.state.collect { st ->
                 when (st) {
                     is ReviewUiState.Loading -> {
-                        // 필요하면 로딩 인디케이터 보여주기
+
                     }
                     is ReviewUiState.Success -> {
-                        reviewAdapter.submitList(st.items) // ★ 여기서 주입
+                        reviewAdapter.submitList(st.items)
+                        toggleReviewEmpty(st.items.isNullOrEmpty())
                     }
                     is ReviewUiState.Error -> {
                         Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
@@ -438,6 +447,17 @@ class HouseDetailFragment : Fragment() {
             binding.ivLike.setImageResource(R.drawable.heart)
         }
     }
+
+
+
+    private fun toggleReviewEmpty(isEmpty: Boolean){
+        binding.rvReviewList.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        binding.rvEmptyReview.visibility = if (isEmpty) View.VISIBLE else View.GONE
+    }
+
+
+
+
 
     override fun onDestroyView() {
         houseDetailVM.scrollPosition = binding.nVHouseDetail.scrollY

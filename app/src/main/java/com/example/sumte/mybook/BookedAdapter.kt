@@ -104,12 +104,13 @@ class BookedAdapter(
                 binding.status.visibility = View.GONE
             }
 
+
             binding.reviewWriteBtn.setOnClickListener {
                 fragment.lifecycleScope.launch {
                     try {
                         // 서버에 보낼 "빈 리뷰" 데이터 생성
                         val requestBody = ReviewRequest(
-                            roomId = bookedData.roomId,
+                            reservationId = bookedData.reservationId,
                             contents = "",
                             score = 1
                         )
@@ -128,6 +129,7 @@ class BookedAdapter(
                                 intent.putExtra("isReviewMode", true)
                                 intent.putExtra("BookedReviewId", reviewId)
                                 intent.putExtra("BookedReservationId", bookedData.reservationId)
+
 //                                itemView.context.startActivity(intent)
                                 reviewWriteLauncher.launch(intent)
                             } else {
@@ -204,5 +206,13 @@ class BookedAdapter(
     fun updateData(newItems: List<BookedData>) {
         this.items = newItems
         notifyDataSetChanged()
+    }
+
+    fun updateReviewStatus(reservationId: Int, isWritten: Boolean) {
+        val index = items.indexOfFirst { it.reservationId == reservationId }
+        if (index != -1) {
+            items[index].reviewWritten = isWritten
+            notifyItemChanged(index)
+        }
     }
 }

@@ -11,6 +11,11 @@ import com.example.sumte.HomeFragment
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentPaymentCompleteBinding
 import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT
+import com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT
+import com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME
+import com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID
+import com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME
 
 
 class PaymentCompleteFragment : Fragment() {
@@ -39,12 +44,24 @@ class PaymentCompleteFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val amount = requireArguments().getInt("amount", 0)
-        val method = requireArguments().getString("method").orEmpty()
-        val paymentId = requireArguments().getString("paymentId").orEmpty()
-        val tid = requireArguments().getString("tid").orEmpty()
+        val gh       = arguments?.getString(EXTRA_GUESTHOUSE_NAME)
+        val room     = arguments?.getString(EXTRA_ROOM_NAME)
+        val amount   = arguments?.getInt(EXTRA_AMOUNT)
+        val created  = arguments?.getString(EXTRA_CREATED_AT)
+
+        val prettyAmount = java.text.NumberFormat
+            .getInstance(java.util.Locale.KOREA)
+            .format(amount) + "원"
+
+        binding.bookedName.text = gh
+        binding.roomType.text = room
+        binding.price.text = prettyAmount
+        binding.cancelTime.text = created
+
 
     }
+
+
 
 
 }
