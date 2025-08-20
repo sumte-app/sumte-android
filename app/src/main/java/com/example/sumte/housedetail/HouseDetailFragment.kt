@@ -236,10 +236,11 @@ class HouseDetailFragment : Fragment() {
             vm.state.collect { st ->
                 when (st) {
                     is ReviewUiState.Loading -> {
-                        // 필요하면 로딩 인디케이터 보여주기
+
                     }
                     is ReviewUiState.Success -> {
-                        reviewAdapter.submitList(st.items) // ★ 여기서 주입
+                        reviewAdapter.submitList(st.items)
+                        toggleReviewEmpty(st.items.isNullOrEmpty())
                     }
                     is ReviewUiState.Error -> {
                         Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
@@ -452,6 +453,11 @@ class HouseDetailFragment : Fragment() {
         }
     }
 
+
+    private fun toggleReviewEmpty(isEmpty: Boolean){
+        binding.rvReviewList.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        binding.rvEmptyReview.visibility = if (isEmpty) View.VISIBLE else View.GONE
+    }
 
 
 

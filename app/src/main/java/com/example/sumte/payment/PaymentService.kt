@@ -19,4 +19,9 @@ interface PaymentService {
         @Path("id") paymentId: Int,
         @Query("pg_token") pgToken: String
     ): Response<PaymentApproveResponse<PaymentApproveData>>
+
+    @PATCH("/payments/{id}/approve/manual")
+    suspend fun approvePaymentManual(
+        @Path("id") paymentId: Int
+    ): Response<PaymentApproveManualResponse>
 }

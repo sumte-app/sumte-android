@@ -50,4 +50,10 @@ class PaymentRepository(context: Context) {
         }
         return resp
     }
+
+    suspend fun approvePaymentManual(paymentId: Int): Response<PaymentApproveManualResponse>? {
+        val service = authedServiceOrNull() ?: return null
+        return service.approvePaymentManual(paymentId)
+    }
+
 }
