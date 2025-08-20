@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#F6F6F6"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -16,8 +17,8 @@
         app:layout_constraintTop_toTopOf="parent">
         <ImageView
             android:id="@+id/back_btn"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/arrow_left"/>
         <TextView
             android:layout_width="wrap_content"
@@ -207,6 +208,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="전체 삭제"
+            android:textSize="12sp"
+            android:textColor="#C0C0C0"
             app:layout_constraintTop_toTopOf="@id/history"
             app:layout_constraintEnd_toEndOf="parent" />
 

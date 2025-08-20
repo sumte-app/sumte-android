@@ -22,6 +22,7 @@
         android:textSize="14sp"
         android:fontFamily="@font/pretendard_semibold"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@id/time_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/date_change_bar"/>
@@ -30,7 +31,6 @@
         android:id="@+id/date_change_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/keyword"
         app:layout_constraintTop_toBottomOf="@id/keyword">
 
@@ -38,17 +38,17 @@
             android:id="@+id/start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="6.18 수"
             android:fontFamily="@font/pretendard_regular"
+            android:text="6.18 수"
+            android:textColor="#8E8E8E"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="-"
+            android:textColor="#8E8E8E"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
@@ -56,8 +56,8 @@
             android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:text="6.19 목"
+            android:textColor="#8E8E8E"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
@@ -65,8 +65,8 @@
             android:id="@+id/date_comma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
             android:text=","
+            android:textColor="#8E8E8E"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"
             android:visibility="gone" />
@@ -84,6 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=","
+        android:textColor="#8E8E8E"
         android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toEndOf="@id/date_change_bar"
         app:layout_constraintTop_toTopOf="@id/date_change_bar"/>
@@ -100,6 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="성인 1"
+            android:textColor="#8E8E8E"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"/>
         <TextView
@@ -108,6 +110,7 @@
             android:layout_marginStart="4dp"
             android:text=","
             android:fontFamily="@font/pretendard_regular"
+            android:textColor="#8E8E8E"
             android:visibility="gone"
             android:textSize="12sp"/>
         <TextView
@@ -115,6 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:textColor="#8E8E8E"
             android:text="아동 1"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp"/>
@@ -126,11 +130,13 @@
         android:id="@+id/delete_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cancel_btn"
+        android:src="@drawable/cancel_btn_gray"
         android:layout_marginEnd="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="#DBDBDB"
+        app:layout_constraintTop_toTopOf="@id/time_icon"
+        app:layout_constraintBottom_toBottomOf="@id/time_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+         />
 
     <View
         android:id="@+id/vDividerHouseInfo"

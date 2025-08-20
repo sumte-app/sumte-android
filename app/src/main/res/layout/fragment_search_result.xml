@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/back_btn"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_left"
         app:layout_constraintBottom_toBottomOf="@+id/search_result_search_bar"
@@ -54,6 +54,7 @@
         app:layout_constraintStart_toEndOf="@id/search_result_search_bar"
         app:layout_constraintTop_toTopOf="@id/search_result_search_bar">
         <ImageView
+            android:id="@+id/search_filtering_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/adjustments"
@@ -189,5 +190,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:clipToPadding="false"
         android:overScrollMode="always" />
+
+    <TextView
+        android:id="@+id/tvNoResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="검색 결과가 없습니다"
+        android:textColor="@color/gray600"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/search_result_search_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

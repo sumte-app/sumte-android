@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.R
 import com.example.sumte.common.bindBookInfoUI
@@ -29,17 +30,16 @@ class SearchFragment : Fragment() {
     private lateinit var historyList: MutableList<History>
     private val viewModel by lazy { getBookInfoViewModel() }
 
+    // SearchFragment.kt
+    override fun onResume() {
+        super.onResume()
+        val filterVm = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
+        filterVm.save(FilterOptions()) // 화면 복귀 시 항상 초기화
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requireActivity().window.statusBarColor =
-            ContextCompat.getColor(requireContext(), android.R.color.white)
-
-        WindowInsetsControllerCompat(
-            requireActivity().window,
-            requireActivity().window.decorView
-        ).isAppearanceLightStatusBars = true
-
         historyList = loadHistoryList()
         loadHistoryVisibility()
     }
@@ -54,6 +54,14 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
+
+        // 상태바 색/아이콘 설정 (gray50 = #F6F6F6)
+        val w = requireActivity().window
+        w.statusBarColor = ContextCompat.getColor(requireContext(), R.color.gray50)
+        WindowInsetsControllerCompat(w, w.decorView).isAppearanceLightStatusBars = true
+
         bindBookInfoUI(binding, viewModel)
 
         binding.history.visibility = if (loadHistoryVisibility()) View.VISIBLE else View.GONE

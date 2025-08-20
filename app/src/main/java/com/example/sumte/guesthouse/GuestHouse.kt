@@ -37,7 +37,9 @@ fun List<GuesthouseItemResponse>.toUi(): List<GuestHouse> =
             price = d.lowerPrice?.let { "%,d원".format(it) } ?: "가격 정보 없음",
             imageResId = R.drawable.sumte_logo1,
             time = formatCheckin(d.checkinTime),
-            imageUrl = d.imageUrl
+            imageUrl = d.imageUrl ,
+            averageScore = d.averageScore,
+            reviewCount  = d.reviewCount
         )
     }
 
