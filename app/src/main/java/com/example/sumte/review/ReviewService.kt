@@ -14,13 +14,13 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 data class ReviewRequest(
-    val roomId: Long,
+    val reservationId: Int,
     val contents: String?,
     val score: Int
 )
 
 data class ReviewRequest2(
-    val roomId: Long,
+    val reservationId: Int,
     val contents: String,
     val score: Int
 )

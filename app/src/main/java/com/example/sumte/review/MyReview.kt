@@ -8,5 +8,6 @@ data class MyReview(
     val authorNickname: String,
     val createdAt: String,
     val roomId: Long,
-    val roomName: String
+    val roomName: String,
+    val reservationId: Int
 )
