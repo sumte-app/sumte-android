@@ -98,11 +98,23 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
 
     private fun initLaunchers() {
         permissionLauncher =
+//            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+//                if (permissions.all { it.value }) {
+//                    launchCamera() // 권한 허용 시 카메라 즉시 실행
+//                } else {
+//                    Toast.makeText(this, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                if (permissions.all { it.value }) {
-                    launchCamera() // 권한 허용 시 카메라 즉시 실행
+                val granted = permissions.all { it.value }
+                if (granted) {
+                    // 권한이 허용된 경우, launchCamera()를 실행하도록 onGranted() 호출
+                    Log.d("PermissionDebug", "Camera permission granted. Launching camera.")
+                    launchCamera() // launchCamera()를 직접 호출하거나,
+                    // 또는 `requestPermissionsIfNeeded`에 전달된 `onGranted` 람다를 여기서 실행
+                    // onGranted()
                 } else {
-                    Toast.makeText(this, "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -184,6 +196,10 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         binding.reviewWriteCancelIv.setOnClickListener {
             if (!isContentModified) {
                 deletePlaceholderReview()
+                val resultIntent = Intent().apply {
+                    putExtra("canceledReservationId", reservationId)
+                }
+                setResult(Activity.RESULT_CANCELED, resultIntent)
             }
             finish()
         }
