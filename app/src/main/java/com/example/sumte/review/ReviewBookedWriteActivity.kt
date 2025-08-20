@@ -1,7 +1,9 @@
 package com.example.sumte.review
 
 import android.app.Activity
+
 import android.content.Intent
+
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -55,7 +57,9 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
 
     // 내용을 추가하지 않고 창을 닫는 경우을 고려한 변수
     private var isContentModified = false
+
     private var reservationId: Int = -1
+
 
     // 변경 감지를 위한 원본 데이터 (항상 빈 값으로 시작)
     private var originalContent = ""
@@ -238,7 +242,9 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
                 if (!patchResponse.isSuccessful) Log.e("ReviewDebug", "patchReview failed: ${patchResponse.code()}")
             }
 
+
 //            setResult(Activity.RESULT_OK)
+
 
             onSuccess()
 
@@ -312,6 +318,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
     }
 
+
     // 성공 다이얼로그를 보여주고, 이전 화면으로 결과를 반환하는 함수.
     private fun showSuccessDialogAndSetResult() {
         ReviewSubmittedDialog {
@@ -326,6 +333,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
     private fun deletePlaceholderReview() {
         if (reviewId != -1L) {
             Log.d("ReviewBookedWriteActivity", "내용이 수정되지 않았으므로 임시 리뷰(id: $reviewId)를 삭제합니다.")
+
             lifecycleScope.launch {
                 try {
                     ApiClient.reviewService.deleteReview(reviewId)

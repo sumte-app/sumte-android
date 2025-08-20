@@ -441,10 +441,12 @@ class HouseDetailFragment : Fragment() {
     }
 
 
+
     private fun toggleReviewEmpty(isEmpty: Boolean){
         binding.rvReviewList.visibility = if (isEmpty) View.GONE else View.VISIBLE
         binding.rvEmptyReview.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
+
 
 
 

@@ -26,6 +26,7 @@ class BookedListMainFragment : Fragment() {
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
 
+
 //    private val reviewWriteResultLauncher = registerForActivityResult(
 //        ActivityResultContracts.StartActivityForResult()
 //    ) { result ->
@@ -61,6 +62,7 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
         }
     }
 }
+
     class BookedViewModelFactory(private val repository: ReservationRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BookedViewModel::class.java)) {
@@ -112,16 +114,20 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
                         reviewWritten = item.reviewWritten,
                         reservedAt = item.reservedAt
                     )
+
+
                 }.sortedByDescending { LocalDateTime.parse(it.reservedAt) } // ← 최신 예약이 위로
 
                 // 어댑터를 매번 새로 만들지 말고 updateData 사용
+
                 adapter.updateData(bookedDataList)
             }
         }
-    }
+
 
 //    override fun onResume() {
 //        super.onResume()
 //        bookedVM.fetchBookedList()
 //    }
+    }
 }
