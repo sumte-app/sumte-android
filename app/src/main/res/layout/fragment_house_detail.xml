@@ -37,8 +37,8 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="8dp"
-            android:layout_height="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/arrow_left"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toTopOf="parent"
@@ -205,10 +205,9 @@
                     />
                 <ImageView
                     android:id="@+id/ivHouseAllReview"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/arrow_right_gray"
-                    android:layout_marginStart="5dp"
                     app:layout_constraintStart_toEndOf="@id/tvCloseBrace"
                     app:layout_constraintTop_toTopOf="@id/tvCloseBrace"
                     app:layout_constraintBottom_toBottomOf="@+id/tvCloseBrace"/>
@@ -369,19 +368,64 @@
                 app:layout_constraintTop_toBottomOf="@id/rvInfo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.9">
+                app:layout_constraintWidth_percent="0.9"
+                android:paddingTop="16dp">
+
+
+                <ImageView
+                    android:id="@+id/ivStar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/star_fill"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvReviewScore"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvReviewScore"/>
 
                 <TextView
                     android:id="@+id/tvReviewScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.4 (215)"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:layout_marginStart="4dp"
+                    android:text="4.4"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/ivStar"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvOpenBrace2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="("
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="@id/tvReviewScore"
+                    app:layout_constraintBottom_toBottomOf="@id/tvReviewScore"
+                    app:layout_constraintStart_toEndOf="@id/tvReviewScore"/>
+
+                <TextView
+                    android:id="@+id/tvReviewCount2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="215"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="@id/tvReviewScore"
+                    app:layout_constraintBottom_toBottomOf="@id/tvReviewScore"
+                    app:layout_constraintStart_toEndOf="@id/tvOpenBrace2"/>
+
+                <TextView
+                    android:id="@+id/tvCloseBrace2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=")"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="@id/tvReviewScore"
+                    app:layout_constraintBottom_toBottomOf="@id/tvReviewScore"
+                    app:layout_constraintStart_toEndOf="@id/tvReviewCount2"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/llSeeAllReviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -395,14 +439,19 @@
                         android:layout_height="wrap_content"
                         android:text="전체보기"
                         android:textSize="12sp"
-                        android:textColor="@color/gray500" />
+                        android:textColor="@color/gray500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <ImageView
                         android:id="@+id/ivArrowRight"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/arrow_right" />
-                </LinearLayout>
+                        android:src="@drawable/arrow_right_gray"
+                        app:layout_constraintStart_toEndOf="@+id/tvSeeAllReviews"
+                        app:layout_constraintTop_toTopOf="@+id/tvSeeAllReviews"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvSeeAllReviews"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

@@ -19,23 +19,48 @@ import com.example.sumte.mybook.BookedData
 import com.example.sumte.reservation.ReservationRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class BookedListMainFragment : Fragment() {
     private lateinit var binding: FragmentBookedListMainBinding
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
 
-    private val reviewWriteResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        // ReviewBookedWriteActivity에서 RESULT_OK 응답을 보내면 이 블록이 실행
-        if (result.resultCode == Activity.RESULT_OK) {
-            // 리뷰가 작성되었으므로, ViewModel을 통해 목록을 새로고침하도록 요청
-            Log.d("BookedListMainFragment", "리뷰 작성 완료. 목록을 새로고침합니다.")
-            bookedVM.fetchBookedList()
+//    private val reviewWriteResultLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        // ReviewBookedWriteActivity에서 RESULT_OK 응답을 보내면 이 블록이 실행
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            // 리뷰가 작성되었으므로, ViewModel을 통해 목록을 새로고침하도록 요청
+//            Log.d("BookedListMainFragment", "리뷰 작성 완료. 목록을 새로고침합니다.")
+//            bookedVM.fetchBookedList()
+//        }
+//    }
+private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+    ActivityResultContracts.StartActivityForResult()
+) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+        // 리뷰가 작성된 예약 건의 ID를 결과로부터 받습니다.
+        val completedReservationId = result.data?.getIntExtra("completedReservationId", -1) ?: -1
+        if (completedReservationId != -1) {
+            // 현재 ViewModel이 가지고 있는 리스트를 직접 수정합니다.
+            val currentList = bookedVM.bookedList.value.toMutableList()
+
+            // 리스트에서 해당 reservationId를 가진 아이템을 찾습니다.
+            val itemIndex = currentList.indexOfFirst { it.id == completedReservationId }
+
+            if (itemIndex != -1) {
+                // 아이템을 찾았다면, 해당 아이템의 reviewWritten 상태를 true로 변경합니다.
+                val updatedItem = currentList[itemIndex].copy(reviewWritten = true)
+                currentList[itemIndex] = updatedItem
+
+                // 수정된 리스트로 어댑터의 데이터를 업데이트합니다.
+                // (ViewModel의 StateFlow를 업데이트하면 collectLatest가 자동으로 감지하여 UI를 갱신합니다.)
+                bookedVM.updateBookedList(currentList)
+            }
         }
     }
-
+}
     class BookedViewModelFactory(private val repository: ReservationRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BookedViewModel::class.java)) {
@@ -73,8 +98,7 @@ class BookedListMainFragment : Fragment() {
             bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
-                        reservationId = item.reservationId,
-                        bookedDate = item.startDate, //수정
+                        reservationId = item.id,
                         houseName = item.guestHouseName,
                         roomType = item.roomName,
                         startDate = item.startDate,
@@ -88,14 +112,12 @@ class BookedListMainFragment : Fragment() {
                         reviewWritten = item.reviewWritten,
                         reservedAt = item.reservedAt
                     )
-                }
-//                adapter = BookedAdapter(bookedDataList, this@BookedListMainFragment)
-//                binding.bookedListRecyclerview.adapter = adapter
+                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) } // ← 최신 예약이 위로
+
+                // 어댑터를 매번 새로 만들지 말고 updateData 사용
                 adapter.updateData(bookedDataList)
             }
         }
-        // 화면이 처음 생성될 때 목록을 불러옵니다.
-        bookedVM.fetchBookedList()
     }
 
 //    override fun onResume() {
