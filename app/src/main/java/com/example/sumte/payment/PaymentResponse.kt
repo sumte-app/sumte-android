@@ -22,6 +22,15 @@ data class PaymentApproveResponse<T>(
     val data: T
 )
 
+data class PaymentApproveManualResponse(
+    val success: Boolean,
+    val code: String,
+    val message: String,
+    val data: String
+)
+
+
+
 data class PaymentApproveData(
     val aid: String,
     val tid: String,
