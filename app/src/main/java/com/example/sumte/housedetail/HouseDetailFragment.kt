@@ -206,8 +206,13 @@ class HouseDetailFragment : Fragment() {
                     Log.d("Reservation", "reservationId=$resId")
 
 
+                    val createdAtIso = java.time.ZonedDateTime
+                        .now(java.time.ZoneId.of("Asia/Seoul"))
+                        .toLocalDateTime()                    // 오프셋 없이 LocalDateTime
+                        .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
+
                     val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
-                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId) // ★ 필수
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_RES_ID, resId)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_ID, room.id)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME, room.name)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME, binding.tvTitle.text?.toString())
@@ -217,7 +222,10 @@ class HouseDetailFragment : Fragment() {
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHECKOUT_TIME, room.checkout)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ADULT, bookInfoVM.adultCount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
-                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount) // 총액을 넘김
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount)
+                        putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT, createdAtIso)
+
+
                     }
                     startActivity(intent)
                 } else {

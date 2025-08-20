@@ -20,6 +20,7 @@ import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import com.example.sumte.databinding.ActivityPaymentBinding
 import com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT
+import com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT
 import com.example.sumte.payment.PaymentExtras.EXTRA_END
 import com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME
 import com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME
@@ -28,12 +29,21 @@ import com.example.sumte.search.BookInfoViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.text.NumberFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class PaymentActivity : AppCompatActivity() {
+
+
 
     private lateinit var binding: ActivityPaymentBinding
     private var selectedPaymentMethod: String = "kakao"
@@ -356,11 +366,26 @@ class PaymentActivity : AppCompatActivity() {
 
     private fun showPaymentCompleteFragment(message: String) {
         navigatedToComplete = true
+
+        val guesthouseName = intent.getStringExtra(com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME)
+        val roomName       = intent.getStringExtra(com.example.sumte.payment.PaymentExtras.EXTRA_ROOM_NAME)
+        val amount         = intent.getIntExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, 0)
+        val createdRaw = intent.getStringExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT)
+        Log.d("CompleteArgs", "createdRaw(intent)=$createdRaw")
+        val createdStr = formatCreatedForKorea(createdRaw)
+
         val frag = PaymentCompleteFragment().apply {
             arguments = Bundle().apply {
                 putString("message", message)
+                putString(EXTRA_GUESTHOUSE_NAME, guesthouseName)
+                putString(EXTRA_ROOM_NAME, roomName)
+                putInt(EXTRA_AMOUNT,amount)
+                putString(EXTRA_CREATED_AT, createdStr)
             }
         }
+        Log.d("CompleteArgs", "bundle to fragment keys=${frag.arguments?.keySet()}")
+        Log.d("CompleteArgs", "fragment values: gh=$guesthouseName, room=$roomName   , amount=$amount, created=$createdStr")
+
         supportFragmentManager.beginTransaction()
             .setReorderingAllowed(true)
             .setCustomAnimations(
@@ -529,6 +554,25 @@ class PaymentActivity : AppCompatActivity() {
         }
     }
 
+    private fun formatCreatedForKorea(raw: String?): String {
+        if (raw.isNullOrBlank()) return "-"
+
+        return try {
+            // 서버 응답 파싱용
+            val inputFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+            val ldt = LocalDateTime.parse(raw, inputFmt)
+
+            // 한국 시간대 적용
+            val zdt = ldt.atZone(ZoneId.of("Asia/Seoul"))
+
+            // 출력 포맷
+            val outFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd (E) HH:mm", Locale.KOREAN)
+            zdt.format(outFmt)
+        } catch (e: Exception) {
+            android.util.Log.e("Payment", "날짜 파싱 실패 raw=$raw", e)
+            raw // 실패하면 원문 출력
+        }
+    }
 
 
 }
