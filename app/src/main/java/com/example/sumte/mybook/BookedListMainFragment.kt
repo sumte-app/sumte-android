@@ -115,7 +115,6 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
                         reservedAt = item.reservedAt
                     )
 
-                }
 
                 }.sortedByDescending { LocalDateTime.parse(it.reservedAt) } // ← 최신 예약이 위로
 
@@ -124,10 +123,11 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
                 adapter.updateData(bookedDataList)
             }
         }
-    }
+
 
 //    override fun onResume() {
 //        super.onResume()
 //        bookedVM.fetchBookedList()
 //    }
+    }
 }
