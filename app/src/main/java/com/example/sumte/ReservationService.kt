@@ -84,7 +84,8 @@ data class MyReservationItem(
     val canWriteReview: Boolean,
     val reviewWritten: Boolean,
     val roomId: Long,
-    val reservedAt: String //추가
+    val reservedAt: String, //추가
+    val reservationId: Int // 추가
 )
 
 // 상세 조회 Response

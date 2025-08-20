@@ -1,6 +1,7 @@
 package com.example.sumte.review
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
@@ -54,6 +55,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
 
     // 내용을 추가하지 않고 창을 닫는 경우을 고려한 변수
     private var isContentModified = false
+    private var reservationId: Int = -1
 
     // 변경 감지를 위한 원본 데이터 (항상 빈 값으로 시작)
     private var originalContent = ""
@@ -70,7 +72,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         // Intent에서 ID 값 받기
         reviewId = intent.getLongExtra("BookedReviewId", -1L)
         roomId = intent.getLongExtra("BookedRoomId", -1L)
-
+        reservationId = intent.getIntExtra("BookedReservationId", -1)
         // ID 값이 없으면 액티비티 종료
         if (reviewId == -1L || roomId == -1L) {
             Toast.makeText(this, "리뷰 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
@@ -165,7 +167,8 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         binding.reviewApplyTv.setOnClickListener {
             sendReviewToServer(
                 onSuccess = {
-                    ReviewSubmittedDialog { finish() }.show(supportFragmentManager, "review_done")
+//                    ReviewSubmittedDialog { finish() }.show(supportFragmentManager, "review_done")
+                    showSuccessDialogAndSetResult()
                 },
                 onFailure = { errorMessage ->
                     Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
@@ -174,7 +177,12 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
 
         // 취소 버튼
-        binding.reviewWriteCancelIv.setOnClickListener { finish() }
+        binding.reviewWriteCancelIv.setOnClickListener {
+            if (!isContentModified) {
+                deletePlaceholderReview()
+            }
+            finish()
+        }
     }
 
     private fun sendReviewToServer(onSuccess: () -> Unit, onFailure: (String) -> Unit) = lifecycleScope.launch {
@@ -230,7 +238,7 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
                 if (!patchResponse.isSuccessful) Log.e("ReviewDebug", "patchReview failed: ${patchResponse.code()}")
             }
 
-            setResult(Activity.RESULT_OK)
+//            setResult(Activity.RESULT_OK)
 
             onSuccess()
 
@@ -304,13 +312,20 @@ class ReviewBookedWriteActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // 만약 내용이 수정되지 않았고, 유효한 reviewId가 있다면
-        if (!isContentModified && reviewId != -1L) {
-            Log.d("ReviewBookedWriteActivity", "내용이 수정되지 않았으므로 임시 리뷰(id: $reviewId)를 삭제합니다.")
+    // 성공 다이얼로그를 보여주고, 이전 화면으로 결과를 반환하는 함수.
+    private fun showSuccessDialogAndSetResult() {
+        ReviewSubmittedDialog {
+            val resultIntent = Intent().apply {
+                putExtra("completedReservationId", reservationId)
+            }
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }.show(supportFragmentManager, "review_done")
+    }
 
-            // 화면이 닫히는 중이므로 결과를 기다릴 필요 없이 삭제 요청만 보냄
+    private fun deletePlaceholderReview() {
+        if (reviewId != -1L) {
+            Log.d("ReviewBookedWriteActivity", "내용이 수정되지 않았으므로 임시 리뷰(id: $reviewId)를 삭제합니다.")
             lifecycleScope.launch {
                 try {
                     ApiClient.reviewService.deleteReview(reviewId)

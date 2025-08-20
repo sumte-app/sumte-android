@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BookedData(
     val reservationId: Int,
-    val bookedDate: String,
     val houseName: String,
     val roomType: String,
     val startDate: String,
