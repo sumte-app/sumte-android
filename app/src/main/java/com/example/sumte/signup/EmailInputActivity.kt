@@ -75,9 +75,10 @@ class EmailInputActivity : AppCompatActivity() {
                     return
                 }
                 val domain = email.substring(at + 1)   // '@' 뒤 도메인만 추출
-                if (domain != "gmail.com") {           // ← 대소문자 구분 비교
+                val allowedDomains = setOf("gmail.com", "naver.com")
+                if (domain !in allowedDomains) {
                     isEmailAvailable = false
-                    showEmailError("이메일 형식이 올바르지 않습니다.")
+                    showEmailError("이메일형식이 올바르지 않습니다.")
                     updateNextButton(false)
                     return
                 }
