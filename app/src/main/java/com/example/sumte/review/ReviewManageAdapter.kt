@@ -30,7 +30,24 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
     fun removeItem(pos: Int) {
         items.removeAt(pos)
         notifyItemRemoved(pos)
+        notifyItemRangeChanged(pos, items.size)
     }
+
+    // '실행 취소' 시 특정 위치에 아이템을 다시 추가하는 함수
+    fun addItem(position: Int, item: MyReview) {
+        items.add(position, item)
+        notifyItemInserted(position)
+    }
+
+    // '실행 취소'를 위해 삭제 전 아이템 정보를 가져오는 함수
+    fun getItem(position: Int): MyReview? {
+        return if (position >= 0 && position < items.size) {
+            items[position]
+        } else {
+            null
+        }
+    }
+
 
     fun updateItem(position: Int, newReview: ReviewRequest2) {
         val old = items[position]
