@@ -13,4 +13,6 @@ class BookInfoViewModel(application: Application) : AndroidViewModel(application
 
     var adultCount: Int = 1
     var childCount: Int = 0
+
+    var roomImageUrl: String? = null
 }

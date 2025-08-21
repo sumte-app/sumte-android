@@ -58,6 +58,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var imageAdapter: HouseImageAdapter
     private val reviewAdapter = ReviewCardAdapter()
 
+
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
         ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
@@ -407,6 +408,8 @@ class HouseDetailFragment : Fragment() {
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
                 updatePageIndicator(current, total)
             }
+
+            bookInfoVM.roomImageUrl = urls.firstOrNull()
         }
     }
 
@@ -433,6 +436,7 @@ class HouseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bindBookInfoUI(binding, bookInfoVM)
+
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()

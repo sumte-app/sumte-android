@@ -22,6 +22,7 @@ fun bindBookInfoUI(binding: Any, viewModel: BookInfoViewModel) {
     val seoulZone = ZoneId.of("Asia/Seoul")
     val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
 
+
     val startDate = viewModel.startDate ?: LocalDate.now(seoulZone)
     val endDate = viewModel.endDate ?: LocalDate.now(seoulZone).plusDays(1)
     val nights = ChronoUnit.DAYS.between(startDate, endDate)
