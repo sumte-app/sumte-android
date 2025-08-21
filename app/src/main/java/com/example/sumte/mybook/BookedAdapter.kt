@@ -79,8 +79,8 @@ class BookedAdapter(
             val endDate = LocalDate.parse(bookedData.endDate, formatter)
             //canWriteReview 역할
             if (!LocalDate.now().isAfter(endDate)) {
-                binding.reviewWriteBtn.visibility = View.GONE
-                binding.reviewWrittenBtn.visibility = View.GONE
+//                binding.reviewWriteBtn.visibility = View.GONE
+//                binding.reviewWrittenBtn.visibility = View.GONE
                 val daysUntilStart = ChronoUnit.DAYS.between(LocalDate.now(), startDate)
                 binding.status.text = when {
                     daysUntilStart > 0 -> "D-$daysUntilStart"
