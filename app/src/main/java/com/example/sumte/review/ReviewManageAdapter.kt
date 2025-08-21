@@ -80,8 +80,11 @@ class ReviewManageAdapter(private val fragment : Fragment):RecyclerView.Adapter<
             if (!item.imageUrls.isNullOrEmpty()) {
                 Log.d("ReviewAdapter", "Image list is not empty. Creating adapter.")
                 reviewImageContainer.visibility = View.VISIBLE
-                val imageAdapter = ReviewImageAdapter(item.imageUrls)
-
+                val imageAdapter = ReviewImageAdapter(item.imageUrls){ imageUrl ->
+                    // 이미지를 크게 보여주는 로직
+                    val fullImageDialog = FullImageDialogFragment.newInstance(imageUrl)
+                    fullImageDialog.show(fragment.parentFragmentManager, "FullImageDialog")
+                }
                 reviewImageRv.apply {
                     layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
                     adapter = imageAdapter
