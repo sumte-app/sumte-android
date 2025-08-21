@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sumte.R
@@ -12,7 +13,8 @@ import com.example.sumte.databinding.ItemReviewListBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ReviewListAdapter(private var reviews: List<ReviewItem>) :
+class ReviewListAdapter(private var reviews: List<ReviewItem>,
+                        private val fragment : Fragment) :
     RecyclerView.Adapter<ReviewListAdapter.ReviewViewHolder>() {
 
     // ViewHolder: 각 아이템의 뷰를 보관하는 객체
@@ -47,7 +49,11 @@ class ReviewListAdapter(private var reviews: List<ReviewItem>) :
             if (!review.imageUrls.isNullOrEmpty()) {
                 Log.d("ReviewListAdapter", "Image list is not empty. Creating adapter.")
                 reviewListImageContainer.visibility = View.VISIBLE
-                val imageAdapter = ReviewImageAdapter(review.imageUrls)
+                val imageAdapter = ReviewImageAdapter(review.imageUrls){ imageUrl ->
+                    // 이미지를 크게 보여주는 로직
+                    val fullImageDialog = FullImageDialogFragment.newInstance(imageUrl)
+                    fullImageDialog.show(fragment.parentFragmentManager, "FullImageDialog")
+                }
 
                 reviewListImageRv.apply {
                     layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)

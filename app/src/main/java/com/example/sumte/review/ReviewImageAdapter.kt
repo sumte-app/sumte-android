@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sumte.databinding.ItemReviewManageBinding
 
-class ReviewImageAdapter(private val imageUrls: List<String>) :
+class ReviewImageAdapter(private val imageUrls: List<String>,  private val onImageClick: (String) -> Unit) :
     RecyclerView.Adapter<ReviewImageAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(private val binding: ItemReviewManageBinding) :
@@ -17,6 +17,10 @@ class ReviewImageAdapter(private val imageUrls: List<String>) :
             Glide.with(binding.root.context)
                 .load(imageUrl)
                 .into(binding.photoImageView)
+
+            binding.photoImageView.setOnClickListener {
+                onImageClick(imageUrl)
+            }
         }
     }
 

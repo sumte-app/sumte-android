@@ -72,7 +72,7 @@ class ReviewListFragment : Fragment() {
 
     // RecyclerView 초기 설정
     private fun setupRecyclerView() {
-        reviewAdapter = ReviewListAdapter(emptyList()) // 빈 리스트로 어댑터 초기화
+        reviewAdapter = ReviewListAdapter(emptyList(), this) // 빈 리스트로 어댑터 초기화
         binding.reviewListRv.adapter = reviewAdapter
         binding.reviewListRv.layoutManager = LinearLayoutManager(requireContext())
 
