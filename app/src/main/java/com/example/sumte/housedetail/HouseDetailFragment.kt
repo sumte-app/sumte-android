@@ -13,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 
@@ -82,6 +84,26 @@ class HouseDetailFragment : Fragment() {
     }
 
     private var guesthouseId: Int = -1
+
+    private val bookInfoLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == AppCompatActivity.RESULT_OK) {
+            val needRefresh = result.data?.getBooleanExtra("needRefresh", false) ?: false
+            if (needRefresh) {
+                refreshRoomList()
+            }
+        }
+    }
+    private fun refreshRoomList() {
+        val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
+        val startDate = bookInfoVM.startDate.format(fmt)
+        val endDate = bookInfoVM.endDate.format(fmt)
+
+        // HouseDetailViewModel에서 rooms 다시 로드
+        houseDetailVM.loadRooms(guesthouseId, startDate, endDate)
+    }
+
 
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
@@ -419,20 +441,21 @@ class HouseDetailFragment : Fragment() {
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_DATE)
-                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
                 putExtra("guesthouseId", guesthouseId)
             }
-            startActivity(intent)
+            bookInfoLauncher.launch(intent)
         }
 
         binding.countChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
-                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail") // source 전달
+                putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
                 putExtra("guesthouseId", guesthouseId)
             }
-            startActivity(intent)
+            bookInfoLauncher.launch(intent)
         }
+
 
         // 찜 상태 확인 및 클릭 리스너
         setupLikeButton()
@@ -442,11 +465,7 @@ class HouseDetailFragment : Fragment() {
             binding.nVHouseDetail.scrollTo(0, houseDetailVM.scrollPosition)
         }
     }
-    //재시작할 때
-    override fun onResume() {
-        super.onResume()
-        bindBookInfoUI(binding, bookInfoVM)
-    }
+
     // 찜 버튼 초기 설정 함수
     private fun setupLikeButton() {
         // 찜 상태가 변경될 때마다 UI를 자동으로 업데이트
@@ -477,14 +496,16 @@ class HouseDetailFragment : Fragment() {
         }
     }
 
-
-
     private fun toggleReviewEmpty(isEmpty: Boolean){
         binding.rvReviewList.visibility = if (isEmpty) View.GONE else View.VISIBLE
         binding.rvEmptyReview.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-
+    //재시작할 때
+    override fun onResume() {
+        super.onResume()
+        bindBookInfoUI(binding, bookInfoVM)
+    }
 
 
 

@@ -27,8 +27,6 @@ class BookedListMainFragment : Fragment() {
     private lateinit var binding: FragmentBookedListMainBinding
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
-
-
 //    private val reviewWriteResultLauncher = registerForActivityResult(
 //        ActivityResultContracts.StartActivityForResult()
 //    ) { result ->
@@ -39,70 +37,71 @@ class BookedListMainFragment : Fragment() {
 //            bookedVM.fetchBookedList()
 //        }
 //    }
-
-private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        val completedReservationId = result.data?.getIntExtra("completedReservationId", -1) ?: -1
-        if (completedReservationId != -1) {
-            val currentList = bookedVM.bookedList.value.toMutableList()
-            val itemIndex = currentList.indexOfFirst { it.id == completedReservationId }
-            if (itemIndex != -1) {
-                val updatedItem = currentList[itemIndex].copy(reviewWritten = true)
-                currentList[itemIndex] = updatedItem
-                bookedVM.updateBookedList(currentList)
-                val updatedBookedDataList = currentList.map { item ->
-                    BookedData(
-                        reservationId = item.id,
-                        houseName = item.guestHouseName,
-                        roomType = item.roomName,
-                        startDate = item.startDate,
-                        endDate = item.endDate,
-                        dateCount = "${item.nightCount}박",
-                        adultCount = item.adultCount,
-                        childCount = item.childCount,
-                        status = item.status,
-                        roomId = item.roomId,
-                        canWriteReview = item.canWriteReview,
-                        reviewWritten = item.reviewWritten,
-                        reservedAt = item.reservedAt
-                    )
-                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
-                adapter.updateData(updatedBookedDataList)
+    private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val completedReservationId = result.data?.getIntExtra("completedReservationId", -1) ?: -1
+            if (completedReservationId != -1) {
+                val currentList = bookedVM.bookedList.value.toMutableList()
+                val itemIndex = currentList.indexOfFirst { it.id == completedReservationId }
+                if (itemIndex != -1) {
+                    val updatedItem = currentList[itemIndex].copy(reviewWritten = true)
+                    currentList[itemIndex] = updatedItem
+                    bookedVM.updateBookedList(currentList)
+                    val updatedBookedDataList = currentList.map { item ->
+                        BookedData(
+                            roomImg = item.imageUrl,
+                            reservationId = item.id,
+                            houseName = item.guestHouseName,
+                            roomType = item.roomName,
+                            startDate = item.startDate,
+                            endDate = item.endDate,
+                            dateCount = "${item.nightCount}박",
+                            adultCount = item.adultCount,
+                            childCount = item.childCount,
+                            status = item.status,
+                            roomId = item.roomId,
+                            canWriteReview = item.canWriteReview,
+                            reviewWritten = item.reviewWritten,
+                            reservedAt = item.reservedAt
+                        )
+                    }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
+                    adapter.updateData(updatedBookedDataList)
+                }
             }
-        }
-    } else if (result.resultCode == Activity.RESULT_CANCELED) {
-        val canceledReservationId = result.data?.getIntExtra("canceledReservationId", -1) ?: -1
-        if (canceledReservationId != -1) {
-            val currentList = bookedVM.bookedList.value.toMutableList()
-            val itemIndex = currentList.indexOfFirst { it.id == canceledReservationId }
-            if (itemIndex != -1) {
-                val updatedItem = currentList[itemIndex].copy(reviewWritten = false)
-                currentList[itemIndex] = updatedItem
-                bookedVM.updateBookedList(currentList)
-                val updatedBookedDataList = currentList.map { item ->
-                    BookedData(
-                        reservationId = item.id,
-                        houseName = item.guestHouseName,
-                        roomType = item.roomName,
-                        startDate = item.startDate,
-                        endDate = item.endDate,
-                        dateCount = "${item.nightCount}박",
-                        adultCount = item.adultCount,
-                        childCount = item.childCount,
-                        status = item.status,
-                        roomId = item.roomId,
-                        canWriteReview = item.canWriteReview,
-                        reviewWritten = item.reviewWritten,
-                        reservedAt = item.reservedAt
-                    )
-                }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
-                adapter.updateData(updatedBookedDataList)
+        } else if (result.resultCode == Activity.RESULT_CANCELED) {
+            val canceledReservationId = result.data?.getIntExtra("canceledReservationId", -1) ?: -1
+            if (canceledReservationId != -1) {
+                val currentList = bookedVM.bookedList.value.toMutableList()
+                val itemIndex = currentList.indexOfFirst { it.id == canceledReservationId }
+                if (itemIndex != -1) {
+                    val updatedItem = currentList[itemIndex].copy(reviewWritten = false)
+                    currentList[itemIndex] = updatedItem
+                    bookedVM.updateBookedList(currentList)
+                    val updatedBookedDataList = currentList.map { item ->
+                        BookedData(
+                            roomImg = item.imageUrl,
+                            reservationId = item.id,
+                            houseName = item.guestHouseName,
+                            roomType = item.roomName,
+                            startDate = item.startDate,
+                            endDate = item.endDate,
+                            dateCount = "${item.nightCount}박",
+                            adultCount = item.adultCount,
+                            childCount = item.childCount,
+                            status = item.status,
+                            roomId = item.roomId,
+                            canWriteReview = item.canWriteReview,
+                            reviewWritten = item.reviewWritten,
+                            reservedAt = item.reservedAt
+                        )
+                    }.sortedByDescending { LocalDateTime.parse(it.reservedAt) }
+                    adapter.updateData(updatedBookedDataList)
+                }
             }
         }
     }
-}
 
     class BookedViewModelFactory(private val repository: ReservationRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

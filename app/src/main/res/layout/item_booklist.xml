@@ -133,7 +133,7 @@
             android:id="@+id/to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:text="-"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
@@ -142,7 +142,7 @@
             android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:text="6.19 목"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />

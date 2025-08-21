@@ -13,6 +13,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.example.sumte.App
 import com.example.sumte.R
+import com.example.sumte.RetrofitClient
 import com.example.sumte.common.bindBookInfoUI
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.CalendarDayLayoutBinding
@@ -22,6 +23,9 @@ import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.LocalDate
 import java.time.YearMonth
@@ -40,6 +44,31 @@ class BookInfoDateFragment : Fragment() {
 
     private var source: String? = null
     private var guesthouseId: Int? = null
+    private var closedDatesList: List<LocalDate> = emptyList()
+
+
+    private fun fetchClosedDates(guesthouseId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitClient.guesthouseService.getClosedDates(guesthouseId)
+
+                if (response.success) {
+                    val closedDates = response.data.map { java.time.LocalDate.parse(it) }
+                    Log.d("ClosedDatesAPI", "Parsed dates: $closedDates")
+
+                    // Fragment 변수에 저장 후 UI 스레드에서 캘린더 갱신
+                    closedDatesList = closedDates
+                    CoroutineScope(Dispatchers.Main).launch {
+                        binding.customCalendar.notifyCalendarChanged()
+                    }
+                } else {
+                    Log.e("ClosedDatesAPI", "API 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("ClosedDatesAPI", "통신 에러: ${e.message}")
+            }
+        }
+    }
 
 
     override fun onCreateView(
@@ -49,6 +78,7 @@ class BookInfoDateFragment : Fragment() {
     ): View? {
         binding=FragmentBookInfoDateBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
 
@@ -59,12 +89,14 @@ class BookInfoDateFragment : Fragment() {
         guesthouseId = activity?.intent?.getIntExtra("guesthouseId", -1)?.takeIf { it > 0 }
         Log.d("guesthouseId","${guesthouseId}")
 
+        guesthouseId?.let { id ->
+            fetchClosedDates(id)
+        }
+
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
         bindBookInfoUI(binding, viewModel)
 
-        if (source == "houseDetail" && guesthouseId != null) {
-            // 예: 예약 가능한 날짜 불러오기
-        }
+
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
@@ -81,11 +113,6 @@ class BookInfoDateFragment : Fragment() {
                 ))
                 container.textView.alpha = 1f
                 container.textView.isClickable = true
-
-                //houseDetail에서 온 경우
-                if (source == "houseDetail") {
-                    // API에서 받은 예약가능/불가능 날짜 반영x
-                }
 
                 //선택 가능한 때 정의
                 val selected = when {
@@ -139,6 +166,14 @@ class BookInfoDateFragment : Fragment() {
                         container.textView.setBackgroundResource(R.drawable.today_circle)
                     }
                 }
+                //만약 예약불가날짜 불러온게 있다면
+                if (closedDatesList.contains(date)) {
+                    container.textView.alpha = 0.3f
+                    container.textView.isClickable = false
+                    return
+
+                }
+
                 container.textView.setOnClickListener {
                     val clickedDate = date
                     if (startDate != null && endDate == null && clickedDate == startDate) {
@@ -234,9 +269,5 @@ class BookInfoDateFragment : Fragment() {
                 requireActivity().finish()
             }
         }
-
     }
-
-
-
 }

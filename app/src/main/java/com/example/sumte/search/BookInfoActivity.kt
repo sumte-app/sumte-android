@@ -48,10 +48,15 @@ class BookInfoActivity : AppCompatActivity() {
     fun onApplyClicked() {
         when (source) {
             "house_detail" -> {
+                // HouseDetail에서 왔으면, needRefresh 전달
+                val intent = Intent().apply {
+                    putExtra("needRefresh", true)
+                }
+                setResult(AppCompatActivity.RESULT_OK, intent)
                 finish()
             }
             else -> {
-                val keyword = "" //검색어 키워드
+                val keyword = "" // 검색어 키워드
                 val fragment = SearchResultFragment().apply {
                     arguments = Bundle().apply {
                         putString("keyword", keyword)
@@ -64,4 +69,25 @@ class BookInfoActivity : AppCompatActivity() {
             }
         }
     }
+
+
+//    fun onApplyClicked() {
+//        when (source) {
+//            "house_detail" -> {
+//                finish()
+//            }
+//            else -> {
+//                val keyword = "" //검색어 키워드
+//                val fragment = SearchResultFragment().apply {
+//                    arguments = Bundle().apply {
+//                        putString("keyword", keyword)
+//                    }
+//                }
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.book_info_container, fragment)
+//                    .addToBackStack(null)
+//                    .commit()
+//            }
+//        }
+//    }
 }
