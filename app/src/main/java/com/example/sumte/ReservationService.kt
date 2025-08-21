@@ -74,7 +74,7 @@ data class MyReservationItem(
     val id: Int,
     val guestHouseName: String,
     val roomName: String,
-    val imageUrl: String?,
+    val imageUrl: String,
     val startDate: String,
     val endDate: String,
     val adultCount: Int,

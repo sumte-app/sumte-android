@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class BookedData(
+    val roomImg: String?,
     val reservationId: Int,
     val houseName: String,
     val roomType: String,

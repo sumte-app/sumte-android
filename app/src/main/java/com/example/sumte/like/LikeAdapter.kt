@@ -75,6 +75,9 @@ class LikeAdapter(
                 Log.d("LikeAdapter_Check", "게스트하우스 ID: $ghId")
                 onLikeRemovedListener.onLikeRemoved(guestHouse)
             }
+            guesthouseItem.setOnClickListener {
+                //클릭시 상세화면으로
+            }
         }
     }
 
