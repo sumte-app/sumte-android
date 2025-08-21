@@ -1,6 +1,7 @@
 package com.example.sumte
 
 import android.util.Log
+import com.example.sumte.guesthouse.GuestHouseService
 import com.example.sumte.guesthouse.GuesthouseApi
 import com.example.sumte.roomregister.RoomRegisterService
 import com.example.sumte.housedetail.RoomService
@@ -15,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private const val BASE_URL = "https://sumteapi.duckdns.org/"
 
+
     val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     val ok = OkHttpClient.Builder().addInterceptor(logging).build()
 
@@ -24,6 +26,10 @@ object RetrofitClient {
             .client(ok)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    val guesthouseService: GuestHouseService.GuesthouseService by lazy {
+        instance.create(GuestHouseService.GuesthouseService::class.java)
     }
 
 
