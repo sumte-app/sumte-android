@@ -33,7 +33,7 @@
 
     <View
         android:id="@+id/my_boarder"
-        android:background="@color/gray100"
+        android:background="@color/gray50"
         android:layout_width="0dp"
         android:layout_height="1dp"
         app:layout_constraintStart_toStartOf="parent"

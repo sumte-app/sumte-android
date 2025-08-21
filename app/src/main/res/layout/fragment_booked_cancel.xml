@@ -129,6 +129,8 @@
         android:layout_height="92dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/sumte_main_logo"
+        android:background="@drawable/round_img_bg"
+        android:clipToOutline="true"
         app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/booked_info" />
 

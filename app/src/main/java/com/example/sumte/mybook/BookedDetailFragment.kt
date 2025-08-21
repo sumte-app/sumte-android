@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedDetailBinding
 import com.example.sumte.reservation.ReservationRepository
@@ -49,6 +50,11 @@ class BookedDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val detail = repository.getReservationDetail(reservationId)
             if (detail != null) {
+                Glide.with(binding.detailImg.context)
+                    .load(detail.imageUrl ?: "") // null일 경우 빈 문자열
+                    .placeholder(R.drawable.sumte_logo1) // 로딩 중 기본 이미지
+                    .error(R.drawable.sumte_logo1)       // 실패 시 기본 이미지
+                    .into(binding.detailImg)
                 binding.bookedDate.text = formatReservedAt(detail.reservedAt) //formatter수정
                 binding.houseName.text = detail.guestHouseName
                 binding.roomType.text = detail.roomName
@@ -72,13 +78,12 @@ class BookedDetailFragment : Fragment() {
                     binding.selectedDate.alpha = dimAlpha
                     binding.selectedCount.alpha = dimAlpha
                 }
-                //만약 현재날짜가 detail.endDate보다 나중이라면
+                //만약 현재날짜가 detail.startDate보다 나중이라면
                 val today = java.time.LocalDate.now()
-                val endDate = LocalDate.parse(detail.endDate)
-                if (endDate.isBefore(today)) {
+                val startDate = LocalDate.parse(detail.startDate)
+                if (startDate.isBefore(today)) {
                     binding.cancelBtn.isEnabled = false
                     binding.cancelBtn.setBackgroundResource(R.drawable.apply_btn_disabled_style)
-
                 }
 
 

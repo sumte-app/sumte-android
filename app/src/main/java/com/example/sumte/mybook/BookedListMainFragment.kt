@@ -98,6 +98,7 @@ private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = register
             bookedVM.bookedList.collectLatest { list ->
                 val bookedDataList = list.map { item ->
                     BookedData(
+                        roomImg = item.imageUrl,
                         reservationId = item.id,
                         houseName = item.guestHouseName,
                         roomType = item.roomName,

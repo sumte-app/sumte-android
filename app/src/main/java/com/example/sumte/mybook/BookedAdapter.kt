@@ -11,21 +11,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sumte.ApiClient
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemBooklistBinding
-import com.example.sumte.databinding.ItemHistoryBinding
 import com.example.sumte.review.ReviewBookedWriteActivity
 import com.example.sumte.review.ReviewRequest
-import com.example.sumte.review.ReviewWriteActivity
-import com.example.sumte.search.HistoryAdapter
-import com.example.sumte.search.HistoryAdapter.HistoryViewHolder
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
@@ -49,6 +43,12 @@ class BookedAdapter(
     inner class BookedViewHolder(private var binding : ItemBooklistBinding) :
         RecyclerView.ViewHolder(binding.root){
         fun bind(bookedData: BookedData) {
+            Glide.with(binding.detailImg.context)
+                .load(bookedData.roomImg ?: "") // null일 경우 빈 문자열
+                .placeholder(R.drawable.sumte_logo1) // 로딩 중 기본 이미지
+                .error(R.drawable.sumte_logo1)       // 실패 시 기본 이미지
+                .into(binding.detailImg)
+
             binding.houseName.text = bookedData.houseName
             binding.bookedDate.text = formatReservedAt(bookedData.reservedAt)
             binding.roomType.text = bookedData.roomType
@@ -79,9 +79,9 @@ class BookedAdapter(
             val endDate = LocalDate.parse(bookedData.endDate, formatter)
             //canWriteReview 역할
             if (!LocalDate.now().isAfter(endDate)) {
-//                binding.reviewWriteBtn.visibility = View.GONE
-//                binding.reviewWrittenBtn.visibility = View.GONE
-                val daysUntilStart = ChronoUnit.DAYS.between(LocalDate.now(), startDate) - 1
+                binding.reviewWriteBtn.visibility = View.GONE
+                binding.reviewWrittenBtn.visibility = View.GONE
+                val daysUntilStart = ChronoUnit.DAYS.between(LocalDate.now(), startDate)
                 binding.status.text = when {
                     daysUntilStart > 0 -> "D-$daysUntilStart"
                     daysUntilStart == 0L -> "D-day"

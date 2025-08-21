@@ -4,48 +4,44 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/border_only_bottom"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
-            android:id="@+id/top_text"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:weightSum="10"
-            app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/border_only_bottom"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
 
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/arrow_left" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="9"
-                android:gravity="center"
-                android:text="상세 예약 내역"
-                android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
-
-            <View
-                android:layout_width="12dp"
-                android:layout_height="12dp" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/boarder1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/gray100"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/arrow_left"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_text" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/review_manage_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="상세 예약 내역"
+            android:textColor="@color/gray900"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
             android:id="@+id/book_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,6 +104,9 @@
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/round_img_bg"
+        android:clipToOutline="true"
         android:src="@drawable/sumte_main_logo"
         app:layout_constraintStart_toStartOf="@+id/book_date_text"
         app:layout_constraintTop_toBottomOf="@+id/booked_info" />
