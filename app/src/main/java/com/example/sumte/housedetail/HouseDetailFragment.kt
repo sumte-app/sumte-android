@@ -95,6 +95,9 @@ class HouseDetailFragment : Fragment() {
             if (needRefresh) {
                 refreshRoomList()
             }
+
+            //인원 변경
+            adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
         }
     }
     private fun refreshRoomList() {
@@ -289,6 +292,10 @@ class HouseDetailFragment : Fragment() {
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
 
+        adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
+
+
+
         // 구분선
         val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL).apply {
             ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { setDrawable(it) }
@@ -329,13 +336,13 @@ class HouseDetailFragment : Fragment() {
 // 최초 로드 (guesthouseId를 Long으로 변환)
         vm.loadFirst(guesthouseId.toLong(), size = 10)
 
-        // 뒤로가기 & 등록 이동
+        // 뒤로가기
         binding.ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
-        binding.shareIcon.setOnClickListener {
-            val intent = Intent(requireContext(), com.example.sumte.roomregister.RoomRegisterActivity::class.java)
-            intent.putExtra("guesthouseId", 1)
-            startActivity(intent)
-        }
+//        binding.shareIcon.setOnClickListener {
+//            val intent = Intent(requireContext(), com.example.sumte.roomregister.RoomRegisterActivity::class.java)
+//            intent.putExtra("guesthouseId", 1)
+//            startActivity(intent)
+//        }
 
         Log.d("HD/F", "ARG id=" + arguments?.getInt("guesthouseId"))
         Log.d("HD/F", "use id=$guesthouseId")
@@ -470,6 +477,10 @@ class HouseDetailFragment : Fragment() {
         binding.nVHouseDetail.post {
             binding.nVHouseDetail.scrollTo(0, houseDetailVM.scrollPosition)
         }
+
+
+
+
     }
 
     // 찜 버튼 초기 설정 함수
@@ -511,6 +522,7 @@ class HouseDetailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bindBookInfoUI(binding, bookInfoVM)
+        adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
     }
 
 
