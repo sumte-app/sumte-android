@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="140dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/sample_room1"
+        android:src="@drawable/sumte_main_logo"
         android:background="@drawable/calendar_round_style"
         android:clipToOutline="true"
         app:layout_constraintTop_toTopOf="parent"

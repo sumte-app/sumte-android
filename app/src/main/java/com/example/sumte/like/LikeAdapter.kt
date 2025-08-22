@@ -9,10 +9,12 @@ import com.bumptech.glide.Glide
 import com.example.sumte.GuesthouseSummaryDto
 import com.example.sumte.R
 import com.example.sumte.databinding.ItemGuesthouseBinding
+import com.example.sumte.guesthouse.GuestHouse
 
 class LikeAdapter(
     private val items: MutableList<GuesthouseSummaryDto>,
-    private val onLikeRemovedListener: OnLikeRemovedListener
+    private val onLikeRemovedListener: OnLikeRemovedListener,
+    private val onItemClick: (GuesthouseSummaryDto) -> Unit
 ) : RecyclerView.Adapter<LikeAdapter.ViewHolder>() {
 
     interface OnLikeRemovedListener {
@@ -62,11 +64,11 @@ class LikeAdapter(
             if (!guestHouse.imageUrl.isNullOrBlank()) {
                 Glide.with(root.context)
                     .load(guestHouse.imageUrl)
-                    .placeholder(R.drawable.sample_house3)
-                    .error(R.drawable.sample_house3)
+                    .placeholder(R.drawable.sumte_main_logo)
+                    .error(R.drawable.sumte_main_logo)
                     .into(guesthouseIv)
             } else {
-                guesthouseIv.setImageResource(R.drawable.sample_house2)
+                guesthouseIv.setImageResource(R.drawable.sumte_main_logo)
             }
 
             guesthouseHeartIv.setImageResource(R.drawable.heart_home_filled)
@@ -76,7 +78,7 @@ class LikeAdapter(
                 onLikeRemovedListener.onLikeRemoved(guestHouse)
             }
             guesthouseItem.setOnClickListener {
-                //클릭시 상세화면으로
+                onItemClick(guestHouse)
             }
         }
     }

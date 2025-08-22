@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sumte.ApiClient
 import com.example.sumte.GuesthouseSummaryDto
@@ -17,6 +18,7 @@ import com.example.sumte.R
 import com.example.sumte.databinding.CustomSnackbarBinding
 import com.example.sumte.databinding.FragmentLikeBinding
 import com.example.sumte.guesthouse.GuestHouseViewModel
+import com.example.sumte.housedetail.HouseDetailFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -37,7 +39,13 @@ class LikeFragment : Fragment(), LikeAdapter.OnLikeRemovedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = LikeAdapter(mutableListOf(), this)
+        adapter = LikeAdapter(mutableListOf(), this, { guestHouse ->
+            val id = guestHouse.id
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, HouseDetailFragment.newInstance(id.toInt()))
+                .addToBackStack(null)
+                .commit()
+        })
         binding.likeRv.layoutManager = LinearLayoutManager(requireContext())
         binding.likeRv.adapter = adapter
         viewModel = ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]

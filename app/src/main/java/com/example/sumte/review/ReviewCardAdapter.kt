@@ -15,11 +15,13 @@ import com.example.sumte.databinding.ItemReviewCardBinding
 
 
 class ReviewCardAdapter(
+    private var defaultImageUrl: String?,
     private val onItemClick: ((ReviewItem) -> Unit)? = null
 ) : ListAdapter<ReviewItem, ReviewCardAdapter.VH>(diff) {
 
+
     inner class VH(val binding: ItemReviewCardBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ReviewItem) = with(binding) {
+        fun bind(item: ReviewItem, defaultImageUrl: String?) = with(binding) {
 
             tvDate.text = formatIsoToDate(item.createdAt)
 
@@ -33,7 +35,11 @@ class ReviewCardAdapter(
             // 이미지 (첫 장만)
             val thumb = item.imageUrls?.firstOrNull()
             if (thumb.isNullOrBlank()) {
-                ivImage.setImageResource(R.drawable.sample_room1) // 기본 이미지
+                if (!defaultImageUrl.isNullOrBlank()) {
+                    Glide.with(ivImage).load(defaultImageUrl).into(ivImage)
+                } else {
+                    ivImage.setImageResource(R.drawable.sample_room1)
+                }
             } else {
                 Glide.with(ivImage)
                     .load(thumb)
@@ -67,7 +73,7 @@ class ReviewCardAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), defaultImageUrl)
     }
 
     private fun formatIsoToDate(raw: String): String {
@@ -98,6 +104,11 @@ class ReviewCardAdapter(
 
         // 4) 마지막 안전망: 보이는 형태라도 "YYYY.MM.DD" 비슷하게
         return raw.take(10).replace('-', '.')
+    }
+
+    fun updateDefaultImage(url: String?) {
+        this.defaultImageUrl = url
+        // 데이터 변경 사항을 알리지 않아도 onBindViewHolder에서 적용됨
     }
 
 
