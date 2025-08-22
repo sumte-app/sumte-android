@@ -336,7 +336,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnReserve"
-        android:layout_width="328dp"
+        android:layout_width="0dp"
         android:layout_height="52dp"
         android:background="@drawable/btn_reserve_background"
         android:text="예약하기"
