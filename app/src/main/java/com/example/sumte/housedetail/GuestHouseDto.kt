@@ -1,6 +1,7 @@
 package com.example.sumte.housedetail
 
 data class GuesthouseDto(
+    val maxPeople: Int,
     val id: Int,
     val name: String,
     val averageScore: Double?,
