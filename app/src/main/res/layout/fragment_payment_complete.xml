@@ -60,7 +60,7 @@
         android:id="@+id/canceled_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="예약이 완료되었습니다.."
+        android:text="예약이 완료되었습니다!"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/pretendard_semibold"
         android:textSize="18sp"
@@ -81,8 +81,9 @@
             android:id="@+id/cancel_time_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="예약 : "
+            android:text="예약 일시: "
             android:textSize="14sp"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             app:layout_constraintEnd_toStartOf="@id/cancel_time"
             app:layout_constraintStart_toStartOf="parent"
@@ -93,6 +94,7 @@
             android:layout_height="wrap_content"
             android:text="2025.06.17(화) 04:09"
             android:textSize="14sp"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cancel_time_text"
@@ -123,6 +125,7 @@
         android:text="예약 정보"
         android:textSize="16sp"
         android:fontFamily="@font/pretendard_semibold"
+        android:textColor="@color/gray900"
         android:layout_marginTop="30dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,6 +157,7 @@
         android:layout_height="wrap_content"
         android:text="여자도미토리(4인)"
         android:textSize="14sp"
+        android:textColor="@color/gray900"
         android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toStartOf="@+id/booked_name"
         app:layout_constraintTop_toBottomOf="@+id/booked_name" />
@@ -178,6 +182,7 @@
             android:layout_height="wrap_content"
             android:text="6.18 수"
             android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray600"
             android:layout_marginStart="4dp"
             android:textSize="12sp" />
 
@@ -187,6 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="-"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
@@ -196,6 +202,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="6.19 목"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
@@ -205,6 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=", 1박"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
     </LinearLayout>
@@ -229,6 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="성인 1"
+            android:textColor="@color/gray600"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="12sp" />
 
@@ -280,6 +289,7 @@
         android:layout_marginTop="15dp"
         android:text="이용 8일전 : 결제 금액에 대한 취소 수수료 없음"
         android:textSize="14sp"
+        android:textColor="@color/gray700"
         android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/refund_policy" />
@@ -291,6 +301,7 @@
         android:layout_marginTop="8dp"
         android:text="이용 7일전 : 결제 금액에 대한 20% 차감 후 환불"
         android:textSize="14sp"
+        android:textColor="@color/gray700"
         android:fontFamily="@font/pretendard_regular"
         app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/refund_policy1" />
@@ -333,6 +344,7 @@
             android:layout_height="wrap_content"
             android:text="18400원"
             android:textSize="20sp"
+            android:textColor="@color/gray900"
             android:fontFamily="@font/pretendard_semibold"
             android:layout_marginEnd="16dp"/>
 
