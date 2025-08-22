@@ -31,6 +31,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.ApiClient
 import com.example.sumte.App
 import com.example.sumte.HomeFragment
+import com.example.sumte.MainActivity
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
@@ -462,9 +463,11 @@ class HouseDetailFragment : Fragment() {
         updateMaxPeopleWarning()
 
         binding.homeIcon.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main_container, HomeFragment()) // MainActivity의 container ID
-                .commit()
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            requireActivity().finish() // 현재 액티비티 종료
         }
 
         //객실 예약가능 정보 반영캘린더
