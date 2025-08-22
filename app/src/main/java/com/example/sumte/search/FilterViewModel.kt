@@ -11,4 +11,10 @@ class FilterViewModel : ViewModel() {
     fun save(new: FilterOptions) {
         _selected.value = new
     }
+
+    fun reset() {
+        _selected.value = FilterOptions()
+    }
+
+    fun replace(new: FilterOptions) { _selected.value = new }
 }
