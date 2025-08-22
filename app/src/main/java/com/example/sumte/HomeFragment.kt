@@ -53,7 +53,6 @@ class HomeFragment : Fragment() {
             intent.putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, "search")
             startActivity(intent)
         }
-
         return binding.root
     }
 
