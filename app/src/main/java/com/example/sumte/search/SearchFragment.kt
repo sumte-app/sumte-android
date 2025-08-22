@@ -114,6 +114,10 @@ class SearchFragment : Fragment() {
             }
         }
 
+        binding.searchWithName.setOnClickListener {
+            focusSearchField()
+        }
+
         // 날짜변경화면 이동
         binding.dateChangeBar.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -138,6 +142,19 @@ class SearchFragment : Fragment() {
         binding.allDeleteBtn.setOnClickListener {
             historyAdapter.clearAll()
             saveHistoryList(emptyList(), false)
+        }
+    }
+
+    private fun focusSearchField() {
+        val et = binding.searchText
+        et.requestFocus()
+        et.post {
+            // 커서를 맨 뒤로
+            et.setSelection(et.text?.length ?: 0)
+
+            // 키보드 올리기
+            val imm = ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)
+            imm?.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

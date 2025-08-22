@@ -108,8 +108,6 @@ class HouseDetailFragment : Fragment() {
         // HouseDetailViewModel에서 rooms 다시 로드
         houseDetailVM.loadRooms(guesthouseId, startDate, endDate)
     }
-
-
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
         object : ViewModelProvider.Factory {
@@ -118,6 +116,18 @@ class HouseDetailFragment : Fragment() {
                 HouseDetailViewModel(repo) as T
         }.create(HouseDetailViewModel::class.java)
     }
+
+    private fun updateMaxPeopleWarning() {
+        val totalGuests = bookInfoVM.adultCount + bookInfoVM.childCount
+        if (maxPeople > 0 && totalGuests > maxPeople) {
+            binding.maxPeoplePopup.visibility = View.VISIBLE
+            binding.errorMsg.visibility = View.VISIBLE
+        } else {
+            binding.maxPeoplePopup.visibility = View.GONE
+            binding.errorMsg.visibility = View.GONE
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -404,7 +414,7 @@ class HouseDetailFragment : Fragment() {
             binding.tvReviewCount2.text = h.reviewCount.toString()
 
             maxPeople = h.maxPeople
-            Log.d("guesthouseMaxPeople", "maxPeople: $maxPeople")
+            updateMaxPeopleWarning() //초기화
 
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
@@ -445,7 +455,7 @@ class HouseDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindBookInfoUI(binding, bookInfoVM)
-
+        updateMaxPeopleWarning()
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -522,6 +532,7 @@ class HouseDetailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bindBookInfoUI(binding, bookInfoVM)
+        updateMaxPeopleWarning()
         adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
     }
 

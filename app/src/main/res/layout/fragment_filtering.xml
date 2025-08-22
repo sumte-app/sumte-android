@@ -78,15 +78,17 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            android:textSize="16sp"-->
 <!--            android:textStyle="bold"/>-->
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/filtering_checkbox"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="16dp"
-            android:background="@drawable/round_style_search_result_empty"
+            android:button="@drawable/check_box_selector"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/filtering_cl"/>
+            app:layout_constraintTop_toTopOf="@+id/filtering_cl"
+            android:theme="@style/Signup.Sumte"
+            />
         <TextView
             android:id="@+id/filtering_available_tv"
             android:layout_width="wrap_content"
@@ -238,6 +240,7 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/bottom_nav_my"/>
             <TextView
+                android:id="@+id/filteringPeopleMinTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -250,6 +253,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
             <ImageView
+                android:id="@+id/filteringPeopleMinIv"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginEnd="10dp"

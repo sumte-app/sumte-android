@@ -1,0 +1,9 @@
+<!-- res/drawable/checkbox_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 체크된 상태 -->
+    <item android:state_checked="true" android:drawable="@drawable/checkbox_check"/>
+    <!-- (선택) 눌림 피드백 주고 싶으면 추가 -->
+    <!-- <item android:state_pressed="true" android:drawable="@drawable/checkbox_check"/> -->
+    <!-- 기본(언체크) -->
+    <item android:drawable="@drawable/checkbox_no"/>
+</selector>
