@@ -70,6 +70,19 @@ class BookInfoDateFragment : Fragment() {
         }
     }
 
+    private fun updateApplyButtonState() {
+        // 시작과 끝이 모두 선택되어야만 활성화
+        binding.applyBtn.isEnabled = (startDate != null && endDate != null)
+
+        if (binding.applyBtn.isEnabled) {
+            binding.applyBtn.setBackgroundResource(R.drawable.apply_btn_style)
+            binding.applyBtn.alpha = 1f
+        } else {
+            binding.applyBtn.setBackgroundResource(R.drawable.apply_btn_disabled_style) // 비활성화 시 흐리게
+        }
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,12 +144,13 @@ class BookInfoDateFragment : Fragment() {
                             )
                             else -> container.textView.background = null
                         }
-                    } else if (startDate != null) {
+                    } else if (startDate != null) { //시작날짜만 선택
                         if (date == startDate) {
                             container.textView.setBackgroundResource(R.drawable.selected_circle)
                         } else {
                             container.textView.background = null
                         }
+                        //apply버튼 비활성화
                     } else {
                         container.textView.background = null
                     }
@@ -171,9 +185,7 @@ class BookInfoDateFragment : Fragment() {
                     container.textView.alpha = 0.3f
                     container.textView.isClickable = false
                     return
-
                 }
-
                 container.textView.setOnClickListener {
                     val clickedDate = date
                     if (startDate != null && endDate == null && clickedDate == startDate) {
@@ -181,16 +193,30 @@ class BookInfoDateFragment : Fragment() {
                     }
                     when {
                         startDate == null || endDate != null -> {
+                            // 새로 시작일 설정
                             startDate = clickedDate
                             endDate = null
                         }
                         clickedDate.isBefore(startDate) -> {
+                            // 기존 시작일보다 앞을 누르면 다시 시작일로
                             startDate = clickedDate
                         }
                         else -> {
-                            endDate = clickedDate
+                            // endDate 후보일 경우 → 사이에 closedDates 가 있는지 체크
+                            val range = (startDate!!..clickedDate)
+                            val hasClosed = closedDatesList.any { it in range }
+                            if (hasClosed) {
+                                // 불가능 → 새 startDate 로 취급
+                                startDate = clickedDate
+                                endDate = null
+                            } else {
+                                // 가능 → endDate 설정
+                                endDate = clickedDate
+                            }
                         }
                     }
+
+                    // UI 업데이트
                     startDate?.let {
                         binding.startDate.text = it.format(formatter)
                     }
@@ -208,7 +234,10 @@ class BookInfoDateFragment : Fragment() {
 
                     binding.dateComma.visibility = if (endDate != null) View.VISIBLE else View.GONE
                     binding.customCalendar.notifyCalendarChanged()
+
+                    updateApplyButtonState()
                 }
+
             }
         }//여기까지 캘린더 내부 bind
 
