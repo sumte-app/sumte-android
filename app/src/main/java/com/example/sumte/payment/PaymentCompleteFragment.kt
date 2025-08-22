@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.Window
 import com.bumptech.glide.Glide
 import com.example.sumte.HomeFragment
+import com.example.sumte.MainActivity
 import com.example.sumte.R
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentPaymentCompleteBinding
@@ -50,12 +51,14 @@ class PaymentCompleteFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding.homeBtn.setOnClickListener{
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, HomeFragment())
-                .addToBackStack(null)
-                .commit()
+        binding.homeBtn.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            requireActivity().finish() // 현재 액티비티 종료
         }
+
+
         return binding.root
     }
 
