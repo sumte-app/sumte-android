@@ -286,6 +286,7 @@ class PaymentActivity : AppCompatActivity() {
         selectedPaymentMethod = method
         binding.btnKakaoPay.isSelected = method == "kakao"
         binding.btnEasyPay.isSelected = method == "easy"
+        updatePayButtonState()
     }
 
     private fun setupAgreementLogic() {
@@ -343,9 +344,10 @@ class PaymentActivity : AppCompatActivity() {
             binding.cbTerms5
         ).all { it.isChecked }
 
-        val isEnabled = selectedPaymentMethod.isNotEmpty() && allTermsChecked
-        binding.btnPay.isEnabled = isEnabled
-        binding.btnPay.alpha = if (isEnabled) 1f else 0.5f
+        val canPay = (selectedPaymentMethod == "kakao") && allTermsChecked
+
+        binding.btnPay.isEnabled = canPay
+        binding.btnPay.alpha = if (canPay) 1f else 0.5f
     }
 
 
