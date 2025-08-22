@@ -1,6 +1,7 @@
 package com.example.sumte.mybook
 
 import BookedListMainFragment
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
 import com.bumptech.glide.Glide
+import com.example.sumte.MainActivity
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedCancelBinding
 import java.text.SimpleDateFormat
@@ -58,10 +60,16 @@ class BookedCancelFragment : Fragment() {
         binding.adultCount.text = adultCount
         binding.childCount.text = childCount
         binding.price.text = totalPrice
+        //투명하게
+        binding.detailImg.alpha = 0.5f
+        binding.bookedName.alpha = 0.5f
+        binding.roomType.alpha = 0.5f
+        binding.selectedDate.alpha = 0.5f
+        binding.selectedCount.alpha = 0.5f
+
         if (imageUrl.isNotEmpty()) Glide.with(requireContext())
             .load(imageUrl)
-            .into(binding.detailImg) // cancel fragment의 imageView id
-
+            .into(binding.detailImg)
 
         //예약내역으로 이동
         binding.bookedListBtn.setOnClickListener {
@@ -73,10 +81,13 @@ class BookedCancelFragment : Fragment() {
                 .commit()
         }
 
-        //홈 이동
         binding.homeBtn.setOnClickListener {
-            //안중요 나중생각
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            requireActivity().finish() // BookInfoActivity 닫기
         }
+
         //뒤로가기 시 상세예약내역
         binding.backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
