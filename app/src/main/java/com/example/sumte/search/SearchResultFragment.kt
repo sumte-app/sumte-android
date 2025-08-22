@@ -102,7 +102,12 @@ class SearchResultFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { bundle ->
-            keyword = bundle.getString("keyword") ?: bundle.getString(BookInfoActivity.EXTRA_KEYWORD)
+
+            keyword = bundle.getString("keyword")
+                ?: bundle.getString(BookInfoActivity.EXTRA_KEYWORD)
+            if (!keyword.isNullOrBlank()) {
+                bookInfoViewModel.keyword = keyword
+            }
             val startDateStr = bundle.getString("startDate")
             val endDateStr = bundle.getString("endDate")
             val adultCount = bundle.getInt("adultCount", bookInfoViewModel.adultCount)
@@ -144,7 +149,7 @@ class SearchResultFragment : Fragment() {
         binding.searchResultRv.layoutManager = LinearLayoutManager(requireContext())
         binding.searchResultRv.adapter = adapter
         bindBookInfoUI(binding, bookInfoViewModel)
-        keyword?.let { binding.searchText.setText(it) }
+        keyword?.let { binding.searchText.setText(bookInfoViewModel.keyword) }
 
         // 페이징 스크롤
         binding.searchResultRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {

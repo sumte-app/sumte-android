@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sumte.ApiClient
 import com.example.sumte.App
+import com.example.sumte.HomeFragment
+import com.example.sumte.MainActivity
 import com.example.sumte.R
 import com.example.sumte.ReservationRequest
 import com.example.sumte.RetrofitClient
@@ -381,8 +383,10 @@ class HouseDetailFragment : Fragment() {
             when (st) {
                 is RoomUiState.Success -> {
 
+
                     Log.d("HouseDetailFragment", "Success! Item count: ${st.items.size}")
                     if (st.items.isNotEmpty()) {
+
                         showLoading(false)
                         Log.d("HouseDetailFragment", "First item: ${st.items[0]}")
                     }
@@ -396,6 +400,7 @@ class HouseDetailFragment : Fragment() {
                 }
                 RoomUiState.Loading -> {
                     showLoading(true)
+
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -458,8 +463,13 @@ class HouseDetailFragment : Fragment() {
         updateMaxPeopleWarning()
 
         binding.homeIcon.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            requireActivity().finish() // 현재 액티비티 종료
         }
+
         //객실 예약가능 정보 반영캘린더
         binding.dateChangeBar.setOnClickListener {
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
@@ -547,7 +557,15 @@ class HouseDetailFragment : Fragment() {
 
     private fun showLoading(show: Boolean) {
         binding.homeLoading.root.isVisible = show
-        if (show) startDotAnimation() else stopDotAnimation()
+        if (show) {
+            binding.homeLoading.root.setBackgroundResource(android.R.color.white) // ✅ 불투명
+            binding.homeLoading.root.isClickable = true
+            binding.homeLoading.root.isFocusable = true
+
+
+
+            startDotAnimation()
+        } else stopDotAnimation()
     }
 
     private fun startDotAnimation() {
@@ -575,5 +593,7 @@ class HouseDetailFragment : Fragment() {
         dotJob?.cancel()
         dotJob = null
     }
+
+
 
 }
