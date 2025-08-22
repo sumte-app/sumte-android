@@ -26,9 +26,9 @@
             <ImageView
                 android:id="@+id/guesthouse_iv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/sample_house1"/>
+                android:src="@drawable/sumte_main_logo"/>
         </androidx.cardview.widget.CardView>
         <ImageView
             android:id="@+id/guesthouse_heart_iv"
