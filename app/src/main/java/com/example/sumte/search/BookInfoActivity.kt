@@ -26,7 +26,11 @@ class BookInfoActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val fragmentType = intent.getStringExtra(EXTRA_FRAGMENT_TYPE) ?: TYPE_DATE
             val fragment = when (fragmentType) {
-                TYPE_COUNT -> BookInfoCountFragment()
+                TYPE_COUNT -> BookInfoCountFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt("maxPeople", intent.getIntExtra("maxPeople", -1))
+                    }
+                }
                 TYPE_SEARCH_RESULT -> {
                     val keyword = intent.getStringExtra(EXTRA_KEYWORD) ?: ""
                     SearchResultFragment().apply {

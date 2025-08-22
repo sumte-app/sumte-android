@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedListMainBinding
 import com.example.sumte.mybook.BookedAdapter
 import com.example.sumte.mybook.BookedData
@@ -27,16 +28,7 @@ class BookedListMainFragment : Fragment() {
     private lateinit var binding: FragmentBookedListMainBinding
     private lateinit var adapter: BookedAdapter
     private lateinit var bookedVM: BookedViewModel
-//    private val reviewWriteResultLauncher = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) { result ->
-//        // ReviewBookedWriteActivity에서 RESULT_OK 응답을 보내면 이 블록이 실행
-//        if (result.resultCode == Activity.RESULT_OK) {
-//            // 리뷰가 작성되었으므로, ViewModel을 통해 목록을 새로고침하도록 요청
-//            Log.d("BookedListMainFragment", "리뷰 작성 완료. 목록을 새로고침합니다.")
-//            bookedVM.fetchBookedList()
-//        }
-//    }
+
     private val reviewWriteResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -163,10 +155,16 @@ class BookedListMainFragment : Fragment() {
 
 
                 }.sortedByDescending { LocalDateTime.parse(it.reservedAt) } // ← 최신 예약이 위로
-
-                // 어댑터를 매번 새로 만들지 말고 updateData 사용
-
-                adapter.updateData(bookedDataList)
+                if (bookedDataList.isEmpty()) {
+                    // 예약 내역이 없으면 Empty Layout 보이기
+                    binding.reviewEmptyLayout.visibility = View.VISIBLE
+                    binding.bookedListRecyclerview.visibility = View.GONE
+                } else {
+                    // 예약 내역이 있으면 RecyclerView 보이기
+                    binding.reviewEmptyLayout.visibility = View.GONE
+                    binding.bookedListRecyclerview.visibility = View.VISIBLE
+                    adapter.updateData(bookedDataList)
+                }
             }
         }
 
@@ -174,5 +172,19 @@ class BookedListMainFragment : Fragment() {
 //        super.onResume()
 //        bookedVM.fetchBookedList()
 //    }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = requireActivity().window
+
+        // 상태바 배경색
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(
+            requireContext(), R.color.white
+        )
+
+        // 상태바 아이콘 색(밝은 배경이면 true)
+        androidx.core.view.WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = true
     }
 }

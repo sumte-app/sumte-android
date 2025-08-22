@@ -10,6 +10,13 @@
     android:background="@color/white"
     android:fitsSystemWindows="true">
 
+    <include
+        android:id="@+id/homeLoading"
+        layout="@layout/view_home_loading"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHeaderBar"
@@ -355,6 +362,32 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:id="@+id/maxPeoplePopup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/max_error_style"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clReservationInfo"
+                app:layout_constraintWidth_percent="0.9">
+
+                <TextView
+                    android:id="@+id/error_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="⚠ 해당 인원으로는 해당 숙소 예약이 불가해요."
+                    android:textColor="@color/lighten100"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvInfo"
@@ -363,7 +396,7 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clReservationInfo"
+                app:layout_constraintTop_toBottomOf="@id/maxPeoplePopup"
                 app:layout_constraintWidth_percent="0.9"
                 android:overScrollMode="never"
                 android:nestedScrollingEnabled="false" />
@@ -528,10 +561,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-    <include
-        android:id="@+id/homeLoading"
-        layout="@layout/view_home_loading"
-        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

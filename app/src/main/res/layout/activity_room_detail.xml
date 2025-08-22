@@ -8,7 +8,7 @@
     android:background="@android:color/white">
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/back_btn"
         android:layout_width="16dp"
         android:layout_height="16dp"
@@ -336,9 +336,9 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnReserve"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/input_field_true"
+        android:layout_width="328dp"
+        android:layout_height="52dp"
+        android:background="@drawable/btn_reserve_background"
         android:text="예약하기"
         android:textColor="@android:color/white"
         android:fontFamily="@font/pretendard_regular"

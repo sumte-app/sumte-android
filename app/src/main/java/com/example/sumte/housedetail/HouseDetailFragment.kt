@@ -56,7 +56,11 @@ class HouseDetailFragment : Fragment() {
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
-    private val reviewAdapter = ReviewCardAdapter()
+    private var reviewAdapter = ReviewCardAdapter(null)
+    private var guesthouseId: Int = -1
+    private var maxPeople: Int = 0
+
+    private var dotJob: Job? = null
 
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
@@ -83,8 +87,6 @@ class HouseDetailFragment : Fragment() {
         }
     }
 
-    private var guesthouseId: Int = -1
-
     private val bookInfoLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -93,6 +95,9 @@ class HouseDetailFragment : Fragment() {
             if (needRefresh) {
                 refreshRoomList()
             }
+
+            //인원 변경
+            adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
         }
     }
     private fun refreshRoomList() {
@@ -103,8 +108,6 @@ class HouseDetailFragment : Fragment() {
         // HouseDetailViewModel에서 rooms 다시 로드
         houseDetailVM.loadRooms(guesthouseId, startDate, endDate)
     }
-
-
     private val houseDetailVM: HouseDetailViewModel by lazy {
         val repo = RoomRepository(RetrofitClient.roomService)
         object : ViewModelProvider.Factory {
@@ -114,11 +117,22 @@ class HouseDetailFragment : Fragment() {
         }.create(HouseDetailViewModel::class.java)
     }
 
+    private fun updateMaxPeopleWarning() {
+        val totalGuests = bookInfoVM.adultCount + bookInfoVM.childCount
+        if (maxPeople > 0 && totalGuests > maxPeople) {
+            binding.maxPeoplePopup.visibility = View.VISIBLE
+            binding.errorMsg.visibility = View.VISIBLE
+        } else {
+            binding.maxPeoplePopup.visibility = View.GONE
+            binding.errorMsg.visibility = View.GONE
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         guesthouseId = arguments?.getInt(ARG_GUESTHOUSE_ID) ?: -1
         if (guesthouseId <= 0) {
-
             Log.e("HD/F", "guesthouseId missing. args=$arguments")
             Toast.makeText(requireContext(), "잘못된 접근입니다.", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
@@ -129,7 +143,6 @@ class HouseDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater, container, false)
-
         imageAdapter = HouseImageAdapter() // 아래에 submit(List<String>)가 있는 버전
         binding.vpHouseImage.adapter = imageAdapter
         binding.vpHouseImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -138,7 +151,6 @@ class HouseDetailFragment : Fragment() {
             }
         })
         updatePageIndicator(1, 0)
-
 
         binding.llSeeAllReviews.setOnClickListener {
             val headerData = houseDetailVM.header.value
@@ -253,13 +265,12 @@ class HouseDetailFragment : Fragment() {
                         return@launch
                     }
 
-                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
-                    Log.d("Reservation", "reservationId=$resId")
+                    Log.d("Reservation success!", "reservationId=$resId")
 
 
                     val createdAtIso = java.time.ZonedDateTime
                         .now(java.time.ZoneId.of("Asia/Seoul"))
-                        .toLocalDateTime()                    // 오프셋 없이 LocalDateTime
+                        .toLocalDateTime()
                         .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
 
                     val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
@@ -275,8 +286,6 @@ class HouseDetailFragment : Fragment() {
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT, createdAtIso)
-
-
                     }
                     startActivity(intent)
                 } else {
@@ -293,6 +302,10 @@ class HouseDetailFragment : Fragment() {
         binding.rvInfo.adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireContext())
 
+        adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
+
+
+
         // 구분선
         val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL).apply {
             ContextCompat.getDrawable(requireContext(), R.drawable.divider)?.let { setDrawable(it) }
@@ -308,7 +321,6 @@ class HouseDetailFragment : Fragment() {
             }
         })
 
-
         binding.rvReviewList.apply {
             adapter = reviewAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -318,7 +330,6 @@ class HouseDetailFragment : Fragment() {
             vm.state.collect { st ->
                 when (st) {
                     is ReviewUiState.Loading -> {
-
                     }
                     is ReviewUiState.Success -> {
                         reviewAdapter.submitList(st.items)
@@ -335,13 +346,13 @@ class HouseDetailFragment : Fragment() {
 // 최초 로드 (guesthouseId를 Long으로 변환)
         vm.loadFirst(guesthouseId.toLong(), size = 10)
 
-        // 뒤로가기 & 등록 이동
+        // 뒤로가기
         binding.ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
-        binding.shareIcon.setOnClickListener {
-            val intent = Intent(requireContext(), com.example.sumte.roomregister.RoomRegisterActivity::class.java)
-            intent.putExtra("guesthouseId", 1)
-            startActivity(intent)
-        }
+//        binding.shareIcon.setOnClickListener {
+//            val intent = Intent(requireContext(), com.example.sumte.roomregister.RoomRegisterActivity::class.java)
+//            intent.putExtra("guesthouseId", 1)
+//            startActivity(intent)
+//        }
 
         Log.d("HD/F", "ARG id=" + arguments?.getInt("guesthouseId"))
         Log.d("HD/F", "use id=$guesthouseId")
@@ -350,6 +361,7 @@ class HouseDetailFragment : Fragment() {
         observeHeader()
 
         if (guesthouseId > 0){
+            showLoading(true)
             val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
             val startDate = bookInfoVM.startDate.format(fmt)
             val endDate   = bookInfoVM.endDate.format(fmt)
@@ -371,6 +383,7 @@ class HouseDetailFragment : Fragment() {
 
                     Log.d("HouseDetailFragment", "Success! Item count: ${st.items.size}")
                     if (st.items.isNotEmpty()) {
+                        showLoading(false)
                         Log.d("HouseDetailFragment", "First item: ${st.items[0]}")
                     }
                     adapter.submitList(st.items)
@@ -379,9 +392,10 @@ class HouseDetailFragment : Fragment() {
 
                     Log.e("HouseDetailFragment", "Error: ${st.msg}")
                     Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
+                    showLoading(false)
                 }
                 RoomUiState.Loading -> {
-
+                    showLoading(true)
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -399,13 +413,22 @@ class HouseDetailFragment : Fragment() {
             binding.tvReviewScore.text = String.format("%.1f", h.averageScore ?: 0.0)
             binding.tvReviewCount2.text = h.reviewCount.toString()
 
+            maxPeople = h.maxPeople
+            updateMaxPeopleWarning() //초기화
+
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
-
                 val total = urls.size
                 val current = if (total == 0) 0
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
                 updatePageIndicator(current, total)
+            }
+
+            bookInfoVM.roomImageUrl = urls.firstOrNull()
+
+            val guestHouseImageUrl = h.imageUrls.firstOrNull()
+            if (guestHouseImageUrl != null) {
+                reviewAdapter.updateDefaultImage(guestHouseImageUrl)
             }
         }
     }
@@ -431,8 +454,8 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         bindBookInfoUI(binding, bookInfoVM)
+        updateMaxPeopleWarning()
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -446,12 +469,12 @@ class HouseDetailFragment : Fragment() {
             }
             bookInfoLauncher.launch(intent)
         }
-
         binding.countChangeBar.setOnClickListener {
+            Log.d("guesthouse_countChangeBar","maxPeople is ${maxPeople}")
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
                 putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
-                putExtra("guesthouseId", guesthouseId)
+                putExtra("maxPeople", maxPeople)
             }
             bookInfoLauncher.launch(intent)
         }
@@ -464,6 +487,10 @@ class HouseDetailFragment : Fragment() {
         binding.nVHouseDetail.post {
             binding.nVHouseDetail.scrollTo(0, houseDetailVM.scrollPosition)
         }
+
+
+
+
     }
 
     // 찜 버튼 초기 설정 함수
@@ -505,13 +532,48 @@ class HouseDetailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bindBookInfoUI(binding, bookInfoVM)
+        updateMaxPeopleWarning()
+        adapter.updatePeopleCount(bookInfoVM.adultCount + bookInfoVM.childCount)
     }
 
 
 
     override fun onDestroyView() {
         houseDetailVM.scrollPosition = binding.nVHouseDetail.scrollY
+        stopDotAnimation()
         super.onDestroyView()
+    }
+
+
+    private fun showLoading(show: Boolean) {
+        binding.homeLoading.root.isVisible = show
+        if (show) startDotAnimation() else stopDotAnimation()
+    }
+
+    private fun startDotAnimation() {
+        val dots = arrayOf(
+            binding.homeLoading.dot1,
+            binding.homeLoading.dot2,
+            binding.homeLoading.dot3
+        )
+        dotJob?.cancel()
+        dotJob = viewLifecycleOwner.lifecycleScope.launch {
+            var i = 0
+            while (isActive) {
+                dots.forEachIndexed { idx, v ->
+                    v.setImageResource(
+                        if (idx == i) R.drawable.dot_green else R.drawable.dot_gray
+                    )
+                }
+                i = (i + 1) % dots.size
+                delay(300)
+            }
+        }
+    }
+
+    private fun stopDotAnimation() {
+        dotJob?.cancel()
+        dotJob = null
     }
 
 }
