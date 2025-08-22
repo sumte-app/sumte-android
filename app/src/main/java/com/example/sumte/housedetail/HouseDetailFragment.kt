@@ -381,8 +381,10 @@ class HouseDetailFragment : Fragment() {
             when (st) {
                 is RoomUiState.Success -> {
 
+
                     Log.d("HouseDetailFragment", "Success! Item count: ${st.items.size}")
                     if (st.items.isNotEmpty()) {
+
                         showLoading(false)
                         Log.d("HouseDetailFragment", "First item: ${st.items[0]}")
                     }
@@ -396,6 +398,7 @@ class HouseDetailFragment : Fragment() {
                 }
                 RoomUiState.Loading -> {
                     showLoading(true)
+
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -547,7 +550,15 @@ class HouseDetailFragment : Fragment() {
 
     private fun showLoading(show: Boolean) {
         binding.homeLoading.root.isVisible = show
-        if (show) startDotAnimation() else stopDotAnimation()
+        if (show) {
+            binding.homeLoading.root.setBackgroundResource(android.R.color.white) // ✅ 불투명
+            binding.homeLoading.root.isClickable = true
+            binding.homeLoading.root.isFocusable = true
+
+
+
+            startDotAnimation()
+        } else stopDotAnimation()
     }
 
     private fun startDotAnimation() {
@@ -575,5 +586,7 @@ class HouseDetailFragment : Fragment() {
         dotJob?.cancel()
         dotJob = null
     }
+
+
 
 }
