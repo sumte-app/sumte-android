@@ -12,6 +12,7 @@ sealed interface RoomUiState {
 }
 
 data class GuesthouseInfo(
+    val maxPeople: Int, //추가
     val name: String,
     val address: String?,
     val imageUrls: List<String>,
@@ -78,6 +79,7 @@ class HouseDetailViewModel(
 
                 val d = repo.fetchGuesthouse(guesthouseId)
                 _header.value = GuesthouseInfo(
+                    maxPeople = d.maxPeople,
                     name = d.name,
                     address = d.address,
                     imageUrls = d.imageUrls ?: emptyList(),
