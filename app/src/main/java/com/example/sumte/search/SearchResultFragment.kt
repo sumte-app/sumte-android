@@ -127,9 +127,11 @@ class SearchResultFragment : Fragment() {
             viewModel = ghViewModel,
             onItemClick = { guestHouse ->
                 val id = guestHouse.id
-
-                // 상세 페이지 이동 로직
-
+                Log.d("guesthouseId","$id")
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.book_info_container, HouseDetailFragment.newInstance(id.toInt()))
+                    .addToBackStack(null)
+                    .commit()
             }
         )
 
@@ -180,42 +182,27 @@ class SearchResultFragment : Fragment() {
             }
         }
 
-        val rawViewEnableReservation = arguments?.getBoolean("viewEnableReservation")
-        val rawMinPrice = arguments?.getInt("minPrice")
-        val rawMaxPrice = arguments?.getInt("maxPrice")
-        val peopleArg = arguments?.getInt("people")
-        val optionService = arguments?.getStringArrayList("optionService")
-        val targetAudience = arguments?.getStringArrayList("targetAudience")
-        val regionArg = arguments?.getStringArrayList("region")
+        // 초기 baseFilter 생성 (한 번만 실행됨)
+        val initialCheckIn = bookInfoViewModel.startDate?.toYmd()
+        val initialCheckOut = bookInfoViewModel.endDate?.toYmd()
+        val initialHasDates = !initialCheckIn.isNullOrBlank() && !initialCheckOut.isNullOrBlank()
+        val initialPeopleSum = (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
+        val initialPeopleForRequest = if (initialHasDates) initialPeopleSum else null
 
-        val checkIn = bookInfoViewModel.startDate?.toYmd()
-        val checkOut = bookInfoViewModel.endDate?.toYmd()
-
-        val hasDates = !checkIn.isNullOrBlank() && !checkOut.isNullOrBlank()
-        val peopleSum = (peopleArg ?: 0).takeIf { it > 0 }
-            ?: (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
-        val peopleForRequest = if (hasDates) peopleSum else null
-
-        val regionNorm = normalizeRegionArg(regionArg)
-
-        val minPriceNorm = rawMinPrice?.takeIf { it > 0 }
-        val maxPriceNorm = rawMaxPrice?.takeIf { it > 0 }
         val keywordNorm = keyword?.takeIf { it.isNotBlank() }
         binding.searchText.setText(keywordNorm ?: "")
 
-        val regionForRequest: List<String>? = null
-
         val baseFilter = GuesthouseSearchRequest(
-            viewEnableReservation = rawViewEnableReservation,
-            checkIn = checkIn,
-            checkOut = checkOut,
-            people = peopleForRequest,
+            viewEnableReservation = arguments?.getBoolean("viewEnableReservation"),
+            checkIn = initialCheckIn,
+            checkOut = initialCheckOut,
+            people = initialPeopleForRequest,
             keyword = keywordNorm,
-            minPrice = minPriceNorm,
-            maxPrice = maxPriceNorm,
-            optionService = optionService,
-            targetAudience = targetAudience,
-            region = regionForRequest
+            minPrice = arguments?.getInt("minPrice")?.takeIf { it > 0 },
+            maxPrice = arguments?.getInt("maxPrice")?.takeIf { it > 0 },
+            optionService = arguments?.getStringArrayList("optionService"),
+            targetAudience = arguments?.getStringArrayList("targetAudience"),
+            region = null
         )
 
         if (!didInitialLoad) {
@@ -224,6 +211,7 @@ class SearchResultFragment : Fragment() {
             didInitialLoad = true
         }
 
+        // --- 네비게이션 ---
         binding.searchText.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, SearchFragment())
@@ -280,15 +268,31 @@ class SearchResultFragment : Fragment() {
                         newRegion = if(isFilterCleared) baseFilter.region else basis.region
                     }
 
+                    // [수정] 항상 최신 날짜와 인원 정보를 ViewModel에서 다시 가져옵니다.
+                    val latestCheckIn = bookInfoViewModel.startDate?.toYmd()
+                    val latestCheckOut = bookInfoViewModel.endDate?.toYmd()
+                    val hasDates = !latestCheckIn.isNullOrBlank() && !latestCheckOut.isNullOrBlank()
+                    val latestPeopleSum = (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
+
+                    // 필터 화면의 인원 수(f.people)를 우선 적용하고, 없으면 예약 정보의 인원 수를 사용합니다.
+                    val peopleForRequest = if (hasDates) {
+                        f.people ?: latestPeopleSum
+                    } else {
+                        f.people // 날짜가 없으면 필터의 인원수만 고려
+                    }
+
                     val merged = basis.copy(
                         viewEnableReservation = f.viewEnableReservation ?: basis.viewEnableReservation,
-                        people = f.people ?: basis.people,
                         minPrice = f.minPrice ?: basis.minPrice,
                         maxPrice = f.maxPrice ?: basis.maxPrice,
                         optionService = f.optionService ?: basis.optionService,
                         targetAudience = f.targetAudience ?: basis.targetAudience,
                         keyword = newKeyword,
-                        region = newRegion
+                        region = newRegion,
+                        // [수정] 최신 날짜와 인원 정보로 덮어씁니다.
+                        checkIn = latestCheckIn,
+                        checkOut = latestCheckOut,
+                        people = peopleForRequest
                     )
 
                     val anyFilterApplied = !f.optionService.isNullOrEmpty() ||
