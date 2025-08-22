@@ -35,8 +35,8 @@ class HouseImageAdapter(
 
             Glide.with(this)
                 .load(url)
-                .placeholder(R.drawable.sample_room1)
-                .error(R.drawable.sample_room1)
+                .placeholder(R.drawable.sample_house1)
+                .error(R.drawable.sample_house1)
                 .into(this)
         }
         holder.binding.root.setOnClickListener { onClick(url) }
