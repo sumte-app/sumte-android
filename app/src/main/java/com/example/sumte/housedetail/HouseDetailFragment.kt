@@ -60,6 +60,8 @@ class HouseDetailFragment : Fragment() {
     private var guesthouseId: Int = -1
     private var maxPeople: Int = 0
 
+    private var dotJob: Job? = null
+
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
         ViewModelProvider(requireActivity())[GuestHouseViewModel::class.java]
@@ -342,6 +344,7 @@ class HouseDetailFragment : Fragment() {
         observeHeader()
 
         if (guesthouseId > 0){
+            showLoading(true)
             val fmt = java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
             val startDate = bookInfoVM.startDate.format(fmt)
             val endDate   = bookInfoVM.endDate.format(fmt)
@@ -363,6 +366,7 @@ class HouseDetailFragment : Fragment() {
 
                     Log.d("HouseDetailFragment", "Success! Item count: ${st.items.size}")
                     if (st.items.isNotEmpty()) {
+                        showLoading(false)
                         Log.d("HouseDetailFragment", "First item: ${st.items[0]}")
                     }
                     adapter.submitList(st.items)
@@ -371,8 +375,10 @@ class HouseDetailFragment : Fragment() {
 
                     Log.e("HouseDetailFragment", "Error: ${st.msg}")
                     Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
+                    showLoading(false)
                 }
                 RoomUiState.Loading -> {
+                    showLoading(true)
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -400,6 +406,8 @@ class HouseDetailFragment : Fragment() {
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
                 updatePageIndicator(current, total)
             }
+
+            bookInfoVM.roomImageUrl = urls.firstOrNull()
         }
     }
 
@@ -426,6 +434,7 @@ class HouseDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bindBookInfoUI(binding, bookInfoVM)
+
 
         binding.homeIcon.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -504,7 +513,40 @@ class HouseDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         houseDetailVM.scrollPosition = binding.nVHouseDetail.scrollY
+        stopDotAnimation()
         super.onDestroyView()
+    }
+
+
+    private fun showLoading(show: Boolean) {
+        binding.homeLoading.root.isVisible = show
+        if (show) startDotAnimation() else stopDotAnimation()
+    }
+
+    private fun startDotAnimation() {
+        val dots = arrayOf(
+            binding.homeLoading.dot1,
+            binding.homeLoading.dot2,
+            binding.homeLoading.dot3
+        )
+        dotJob?.cancel()
+        dotJob = viewLifecycleOwner.lifecycleScope.launch {
+            var i = 0
+            while (isActive) {
+                dots.forEachIndexed { idx, v ->
+                    v.setImageResource(
+                        if (idx == i) R.drawable.dot_green else R.drawable.dot_gray
+                    )
+                }
+                i = (i + 1) % dots.size
+                delay(300)
+            }
+        }
+    }
+
+    private fun stopDotAnimation() {
+        dotJob?.cancel()
+        dotJob = null
     }
 
 }
