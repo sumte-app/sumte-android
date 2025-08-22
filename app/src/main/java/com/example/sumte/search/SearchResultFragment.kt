@@ -20,12 +20,7 @@ import com.example.sumte.databinding.FragmentSearchResultBinding
 import com.example.sumte.guesthouse.GuestHouseAdapter
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.guesthouse.UiState
-<<<<<<< HEAD
-=======
 import com.example.sumte.housedetail.HouseDetailFragment
-import com.example.sumte.like.LikeAdapter
-import com.example.sumte.search.FilterViewModel
->>>>>>> 087d4a8cab3a43e42b96ae34d68d84efc74be5c6
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -132,16 +127,9 @@ class SearchResultFragment : Fragment() {
             viewModel = ghViewModel,
             onItemClick = { guestHouse ->
                 val id = guestHouse.id
-<<<<<<< HEAD
+
                 // 상세 페이지 이동 로직
-=======
-                Log.d("guesthouseId","$id")
-                // BookInfoActivity 내에서 HouseDetailFragment로 이동
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.book_info_container, HouseDetailFragment.newInstance(id.toInt()))
-                    .addToBackStack(null)
-                    .commit()
->>>>>>> 087d4a8cab3a43e42b96ae34d68d84efc74be5c6
+
             }
         )
 
