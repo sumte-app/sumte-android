@@ -8,10 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
-import com.example.sumte.App
 import com.example.sumte.R
 import com.example.sumte.RetrofitClient
 import com.example.sumte.common.bindBookInfoUI
@@ -109,8 +105,6 @@ class BookInfoDateFragment : Fragment() {
         val formatter = DateTimeFormatter.ofPattern("M.d E", Locale.KOREAN)
         bindBookInfoUI(binding, viewModel)
 
-
-
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView = CalendarDayLayoutBinding.bind(view).calendarDayText
         }
@@ -186,6 +180,12 @@ class BookInfoDateFragment : Fragment() {
                     container.textView.isClickable = false
                     return
                 }
+                else if (date.isAfter(LocalDate.now().plusMonths(3))) {
+                    container.textView.alpha = 0.3f
+                    container.textView.isClickable = false
+                    container.textView.setBackgroundResource(0) // 선택 불가 표시
+                }
+
                 container.textView.setOnClickListener {
                     val clickedDate = date
                     if (startDate != null && endDate == null && clickedDate == startDate) {

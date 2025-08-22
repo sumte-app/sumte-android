@@ -57,6 +57,8 @@ class HouseDetailFragment : Fragment() {
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
     private val reviewAdapter = ReviewCardAdapter()
+    private var guesthouseId: Int = -1
+    private var maxPeople: Int = 0
 
     // 찜 상태 관리를 위한 ViewModel
     private val guestHouseVM: GuestHouseViewModel by lazy {
@@ -82,8 +84,6 @@ class HouseDetailFragment : Fragment() {
             arguments = Bundle().apply { putInt(ARG_GUESTHOUSE_ID, guesthouseId) }
         }
     }
-
-    private var guesthouseId: Int = -1
 
     private val bookInfoLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -118,7 +118,6 @@ class HouseDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         guesthouseId = arguments?.getInt(ARG_GUESTHOUSE_ID) ?: -1
         if (guesthouseId <= 0) {
-
             Log.e("HD/F", "guesthouseId missing. args=$arguments")
             Toast.makeText(requireContext(), "잘못된 접근입니다.", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
@@ -129,7 +128,6 @@ class HouseDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHouseDetailBinding.inflate(inflater, container, false)
-
         imageAdapter = HouseImageAdapter() // 아래에 submit(List<String>)가 있는 버전
         binding.vpHouseImage.adapter = imageAdapter
         binding.vpHouseImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -138,7 +136,6 @@ class HouseDetailFragment : Fragment() {
             }
         })
         updatePageIndicator(1, 0)
-
 
         binding.llSeeAllReviews.setOnClickListener {
             val headerData = houseDetailVM.header.value
@@ -253,13 +250,12 @@ class HouseDetailFragment : Fragment() {
                         return@launch
                     }
 
-                    Toast.makeText(requireContext(), "예약 성공", Toast.LENGTH_SHORT).show()
-                    Log.d("Reservation", "reservationId=$resId")
+                    Log.d("Reservation success!", "reservationId=$resId")
 
 
                     val createdAtIso = java.time.ZonedDateTime
                         .now(java.time.ZoneId.of("Asia/Seoul"))
-                        .toLocalDateTime()                    // 오프셋 없이 LocalDateTime
+                        .toLocalDateTime()
                         .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
 
                     val intent = Intent(requireContext(), com.example.sumte.payment.PaymentActivity::class.java).apply {
@@ -275,8 +271,6 @@ class HouseDetailFragment : Fragment() {
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CHILD, bookInfoVM.childCount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT, totalAmount)
                         putExtra(com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT, createdAtIso)
-
-
                     }
                     startActivity(intent)
                 } else {
@@ -308,7 +302,6 @@ class HouseDetailFragment : Fragment() {
             }
         })
 
-
         binding.rvReviewList.apply {
             adapter = reviewAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -318,7 +311,6 @@ class HouseDetailFragment : Fragment() {
             vm.state.collect { st ->
                 when (st) {
                     is ReviewUiState.Loading -> {
-
                     }
                     is ReviewUiState.Success -> {
                         reviewAdapter.submitList(st.items)
@@ -381,7 +373,6 @@ class HouseDetailFragment : Fragment() {
                     Toast.makeText(requireContext(), st.msg, Toast.LENGTH_SHORT).show()
                 }
                 RoomUiState.Loading -> {
-
                     Log.d("HouseDetailFragment", "State is Loading...")
                 }
             }
@@ -399,9 +390,11 @@ class HouseDetailFragment : Fragment() {
             binding.tvReviewScore.text = String.format("%.1f", h.averageScore ?: 0.0)
             binding.tvReviewCount2.text = h.reviewCount.toString()
 
+            maxPeople = h.maxPeople
+            Log.d("guesthouseMaxPeople", "maxPeople: $maxPeople")
+
             val urls = h.imageUrls
             imageAdapter.submitList(urls) {
-
                 val total = urls.size
                 val current = if (total == 0) 0
                 else (binding.vpHouseImage.currentItem + 1).coerceAtMost(total)
@@ -446,12 +439,12 @@ class HouseDetailFragment : Fragment() {
             }
             bookInfoLauncher.launch(intent)
         }
-
         binding.countChangeBar.setOnClickListener {
+            Log.d("guesthouse_countChangeBar","maxPeople is ${maxPeople}")
             val intent = Intent(requireContext(), BookInfoActivity::class.java).apply {
                 putExtra(BookInfoActivity.EXTRA_FRAGMENT_TYPE, BookInfoActivity.TYPE_COUNT)
                 putExtra(BookInfoActivity.EXTRA_SOURCE, "house_detail")
-                putExtra("guesthouseId", guesthouseId)
+                putExtra("maxPeople", maxPeople)
             }
             bookInfoLauncher.launch(intent)
         }

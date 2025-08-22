@@ -1,9 +1,11 @@
 package com.example.sumte.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +20,15 @@ import java.util.Locale
 class BookInfoCountFragment : Fragment() {
     lateinit var binding: FragmentBookInfoCountBinding
     private val viewModel by lazy { getBookInfoViewModel() }
+    private var source: String? = null
+    private var maxPeople: Int? = null
+
+    private fun updateApplyButton(adultCount: Int, childCount: Int) {
+        val total = adultCount + childCount
+        binding.applyBtn.isEnabled = maxPeople?.let { total <= it } ?: true
+        binding.applyBtn.alpha = if (binding.applyBtn.isEnabled) 1f else 0.5f
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +40,11 @@ class BookInfoCountFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        source = activity?.intent?.getStringExtra(BookInfoActivity.EXTRA_SOURCE)
+        Log.d("BookInfoCountFragment","${source}")
+        maxPeople = arguments?.getInt("maxPeople")?.takeIf { it > 0 }
+        Log.d("BookInfoCountFragment", "maxPeople: $maxPeople")
+
         bindBookInfoUI(binding, viewModel)
 
         var adultCount = viewModel.adultCount

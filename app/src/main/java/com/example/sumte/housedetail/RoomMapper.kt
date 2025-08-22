@@ -41,7 +41,8 @@ fun GuesthouseDto.toGuesthouseInfo(): GuesthouseInfo =
             .joinToString(" "),
         imageUrls = imageUrls ?: emptyList(),
         averageScore = averageScore,
-        reviewCount = reviewCount
+        reviewCount = reviewCount,
+        maxPeople = maxPeople
     )
 
 private fun trimSec(s: String): String {
