@@ -115,21 +115,21 @@
                     android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/reviewhouse_1" />
+                    android:src="@drawable/sumte_main_logo" />
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/reviewhouse_2" />
+                    android:src="@drawable/sumte_main_logo" />
 
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/reviewhouse_2" />
+                    android:src="@drawable/sumte_main_logo" />
             </LinearLayout>
         </HorizontalScrollView>
 

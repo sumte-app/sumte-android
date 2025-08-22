@@ -56,7 +56,7 @@ class HouseDetailFragment : Fragment() {
     private lateinit var binding: FragmentHouseDetailBinding
     private lateinit var adapter: RoomInfoAdapter
     private lateinit var imageAdapter: HouseImageAdapter
-    private val reviewAdapter = ReviewCardAdapter()
+    private var reviewAdapter = ReviewCardAdapter(null)
     private var guesthouseId: Int = -1
     private var maxPeople: Int = 0
 
@@ -408,6 +408,11 @@ class HouseDetailFragment : Fragment() {
             }
 
             bookInfoVM.roomImageUrl = urls.firstOrNull()
+
+            val guestHouseImageUrl = h.imageUrls.firstOrNull()
+            if (guestHouseImageUrl != null) {
+                reviewAdapter.updateDefaultImage(guestHouseImageUrl)
+            }
         }
     }
 
@@ -432,7 +437,6 @@ class HouseDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         bindBookInfoUI(binding, bookInfoVM)
 
 
