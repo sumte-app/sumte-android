@@ -2,6 +2,7 @@ package com.example.sumte.payment
 
 import BookedListMainFragment
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.sumte.R
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentPaymentCompleteBinding
 import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.mybook.BookedListActivity
 import com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT
 import com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT
 import com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME
@@ -44,10 +46,8 @@ class PaymentCompleteFragment : Fragment() {
         binding = FragmentPaymentCompleteBinding.inflate(inflater, container, false)
 
         binding.listBtn.setOnClickListener{
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, BookedListMainFragment())
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookedListActivity::class.java)
+            startActivity(intent)
         }
 
         binding.homeBtn.setOnClickListener{
