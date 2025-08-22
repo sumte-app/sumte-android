@@ -22,6 +22,7 @@ import com.example.sumte.guesthouse.GuestHouseAdapter
 import com.example.sumte.guesthouse.GuestHouseViewModel
 import com.example.sumte.guesthouse.UiState
 import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.like.LikeAdapter
 import com.example.sumte.search.FilterViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -40,7 +41,6 @@ class SearchResultFragment : Fragment() {
 
     private lateinit var viewModel: GuestHouseViewModel
 
-    // ✅ 중복 호출 방지용 플래그 & 현재 필터 보관 (로컬 변수로 다시 만들지 말 것!)
     private var didInitialLoad = false
     private var currentFilter: GuesthouseSearchRequest? = null
 
@@ -134,6 +134,12 @@ class SearchResultFragment : Fragment() {
             viewModel = ghViewModel,
             onItemClick = { guestHouse ->
                 val id = guestHouse.id
+                Log.d("guesthouseId","$id")
+                // BookInfoActivity 내에서 HouseDetailFragment로 이동
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.book_info_container, HouseDetailFragment.newInstance(id.toInt()))
+                    .addToBackStack(null)
+                    .commit()
             }
         )
 
