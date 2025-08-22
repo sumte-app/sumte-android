@@ -411,7 +411,6 @@
                 app:layout_constraintWidth_percent="0.9"
                 android:paddingTop="16dp">
 
-
                 <ImageView
                     android:id="@+id/ivStar"
                     android:layout_width="20dp"
@@ -437,6 +436,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="("
+                    android:layout_marginStart="4dp"
                     android:fontFamily="@font/pretendard_regular"
                     android:textSize="14sp"
                     app:layout_constraintTop_toTopOf="@id/tvReviewScore"

@@ -2,11 +2,13 @@ package com.example.sumte.mybook
 
 import BookedListMainFragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
+import com.bumptech.glide.Glide
 import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedCancelBinding
 import java.text.SimpleDateFormat
@@ -36,6 +38,13 @@ class BookedCancelFragment : Fragment() {
         val adultCount = args?.getString("adultCount") ?: ""
         val childCount = args?.getString("childCount") ?: ""
         val totalPrice = args?.getString("totalPrice") ?: ""
+        val imageUrl = args?.getString("imageUrl") ?: ""
+
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(R.drawable.sumte_logo1)
+            .error(R.drawable.sumte_logo1)
+            .into(binding.detailImg)
 
         // 현재 시간 취소일시
         val currentTime = Calendar.getInstance().time
@@ -49,6 +58,9 @@ class BookedCancelFragment : Fragment() {
         binding.adultCount.text = adultCount
         binding.childCount.text = childCount
         binding.price.text = totalPrice
+        if (imageUrl.isNotEmpty()) Glide.with(requireContext())
+            .load(imageUrl)
+            .into(binding.detailImg) // cancel fragment의 imageView id
 
 
         //예약내역으로 이동
