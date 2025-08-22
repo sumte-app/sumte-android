@@ -26,7 +26,8 @@ class RoomInfoAdapter(
         fun bind(room: RoomInfo) = with(binding) {
             tvRoomName.text = room.name
             tvRoomPrice.text = "${String.format("%,d", room.price)}원"
-            tvRoomCapacity.text = "기준인원 ${room.standardCount}인 (정원 ${room.totalCount}인)"
+            tvRoomCapacity.text = "기준인원 ${room.standardCount}인"
+            tvRoomTotalCapacity.text = "(정원 ${room.totalCount}인)"
             tvCheckInOut.text = "체크인 ${room.checkin} · 체크아웃 ${room.checkout}"
 
 
@@ -59,9 +60,9 @@ class RoomInfoAdapter(
 
             //상세보기
             tvRoomDetail.setOnClickListener {
-                Log.d("RoomInfoAdapter", "Clicked room.id = ${room.id}") // 확인용
+                Log.d("RoomInfoAdapter", "Clicked room.id = ${room.id}")
                 val intent = Intent(root.context, ActivityRoomDetail::class.java)
-                intent.putExtra("roomId", room.id) // ★ 여기서 roomId 전달
+                intent.putExtra("roomId", room.id)
                 intent.putExtra("reservableBase", room.reservable == true)
                 intent.putExtra("totalCountBase", room.totalCount)
                 root.context.startActivity(intent)
