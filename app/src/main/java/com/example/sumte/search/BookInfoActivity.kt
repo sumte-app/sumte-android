@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sumte.R
+import com.example.sumte.common.getBookInfoViewModel
 
 class BookInfoActivity : AppCompatActivity() {
 
@@ -15,7 +16,9 @@ class BookInfoActivity : AppCompatActivity() {
         const val TYPE_COUNT = "count"
         const val TYPE_SEARCH_RESULT = "search_result"
     }
+
     private var source: String? = null
+    private val bookInfoViewModel by lazy { getBookInfoViewModel() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,7 @@ class BookInfoActivity : AppCompatActivity() {
                         putInt("maxPeople", intent.getIntExtra("maxPeople", -1))
                     }
                 }
+
                 TYPE_SEARCH_RESULT -> {
                     val keyword = intent.getStringExtra(EXTRA_KEYWORD) ?: ""
                     SearchResultFragment().apply {
@@ -39,6 +43,7 @@ class BookInfoActivity : AppCompatActivity() {
                         }
                     }
                 }
+
                 "search" -> SearchFragment()
                 else -> BookInfoDateFragment()
             }
@@ -59,8 +64,9 @@ class BookInfoActivity : AppCompatActivity() {
                 setResult(AppCompatActivity.RESULT_OK, intent)
                 finish()
             }
+
             else -> {
-                val keyword = "" // 검색어 키워드
+                val keyword = bookInfoViewModel.keyword ?: "" // 검색어 키워드
                 val fragment = SearchResultFragment().apply {
                     arguments = Bundle().apply {
                         putString("keyword", keyword)
@@ -74,24 +80,4 @@ class BookInfoActivity : AppCompatActivity() {
         }
     }
 
-
-//    fun onApplyClicked() {
-//        when (source) {
-//            "house_detail" -> {
-//                finish()
-//            }
-//            else -> {
-//                val keyword = "" //검색어 키워드
-//                val fragment = SearchResultFragment().apply {
-//                    arguments = Bundle().apply {
-//                        putString("keyword", keyword)
-//                    }
-//                }
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.book_info_container, fragment)
-//                    .addToBackStack(null)
-//                    .commit()
-//            }
-//        }
-//    }
 }

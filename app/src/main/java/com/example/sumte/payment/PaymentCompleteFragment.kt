@@ -2,6 +2,7 @@ package com.example.sumte.payment
 
 import BookedListMainFragment
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +11,12 @@ import android.view.ViewGroup
 import android.view.Window
 import com.bumptech.glide.Glide
 import com.example.sumte.HomeFragment
+import com.example.sumte.MainActivity
 import com.example.sumte.R
 import com.example.sumte.common.getBookInfoViewModel
 import com.example.sumte.databinding.FragmentPaymentCompleteBinding
 import com.example.sumte.housedetail.HouseDetailFragment
+import com.example.sumte.mybook.BookedListActivity
 import com.example.sumte.payment.PaymentExtras.EXTRA_AMOUNT
 import com.example.sumte.payment.PaymentExtras.EXTRA_CREATED_AT
 import com.example.sumte.payment.PaymentExtras.EXTRA_GUESTHOUSE_NAME
@@ -44,18 +47,18 @@ class PaymentCompleteFragment : Fragment() {
         binding = FragmentPaymentCompleteBinding.inflate(inflater, container, false)
 
         binding.listBtn.setOnClickListener{
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, BookedListMainFragment())
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), BookedListActivity::class.java)
+            startActivity(intent)
         }
 
-        binding.homeBtn.setOnClickListener{
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, HomeFragment())
-                .addToBackStack(null)
-                .commit()
+        binding.homeBtn.setOnClickListener {
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            requireActivity().finish() // 현재 액티비티 종료
         }
+
+
         return binding.root
     }
 

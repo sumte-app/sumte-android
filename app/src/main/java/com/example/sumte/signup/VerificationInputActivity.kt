@@ -1,11 +1,13 @@
 package com.example.sumte.signup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +37,15 @@ class VerificationInputActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVerificationInputBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.root.setOnClickListener {
+            // InputMethodManager를 가져옵니다.
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            // 현재 포커스를 가진 뷰에서 키보드를 숨깁니다.
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            // EditText의 포커스를 해제합니다.
+            currentFocus?.clearFocus()
+        }
 
         // 1) 이전 화면에서 이메일 받아서 세팅
         val email = intent.getStringExtra("email") ?: ""

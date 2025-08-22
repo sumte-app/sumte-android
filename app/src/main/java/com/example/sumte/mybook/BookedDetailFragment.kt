@@ -55,6 +55,40 @@ class BookedDetailFragment : Fragment() {
                     .placeholder(R.drawable.sumte_logo1) // 로딩 중 기본 이미지
                     .error(R.drawable.sumte_logo1)       // 실패 시 기본 이미지
                     .into(binding.detailImg)
+
+                val imageUrl = detail.imageUrl ?: ""
+
+                binding.yesBtn.setOnClickListener {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        val response = repository.cancelReservation(reservationId)
+                        if (response?.success == true) {
+                            Toast.makeText(requireContext(), "예약이 취소되었습니다.", Toast.LENGTH_SHORT)
+                                .show()
+                            binding.popupOverlay.visibility = View.GONE
+
+                            val fragment = BookedCancelFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString("guestHouseName", binding.houseName.text.toString())
+                                    putString("roomName", binding.roomType.text.toString())
+                                    putString("startDate", binding.startDate.text.toString())
+                                    putString("endDate", binding.endDate.text.toString())
+                                    putString("nightCount", binding.dateCount.text.toString())
+                                    putString("adultCount", binding.adultCount.text.toString())
+                                    putString("childCount", binding.childCount.text.toString())
+                                    putString("totalPrice", binding.price.text.toString())
+                                    putString("imageUrl", imageUrl) // ✅ URL 자체를 넘김
+                                }
+                            }
+
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.booked_list_container, fragment)
+                                .addToBackStack(null)
+                                .commit()
+                        } else {
+                            Toast.makeText(requireContext(), "예약 취소 실패", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
                 binding.bookedDate.text = formatReservedAt(detail.reservedAt) //formatter수정
                 binding.houseName.text = detail.guestHouseName
                 binding.roomType.text = detail.roomName
@@ -94,36 +128,8 @@ class BookedDetailFragment : Fragment() {
         binding.cancelBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.VISIBLE
         }
-        //예약취소 api호출
-        binding.yesBtn.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val response = repository.cancelReservation(reservationId)
-                if (response?.success == true) {
-                    Toast.makeText(requireContext(), "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
-                    binding.popupOverlay.visibility = View.GONE
-                    // 취소완료 화면으로 이동
-                    val fragment = BookedCancelFragment().apply {
-                        arguments = Bundle().apply {
-                            putString("guestHouseName", binding.houseName.text.toString())
-                            putString("roomName", binding.roomType.text.toString())
-                            putString("startDate", binding.startDate.text.toString())
-                            putString("endDate", binding.endDate.text.toString())
-                            putString("nightCount", binding.dateCount.text.toString())
-                            putString("adultCount", binding.adultCount.text.toString())
-                            putString("childCount", binding.childCount.text.toString())
-                            putString("totalPrice", binding.price.text.toString())
-                        }
-                    }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.booked_list_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    Toast.makeText(requireContext(), "예약 취소 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-        //예약유지버튼
+
+        //예약취소
         binding.noBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.GONE
         }

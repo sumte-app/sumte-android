@@ -15,14 +15,12 @@ import com.example.sumte.databinding.FragmentFilteringBinding
 
 class FilteringFragment: Fragment() {
     lateinit var binding: FragmentFilteringBinding
+
+    // [수정] 최대 인원 선택 옵션은 그대로 사용
     val personOptions = arrayOf("1명", "2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명", "11명")
 
-    // 최소 인원 상태 (기본값 1)
+    // 최소 인원을 관리하는 클래스 프로퍼티
     private var minPeople: Int = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -172,14 +170,18 @@ class FilteringFragment: Fragment() {
             }
         }
 
+        // '초기화' 버튼 리스너
         binding.filteringResetLl.setOnClickListener {
             binding.filteringCheckbox.isChecked = false
+
             binding.filteringRangeslider.values = listOf(1000f, 300000f)
             binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
             binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
             binding.filteringPricemidTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
-            binding.filteringPeopleCountTv.text = "인원 선택"
 
+            // [수정] 최소/최대 인원 UI 모두 초기화
+            binding.filteringPeopleCountTv.text = "인원 선택"
+            binding.filteringPeopleCountTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
             minPeople = 1
             binding.filteringPeopleMinTv.text = "1명"
             binding.filteringPeopleMinTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray600))
@@ -203,6 +205,7 @@ class FilteringFragment: Fragment() {
             return list
         }
 
+        // 필터 옵션을 UI에 적용하는 함수
         fun applyFilterToUi(f: FilterOptions) {
             binding.filteringCheckbox.isChecked = f.viewEnableReservation ?: false
 
@@ -212,18 +215,21 @@ class FilteringFragment: Fragment() {
             binding.filteringMinpriceTv.text = "${min}원"
             binding.filteringMaxpriceTv.text = "${max}원+"
 
-            val peopleStr = f.people?.let { "${it}명" } ?: "인원 선택"
-            binding.filteringPeopleCountTv.text = peopleStr
+            // [수정] people -> maxPeople로 변경하고 최대 인원 UI 복원
+            val maxPeopleStr = f.maxPeople?.let { "${it}명" } ?: "인원 선택"
+            binding.filteringPeopleCountTv.text = maxPeopleStr
             binding.filteringPeopleCountTv.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    if (peopleStr == "인원 선택") R.color.gray400 else R.color.gray600
+                    if (maxPeopleStr == "인원 선택") R.color.gray400 else R.color.gray600
                 )
             )
 
-            minPeople = 1
-            binding.filteringPeopleMinTv.text = "1명"
+            // [추가] 최소 인원 UI 복원
+            minPeople = f.minPeople ?: 1
+            binding.filteringPeopleMinTv.text = "${minPeople}명"
             binding.filteringPeopleMinTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray600))
+
 
             fun setSelectedByTexts(container: LinearLayout, wanted: Set<String>) {
                 for (i in 0 until container.childCount) {
@@ -250,16 +256,55 @@ class FilteringFragment: Fragment() {
         val filterViewModel = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
         applyFilterToUi(filterViewModel.selected.value)
 
+        // '적용' 버튼 리스너
         binding.filteringApplyTv.setOnClickListener {
             val selMin = binding.filteringRangeslider.values[0].toInt()
             val selMax = binding.filteringRangeslider.values[1].toInt()
             val minPrice = selMin.takeIf { it != 1000 }
             val maxPrice = selMax.takeIf { it != 300000 }
 
-            val people = binding.filteringPeopleCountTv.text.toString()
+            // 1) 최소/최대 인원 수 취득
+            var pickedMin: Int? = minPeople.takeIf { it > 1 } // 1명은 의미 없는 기본값이므로 null
+            var pickedMax: Int? = binding.filteringPeopleCountTv.text.toString()
                 .takeIf { it != "인원 선택" }
                 ?.removeSuffix("명")
                 ?.toIntOrNull()
+
+            // 2) 범위 보정 (min > max -> 스왑)
+            if (pickedMin != null && pickedMax != null && pickedMin > pickedMax) {
+                val tmp = pickedMin
+                pickedMin = pickedMax
+                pickedMax = tmp
+            }
+
+            // 3) 서버용 인원 파라미터 정규화 규칙
+            // - 둘 다 있으면: minPeople/maxPeople 로 보냄 (people=null)
+            // - 하나만 있으면: 단일 people 로 보냄 (min/max=null)
+            val normalizedMin: Int?
+            val normalizedMax: Int?
+            val normalizedPeople: Int?
+            when {
+                pickedMin != null && pickedMax != null -> {
+                    normalizedMin = pickedMin
+                    normalizedMax = pickedMax
+                    normalizedPeople = null
+                }
+                pickedMax != null -> { // 최대만 선택됨
+                    normalizedMin = null
+                    normalizedMax = null
+                    normalizedPeople = pickedMax
+                }
+                pickedMin != null -> { // 최소만 선택됨
+                    normalizedMin = null
+                    normalizedMax = null
+                    normalizedPeople = pickedMin
+                }
+                else -> { // 아무 것도 선택 안함
+                    normalizedMin = null
+                    normalizedMax = null
+                    normalizedPeople = null
+                }
+            }
 
             fun mapService(s: String) = when (s.trim()) {
                 "이벤트" -> "이벤트"
@@ -282,8 +327,8 @@ class FilteringFragment: Fragment() {
             }
             fun selected(ll: LinearLayout) = getSelectedItemsFromLinearLayout(ll)
 
-            val optionService = selected(binding.filteringExtraServiceLl).map(::mapService).ifEmpty { null }
-            val targetAudience = selected(binding.filteringTargetLl).map(::mapTarget).ifEmpty { null }
+            val optionService = selected(binding.filteringExtraServiceLl).map(::mapService)
+            val targetAudience = selected(binding.filteringTargetLl).map(::mapTarget)
             val regions = buildList {
                 addAll(selected(binding.filteringRegion1Ll))
                 addAll(selected(binding.filteringRegion2Ll))
@@ -292,32 +337,24 @@ class FilteringFragment: Fragment() {
 
             val viewEnableReservation = if (binding.filteringCheckbox.isChecked) true else null
 
-            val noFilters =
-                viewEnableReservation == null &&
-                        minPrice == null && maxPrice == null &&
-                        people == null &&
-                        optionService == null &&
-                        targetAudience == null &&
-                        regions.isEmpty()
-
             val vm = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
-
-            if (noFilters) {
-                vm.save(FilterOptions())
-            } else {
-                vm.save(
-                    FilterOptions(
-                        viewEnableReservation = viewEnableReservation,
-                        minPrice = minPrice,
-                        maxPrice = maxPrice,
-                        people = people,
-                        optionService = optionService,
-                        targetAudience = targetAudience,
-                        regions = regions
-                    )
+            vm.save(
+                FilterOptions(
+                    viewEnableReservation = viewEnableReservation,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice,
+                    // ⚠️ 여기서는 정규화된 결과만 저장
+                    minPeople = normalizedMin,
+                    maxPeople = normalizedMax,
+                    people = normalizedPeople,
+                    optionService = optionService,
+                    targetAudience = targetAudience,
+                    regions = regions
                 )
-            }
+            )
+
             parentFragmentManager.popBackStack()
         }
+
     }
 }
