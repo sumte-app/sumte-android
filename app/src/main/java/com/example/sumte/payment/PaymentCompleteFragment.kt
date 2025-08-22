@@ -97,6 +97,20 @@ class PaymentCompleteFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        val window = requireActivity().window
+
+        // 상태바 배경색
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(
+            requireContext(), R.color.white
+        )
+
+        // 상태바 아이콘 색(밝은 배경이면 true)
+        androidx.core.view.WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = true
+    }
+
 
 
 

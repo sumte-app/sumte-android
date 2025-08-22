@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sumte.R
 import com.example.sumte.databinding.FragmentBookedListMainBinding
 import com.example.sumte.mybook.BookedAdapter
 import com.example.sumte.mybook.BookedData
@@ -171,5 +172,19 @@ class BookedListMainFragment : Fragment() {
 //        super.onResume()
 //        bookedVM.fetchBookedList()
 //    }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = requireActivity().window
+
+        // 상태바 배경색
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(
+            requireContext(), R.color.white
+        )
+
+        // 상태바 아이콘 색(밝은 배경이면 true)
+        androidx.core.view.WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = true
     }
 }
