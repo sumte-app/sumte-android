@@ -12,7 +12,8 @@ data class GuestHouse(
     val id: Long,
     val imageUrl: String? = null,
     val averageScore: Double? = null,
-    val reviewCount: Int? = null
+    val reviewCount: Int? = null,
+    val maxPeople: Int? = null
 )
 
 private fun formatCheckin(s: String?): String {

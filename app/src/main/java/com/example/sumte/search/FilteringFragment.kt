@@ -17,12 +17,7 @@ class FilteringFragment: Fragment() {
     lateinit var binding: FragmentFilteringBinding
     val personOptions = arrayOf("1명", "2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명", "11명")
 
-    // 최소 인원 상태 (기본값 1)
     private var minPeople: Int = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -172,8 +167,11 @@ class FilteringFragment: Fragment() {
             }
         }
 
+        // '초기화' 버튼 리스너
         binding.filteringResetLl.setOnClickListener {
+            // [수정] 예약 가능 숙소만 보기 체크박스도 초기화
             binding.filteringCheckbox.isChecked = false
+
             binding.filteringRangeslider.values = listOf(1000f, 300000f)
             binding.filteringMinpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
             binding.filteringMaxpriceTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray400))
@@ -203,7 +201,9 @@ class FilteringFragment: Fragment() {
             return list
         }
 
+        // 필터 옵션을 UI에 적용하는 함수
         fun applyFilterToUi(f: FilterOptions) {
+            // [수정] "예약 가능 숙소만 보기" 체크박스 상태 복원
             binding.filteringCheckbox.isChecked = f.viewEnableReservation ?: false
 
             val min = (f.minPrice ?: 1000).coerceAtLeast(1000)
@@ -250,6 +250,7 @@ class FilteringFragment: Fragment() {
         val filterViewModel = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
         applyFilterToUi(filterViewModel.selected.value)
 
+        // '적용' 버튼 리스너
         binding.filteringApplyTv.setOnClickListener {
             val selMin = binding.filteringRangeslider.values[0].toInt()
             val selMax = binding.filteringRangeslider.values[1].toInt()
@@ -290,33 +291,24 @@ class FilteringFragment: Fragment() {
                 addAll(selected(binding.filteringRegion3Ll))
             }.map(::mapRegion)
 
+            // [수정] 체크박스 상태를 가져와 viewEnableReservation 값으로 설정
             val viewEnableReservation = if (binding.filteringCheckbox.isChecked) true else null
-
-            val noFilters =
-                viewEnableReservation == null &&
-                        minPrice == null && maxPrice == null &&
-                        people == null &&
-                        optionService == null &&
-                        targetAudience == null &&
-                        regions.isEmpty()
 
             val vm = ViewModelProvider(requireActivity())[FilterViewModel::class.java]
 
-            if (noFilters) {
-                vm.save(FilterOptions())
-            } else {
-                vm.save(
-                    FilterOptions(
-                        viewEnableReservation = viewEnableReservation,
-                        minPrice = minPrice,
-                        maxPrice = maxPrice,
-                        people = people,
-                        optionService = optionService,
-                        targetAudience = targetAudience,
-                        regions = regions
-                    )
+            // ViewModel에 모든 필터 옵션을 저장
+            vm.save(
+                FilterOptions(
+                    viewEnableReservation = viewEnableReservation,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice,
+                    people = people,
+                    optionService = optionService,
+                    targetAudience = targetAudience,
+                    regions = regions
                 )
-            }
+            )
+
             parentFragmentManager.popBackStack()
         }
     }

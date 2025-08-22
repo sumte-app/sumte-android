@@ -94,27 +94,6 @@ class SearchResultFragment : Fragment() {
         return binding.root
     }
 
-    private fun normalizeRegionArg(region: ArrayList<String>?): List<String>? {
-        if (region.isNullOrEmpty()) return null
-
-        if (region.size == 1) {
-            val city = region[0].trim()
-            val province = when (city) {
-                "제주시", "서귀포시" -> "제주특별자치도"
-                else -> null
-            }
-            return province?.let { listOf(it, city) } ?: listOf(city)
-        }
-
-        val rawProvince = region[0].trim()
-        val city = region[1].trim()
-        val fixedProvince = when (rawProvince) {
-            "제주도", "제주특별자치도" -> "제주특별자치도"
-            else -> rawProvince
-        }
-        return listOf(fixedProvince, city)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -182,14 +161,13 @@ class SearchResultFragment : Fragment() {
             }
         }
 
-        // 초기 baseFilter 생성 (한 번만 실행됨)
         val initialCheckIn = bookInfoViewModel.startDate?.toYmd()
         val initialCheckOut = bookInfoViewModel.endDate?.toYmd()
         val initialHasDates = !initialCheckIn.isNullOrBlank() && !initialCheckOut.isNullOrBlank()
         val initialPeopleSum = (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
         val initialPeopleForRequest = if (initialHasDates) initialPeopleSum else null
-
         val keywordNorm = keyword?.takeIf { it.isNotBlank() }
+        val initialMinPeopleForCapacity = initialPeopleSum
         binding.searchText.setText(keywordNorm ?: "")
 
         val baseFilter = GuesthouseSearchRequest(
@@ -202,7 +180,8 @@ class SearchResultFragment : Fragment() {
             maxPrice = arguments?.getInt("maxPrice")?.takeIf { it > 0 },
             optionService = arguments?.getStringArrayList("optionService"),
             targetAudience = arguments?.getStringArrayList("targetAudience"),
-            region = null
+            region = null,
+            minPeople = initialMinPeopleForCapacity
         )
 
         if (!didInitialLoad) {
@@ -211,7 +190,6 @@ class SearchResultFragment : Fragment() {
             didInitialLoad = true
         }
 
-        // --- 네비게이션 ---
         binding.searchText.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.book_info_container, SearchFragment())
@@ -243,6 +221,8 @@ class SearchResultFragment : Fragment() {
                 .commit()
         }
 
+        // SearchResultFragment.kt
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 filterVm.selected.collect { f ->
@@ -268,19 +248,20 @@ class SearchResultFragment : Fragment() {
                         newRegion = if(isFilterCleared) baseFilter.region else basis.region
                     }
 
-                    // [수정] 항상 최신 날짜와 인원 정보를 ViewModel에서 다시 가져옵니다.
                     val latestCheckIn = bookInfoViewModel.startDate?.toYmd()
                     val latestCheckOut = bookInfoViewModel.endDate?.toYmd()
                     val hasDates = !latestCheckIn.isNullOrBlank() && !latestCheckOut.isNullOrBlank()
                     val latestPeopleSum = (bookInfoViewModel.adultCount + bookInfoViewModel.childCount).takeIf { it > 0 }
 
-                    // 필터 화면의 인원 수(f.people)를 우선 적용하고, 없으면 예약 정보의 인원 수를 사용합니다.
                     val peopleForRequest = if (hasDates) {
                         f.people ?: latestPeopleSum
                     } else {
-                        f.people // 날짜가 없으면 필터의 인원수만 고려
+                        null
                     }
 
+                    val minPeopleForCapacity = (f.people ?: latestPeopleSum)
+
+                    // 1. 모든 필터 조건을 종합해서 'merged' 객체를 먼저 만듭니다.
                     val merged = basis.copy(
                         viewEnableReservation = f.viewEnableReservation ?: basis.viewEnableReservation,
                         minPrice = f.minPrice ?: basis.minPrice,
@@ -289,10 +270,10 @@ class SearchResultFragment : Fragment() {
                         targetAudience = f.targetAudience ?: basis.targetAudience,
                         keyword = newKeyword,
                         region = newRegion,
-                        // [수정] 최신 날짜와 인원 정보로 덮어씁니다.
                         checkIn = latestCheckIn,
                         checkOut = latestCheckOut,
-                        people = peopleForRequest
+                        people = peopleForRequest,
+                        minPeople = minPeopleForCapacity,
                     )
 
                     val anyFilterApplied = !f.optionService.isNullOrEmpty() ||
@@ -309,8 +290,12 @@ class SearchResultFragment : Fragment() {
                         binding.searchFilteringIcon.setImageResource(R.drawable.adjustments)
                     }
 
+                    // 2. 그 다음에 'merged' 객체를 사용해서 if문으로 비교하고 로그를 찍습니다.
                     if (merged != currentFilter) {
                         currentFilter = merged
+                        // 실제로 서버에 보내는 요청 데이터를 로그로 출력합니다.
+                        Log.d("API_REQUEST_CHECK", "요청 데이터: $merged")
+
                         ghViewModel.setFilterAndRefresh(merged)
                     }
                 }

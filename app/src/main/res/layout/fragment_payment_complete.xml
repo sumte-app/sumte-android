@@ -19,14 +19,14 @@
 
         <ImageView
             android:id="@+id/back_btn"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/arrow_left" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="9"
+            android:layout_weight="10"
             android:gravity="center"
             android:text=""
             android:textSize="16dp"
@@ -136,6 +136,8 @@
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/round_img_bg"
         android:src="@drawable/sumte_main_logo"
         app:layout_constraintStart_toStartOf="@+id/booked_info"
         app:layout_constraintTop_toBottomOf="@+id/booked_info" />

@@ -128,38 +128,7 @@ class BookedDetailFragment : Fragment() {
         binding.cancelBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.VISIBLE
         }
-        //예약취소 api호출
-//        binding.yesBtn.setOnClickListener {
-//            viewLifecycleOwner.lifecycleScope.launch {
-//                val response = repository.cancelReservation(reservationId)
-//                if (response?.success == true) {
-//                    Toast.makeText(requireContext(), "예약이 취소되었습니다.", Toast.LENGTH_SHORT).show()
-//                    binding.popupOverlay.visibility = View.GONE
-//                    // 취소완료 화면으로 이동
-//                    val fragment = BookedCancelFragment().apply {
-//                        arguments = Bundle().apply {
-//                            putString("guestHouseName", binding.houseName.text.toString())
-//                            putString("roomName", binding.roomType.text.toString())
-//                            putString("startDate", binding.startDate.text.toString())
-//                            putString("endDate", binding.endDate.text.toString())
-//                            putString("nightCount", binding.dateCount.text.toString())
-//                            putString("adultCount", binding.adultCount.text.toString())
-//                            putString("childCount", binding.childCount.text.toString())
-//                            putString("totalPrice", binding.price.text.toString())
-//                            putString("imageUrl", binding.detailImg.toString()) //
-//                        }
-//
-//                    }
-//
-//                    parentFragmentManager.beginTransaction()
-//                        .replace(R.id.booked_list_container, fragment)
-//                        .addToBackStack(null)
-//                        .commit()
-//                } else {
-//                    Toast.makeText(requireContext(), "예약 취소 실패", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
+
         //예약취소
         binding.noBtn.setOnClickListener {
             binding.popupOverlay.visibility = View.GONE
